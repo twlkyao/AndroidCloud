@@ -1,0 +1,31 @@
+<!--
+    作者： 齐士垚
+    日期： 2013.11.13
+    功能： 文件上传主页面。
+-->
+<html>
+    <head>
+        <!--标题-->
+        <title>软件发布平台</title>
+        <!--设置编码为utf-8-->
+        <meta http-equiv="Content-Type" content="text/html;
+            charset=utf-8">
+    </head>
+        <body>
+            <p align="center">
+                欢迎使用软件发布平台
+            </p>
+                <form method="post" action="upload.php"
+                    enctype="multipart/form-data">
+                        <!--设置上传文件最大为100MB-->
+                        <!--Set the max size of upload file is 100MB-->
+                        <input type="hidden" name="MAX_FILE_SIZE" value="104857600">
+                        <input type="file" name="myfile" size="50"><br><br>
+                        <!--上传按钮-->
+                        <input type="submit" value="上传">
+                        <!--重置按钮-->
+                        <input type="reset" value="重置">
+                </form>
+    </body>
+</html>
+
