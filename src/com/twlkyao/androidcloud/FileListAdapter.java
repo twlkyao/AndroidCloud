@@ -25,7 +25,7 @@ public class FileListAdapter extends BaseAdapter {
         this.isSDcard = isSDcard;
         mInflater = LayoutInflater.from(context);
     }
-         
+    
     @Override
     public int getCount () {
         return files.size();
@@ -40,37 +40,43 @@ public class FileListAdapter extends BaseAdapter {
     public long getItemId (int position) {
         return position;
     }
-         
+    
     @Override
     public View getView (int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder;
-        if(convertView == null) { // The view is not initialized
+        /**
+         * The view is not initialized,initialize the view according to the layout file,
+         * and bind it to tag.
+         */
+        if(convertView == null) { 
             viewHolder = new ViewHolder();
             convertView = mInflater.inflate(R.layout.file_list_item, null); // Inflate from the layout file
             convertView.setTag(viewHolder);
             viewHolder.file_title = (TextView) convertView.findViewById(R.id.file_title); // Find the file_title textview
             viewHolder.file_icon = (ImageView) convertView.findViewById(R.id.file_icon); // Find the file_icon imageview
             viewHolder.file_path = (TextView) convertView.findViewById(R.id.file_path); // Find the file_path textview
-//            viewHolder.ratingBar = (RatingBar) convertView.findViewById(R.id.rating_bar); // Find the rating_bar view
+//            viewHolder.encrypt_level = (RatingBar) convertView.findViewById(R.id.encrypt_level); // Find the rating_bar view
         } else {
               viewHolder = (ViewHolder) convertView.getTag();
         }
-        
         File file = (File) getItem(position);
         if(position == 0 && !isSDcard) { // Add the back to SDcard item
 	        viewHolder.file_title.setText(R.string.back_to_sdcard);
 	        viewHolder.file_icon.setImageResource(R.drawable.sdcard_icon);
 	        viewHolder.file_path.setText(Environment.getExternalStorageDirectory().toString());
+//	        viewHolder.encrypt_level.setRating(0);
         }
 //        if(position == 1 && !(file.getParent().equals(Environment.getExternalStorageDirectory()))) { // Add the back to parent item
         if(position == 1 && !isSDcard) { // Add the back to parent item
 	        viewHolder.file_title.setText(R.string.back_to_parent);
 	        viewHolder.file_icon.setImageResource(R.drawable.folder_up_icon);
 	        viewHolder.file_path.setText(file.getPath());
+//	        viewHolder.encrypt_level.setRating(0);
         } else { // The current filepath is the SDcard or the position is neither 0 nor 1
               String fileName = file.getName();
               viewHolder.file_title.setText(fileName);
               viewHolder.file_path.setText(file.getPath());
+//              viewHolder.encrypt_level.setRating(0);
               if(file.isDirectory()) { // The variable file is a directory
                   viewHolder.file_icon.setImageResource(R.drawable.folder_icon);
               } else { // The variable file is a file
@@ -80,11 +86,10 @@ public class FileListAdapter extends BaseAdapter {
      
      return convertView;
 }
-        
     private class ViewHolder {
     	private ImageView file_icon; // The icon of the file
 		private TextView file_title; // The title of the file
 		private TextView file_path; // The path of the file
-//		private RatingBar ratingBar; // The secret level of the file
+//		private RatingBar encrypt_level; // The encrypt level of the file
     }
 }

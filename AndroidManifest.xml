@@ -6,16 +6,19 @@
 
     <uses-sdk
         android:minSdkVersion="8"
-        android:targetSdkVersion="10" />
-    <!-- Uses the Internet permission -->
+        android:targetSdkVersion="14" />
+    <!-- The permission to access the Internet. -->
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_SDCARD" />
+    <!-- The permission to read and write file. -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- The permission to create, move, delete file and directory. -->
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@android:style/Theme.NoTitleBar" >
         <activity
             android:name="com.twlkyao.androidcloud.LoginActivity"
             android:label="@string/app_name" >

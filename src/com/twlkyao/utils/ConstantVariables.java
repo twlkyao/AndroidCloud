@@ -5,12 +5,12 @@ public class ConstantVariables {
 	/**
 	 * AVD base address
 	 */
-	final public static String BASE_URL= "http://10.0.2.2/"; //Set the login url; 
+//	final public static String BASE_URL= "http://10.0.2.2/"; //Set the login url; 
 
 	/**
 	 * Real world base address
 	 */
-//	final public static String BASE_URL= "http://219.245.80.97/"; //Set the login url
+	final public static String BASE_URL= "http://219.245.80.97/"; //Set the login url
 	
 	final public static String REGISTER_URL = "cloud/android/register.php"; // The location of the register PHP script
 	final public static String LOGIN_URL = "cloud/android/login.php"; // The location of the login PHP script
@@ -24,4 +24,12 @@ public class ConstantVariables {
 	final public int file_info_upload = 0; // Indicating the type is file info upload.
 	
 	public String charset = "UTF-8";
+	
+	public String[] algorithms = {
+			"DESede", "DES", "Blowfish"
+	};
+	
+	public String[] keys = {
+		"2012PinganVitality075522628888ForShenZhenBelter075561869839"
+	};
 }

@@ -9,13 +9,20 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Collections;
+
+import javax.crypto.NoSuchPaddingException;
 
 import com.twlkyao.utils.ConstantVariables;
+import com.twlkyao.utils.FileDEncryption;
 import com.twlkyao.utils.FileOperation;
 
 
@@ -25,13 +32,22 @@ import android.os.Handler;
 import android.os.Message;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
+import android.text.StaticLayout;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
+import android.view.ViewDebug.FlagToString;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -49,16 +65,20 @@ public class MainActivity extends Activity {
 	
 	private String file_info_url = ConstantVariables.BASE_URL + ConstantVariables.FILE_INFO_UPLOAD_URL; // Set the file information url
 	private String file_upload_url = ConstantVariables.BASE_URL + ConstantVariables.FILE_UPLOAD; // Set the file upload url
-	private float rating; // To indicate the rating.
+//	private float rate; // To indicate the rating.
 	private int user_id;	// To store the user id.
 	private String Tag = "MainActivity"; // The logcat tag
+	
+	private String encryptKey = "123456";
+	private boolean DEncryptFlag; // DEncrypt flag.
 	
 	private ListView fileListView; // The listview to stotre the file information
 	private ArrayList<File> filelist; // Used to store the filename
 	private TextView search_result_label; // The search_result_label
 	
 	private FileListAdapter fileListAdapter; // The self defined Adapter
-	private FileOperation fileOperation = new FileOperation(); // Construct an instance of FileOperation
+	private FileOperation fileOperation = new FileOperation(); // Construct an instance of FileOperation.
+	private FileDEncryption fileDEncryption = new FileDEncryption(); // Construct an instance of FileDEncryption.
 	
 	private ConstantVariables constantVariables = new ConstantVariables(); // Instance an ConstantVariables.
 	
@@ -112,6 +132,26 @@ public class MainActivity extends Activity {
 	}
 
 	/**
+	 * Set the menu item selected operation.
+	 */
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// TODO Auto-generated method stub
+		switch(item.getItemId()) {
+		case R.id.action_settings:
+			Toast.makeText(getApplicationContext(),
+					R.string.action_settings, Toast.LENGTH_SHORT).show();
+			break;
+		case R.id.action_help:
+			Toast.makeText(getApplicationContext(),
+					R.string.help, Toast.LENGTH_SHORT).show();
+			break;
+			
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	/**
 	 * Find the views by id
 	 */
 	public void findViews() {
@@ -126,7 +166,7 @@ public class MainActivity extends Activity {
 	 */
 	public void setListeners() {
 		
-		// Set the btnSearch listener
+		// Set the btnSearch listener, start to search file.
 		btnSearch.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
@@ -155,12 +195,11 @@ public class MainActivity extends Activity {
 					Toast.makeText(getApplicationContext(),
 							getString(R.string.keyword_null),
 								Toast.LENGTH_SHORT).show();
-					
 				}
 			}
 		});
 		
-		// Set the fileListView listener
+		// Set the fileListView click listener, start to upload file information.
 		fileListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, 
@@ -170,60 +209,45 @@ public class MainActivity extends Activity {
 				Log.d(Tag, "onclick");
 				
 				final File file = (File) fileListAdapter.getItem(position);
+				final String filepath = file.getPath();
+				
 				if(!file.canRead()) { // If the file can't read, alert
 					Log.w(Tag, "Can't read!");
 				} else if(file.isDirectory()) { // If the clicked item is a directory, get into it
 					initData(file);
 				} else { // If the clicked item is a file, get the file information, such as md5 or sha1
 					
-					// Set a ProgressDialog
-					/*ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);
-					progressDialog.setTitle(R.string.upload_file_info); // Set the title of the ProgressDialog.
-					progressDialog.setMessage(getString(R.string.wait)); // Set the message of the ProgressDialog.
-					progressDialog.setIcon(android.R.id.progress); // Set the icon of the ProgressDialog.
-					progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER); // Set the style of the ProgressDialog
-					progressDialog.show();*/
-					
-					final String md5 = fileOperation.fileToMD5(file.getPath());	// Get the md5 value of the file
-					final String sha1 = fileOperation.fileToSHA1(file.getPath());	// Get the sha1 value of the file
-					
-//					progressDialog.dismiss();
+					final String md5 = fileOperation.fileToMD5(filepath);	// Get the md5 value of the file
+					final String sha1 = fileOperation.fileToSHA1(filepath);	// Get the sha1 value of the file
 					
 					Log.d(Tag, "md5:" + md5 + "\nsha1:" + sha1);			// Log out the md5 and sha1 value of the file
 					
-					final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-					
-					/**
-					 * The setting here is not work
-					 */
-					final RatingBar ratingBar = new RatingBar(MainActivity.this);
-					ratingBar.setRating(0);
-					ratingBar.setStepSize(1);
-					ratingBar.setNumStars(2);
-
-					builder.setTitle(R.string.alertdialog_title)
-					.setIcon(android.R.drawable.ic_dialog_info)
-					.setView(ratingBar)
-					.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+					Builder builder = new AlertDialog.Builder(MainActivity.this);
+					builder.setIcon(android.R.drawable.ic_dialog_info);
+					builder.setTitle(R.string.encrypt_level_title);
+					Log.d(Tag, "OnClick");
+					builder.setItems(R.array.encrypt_level, new OnClickListener() {
+						
+						@Override
 						public void onClick(DialogInterface dialog, int which) {
-							rating = ratingBar.getRating();
-							// Call the fileOperation to upload the file info
-							fileInfo(file_info_url, file.getPath(),
-									String.valueOf(user_id), md5, sha1, rating + "", "123456");
+							// TODO Auto-generated method stub
+							int encrypt_level;
+							
+							encrypt_level = which + 1; // Get the encrypt level.
+							
+							// Call the startUploadFileInfo function to upload file information.
+							startUploadFileInfo(file_info_url, filepath,
+									String.valueOf(user_id), md5, sha1, String.valueOf(encrypt_level), encryptKey);
 						}
-					})
-					.setNegativeButton("取消", null);
+					});
 					
-					//Create the AlertDialog  
-					AlertDialog alertDialog = builder.create();  
-					//Show the AlertDialog 
-					alertDialog.show();
-					
-					
+					AlertDialog alertDialog = builder.create(); // Create the dialog.
+					alertDialog.show(); // Show the dialog.
 				}
 			}
 		});
 		
+		// Set the fileListView long click listener, encrypt the file and upload it to remote server.
 		fileListView.setOnItemLongClickListener(new OnItemLongClickListener() {
 
 			@Override
@@ -231,15 +255,115 @@ public class MainActivity extends Activity {
 					int position, long id) {
 				// TODO Auto-generated method stub
 				
-				Log.d(Tag, "onlongclick");
+				Log.d(Tag, "onLongClick");
 				
-				File file = (File) fileListAdapter.getItem(position);
-				startUploadFile(file.getPath(), file_upload_url);
+				final File file = (File) fileListAdapter.getItem(position);
+				
+				final File dir1 = new File(Environment.getExternalStorageDirectory().toString()
+						+ File.separator + "ABB"); // Create a new directory to store the encrypted file.
+				if(!dir1.exists()) { // If the directory is not exist, create it.
+					dir1.mkdirs();
+				}
+				
+				final File dir2 = new File(Environment.getExternalStorageDirectory().toString()
+						+ File.separator + "ACC"); // Create a new directory to store the encrypted file.
+				if(!dir2.exists()) { // If the directory is not exist, create it.
+					dir2.mkdirs();
+				}
+				
+				// Create a encrypt and decrypt dialog.
+				Builder builder = new AlertDialog.Builder(MainActivity.this);
+				builder.setIcon(android.R.drawable.ic_dialog_info);
+				builder.setTitle(R.string.choice_title);
+				Log.d(Tag, "Decryption");
+				builder.setItems(R.array.choice, new OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						// TODO Auto-generated method stub
+						
+						switch(which) {
+						case 0: // Encryption
+							// Call the startUploadFile function to upload file.
+							if(fileDEncryption.Encryption(file.getPath(), "desede",
+									"123456789012345678", dir1 + File.separator + file.getName())) {
+								startUploadFile(file.getPath(), file_upload_url);
+								Log.d(Tag, "Encrypted");
+							}
+							break;
+						case 1: // Decryption
+							fileDEncryption.Decryption(file.getPath(), "desede",
+									"123456789012345678", dir2 + File.separator + file.getName());
+								Log.d(Tag, "Decrypted");
+							break;
+						default:
+							break;
+						}
+						
+					}
+				});
+				
+				AlertDialog alertDialog = builder.create(); // Create the dialog.
+				alertDialog.show(); // Show the dialog.
+				
+				
 				
 				return true; // Set true in order not to trigger the onItemClickListener.
 			}
 			
 		});
+	}
+	
+	/**
+	 * Create a thread to do the encryption.
+	 * @param srcFilepath The file path of the file to be encrypted.
+	 * @param algorithm The encrypt algorithm.
+	 * @param encKey The encrypt key.
+	 * @param destFilepath The file path of the encrypted file to store.
+	 * @return The encrypt status.
+	 */
+	public boolean startEncrypt(final String srcFilepath, final String algorithm, final String encKey, final String destFilepath) {
+		
+		File sd = Environment.getExternalStorageDirectory();
+		boolean can_write = sd.canWrite();
+		if(!can_write) {
+			Log.d("SDCard can't read.", Environment.getExternalStorageState());
+			Toast.makeText(MainActivity.this, "无法读写", Toast.LENGTH_SHORT).show();
+		}
+		
+		DEncryptFlag = true; // Initial the flag to be true.
+		final FileDEncryption fileDEncryption = new FileDEncryption();
+		Thread thread = new Thread(){
+			public void run() {
+				
+				
+				if(!fileDEncryption.Encryption(srcFilepath, algorithm, encKey, destFilepath)) {
+					DEncryptFlag = false;
+				}
+			}
+		};
+		
+		thread.start();
+		
+		return DEncryptFlag;
+	}
+	
+	public boolean startDecrypt(final String srcFilepath, final String algorithm, final String encKey, final String destFilepath) {
+		
+		DEncryptFlag = true; // Initial the flag to be true.
+		final FileDEncryption fileDEncryption = new FileDEncryption();
+		Thread thread = new Thread(){
+			public void run() {
+				if(!fileDEncryption.Decryption(srcFilepath, algorithm, encKey, destFilepath)) {
+					DEncryptFlag = false;
+				}
+			}
+		};
+		
+		thread.start();
+		
+		return DEncryptFlag;
+		
 	}
 	
 	/**
@@ -252,7 +376,7 @@ public class MainActivity extends Activity {
 	 * @param encrypt_level The encrypt level of the file.
 	 * @param encrypt_key The password
 	 */
-	public void fileInfo(final String url, final String filepath, final String uid,
+	public void startUploadFileInfo(final String url, final String filepath, final String uid,
 			final String md5, final String sha1, final String encrypt_level, final String encrypt_key) {
 		
 		final Message msg = Message.obtain(); // Get the Message object
@@ -375,12 +499,14 @@ public class MainActivity extends Activity {
             InputStream is = httpURLConnection.getInputStream();
             
             InputStreamReader isr = new InputStreamReader(is, "utf-8");  
-            BufferedReader br = new BufferedReader(isr, 8 * 1024);  
+            BufferedReader br = new BufferedReader(isr, 8 * 1024); // Set to 8KB to get better performance.
             String result = br.readLine();
         
             Log.d(Tag, result);
             
-//            dos.close(); // Will respond I/O exception if closes.
+//          dos.close(); // Will respond I/O exception if closes.
+            fis.close(); // Close the FileInputStream.
+            
           } catch (Exception e) {
         	  e.printStackTrace();
         	  status = true;
@@ -390,7 +516,7 @@ public class MainActivity extends Activity {
 
 	
 	/**
-	 * Update the fileListView
+	 * Update the fileListView and sort the files according to their name.
 	 * @param folder The new folder path to display
 	 */
 	private void initData(File folder) {
@@ -406,6 +532,8 @@ public class MainActivity extends Activity {
 				files.add(file);
 			}
 		}
+		Collections.sort(files); // Sort the files.
+		
 		fileListAdapter= new FileListAdapter(getApplicationContext(), files, isSDcard); // Update the fileListAdapter
 		fileListView.setAdapter(fileListAdapter); // Update the fileListView's adapter
 	}

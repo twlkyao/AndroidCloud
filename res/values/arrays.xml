@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- The encrypt level string array. -->
+    <string-array name="encrypt_level">
+        <item>1 不用加密</item>
+        <item>2 低等密级</item>
+        <item>3 中等秘密</item>
+        <item>4 高等密级</item>
+        <item>5 绝密级别</item>
+    </string-array>
+    <string-array name="choice">
+        <item>1 加密文件</item>
+        <item>2 解密文件 </item>
+    </string-array>
+
+</resources>

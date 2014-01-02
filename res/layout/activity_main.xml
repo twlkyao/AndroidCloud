@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginTop="5dp"
-    android:background="#55aaff"
+    android:background="@color/green"
     android:orientation="vertical" >
 
     <!-- The label of the filename -->
@@ -15,7 +15,7 @@
         android:layout_marginLeft="5dp"
         android:layout_marginTop="10dp"
         android:text="@string/keyword_label"
-        android:textColor="@color/dark"
+        android:textColor="@android:color/background_dark"
         android:textSize="20sp" />
     <!-- EditText for input the keyword -->
 
@@ -28,7 +28,7 @@
         android:layout_marginTop="5dp"
         android:layout_toRightOf="@id/keyword_label"
         android:hint="@string/keyword_hint"
-        android:textColor="@color/dark"
+        android:textColor="@android:color/background_dark"
         android:textSize="15sp" />
     <!-- The search button -->
 
@@ -42,7 +42,7 @@
         android:layout_marginTop="5dp"
         android:layout_toRightOf="@id/keyword"
         android:text="@string/search"
-        android:textColor="@color/dark"
+        android:textColor="@android:color/background_dark"
         android:textSize="15sp" />
     <!-- The search result label -->
 
@@ -54,7 +54,7 @@
         android:layout_marginLeft="5dp"
         android:layout_marginTop="20dp"
         android:text="@string/search_result"
-        android:textColor="@color/dark"
+        android:textColor="@android:color/background_dark"
         android:textSize="18sp"
         android:visibility="gone" />
     <!-- The search result -->
@@ -64,12 +64,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/search_result_label"
-        android:background="#ffffff"
-        android:divider="#0000ff"
+        android:background="@android:color/background_light"
+        android:divider="@android:color/black"
         android:dividerHeight="2dp"
         android:footerDividersEnabled="true"
         android:headerDividersEnabled="true"
-        android:textColor="@color/dark" >
+        android:textColor="@android:color/background_dark" >
     </ListView>
 
 </RelativeLayout>

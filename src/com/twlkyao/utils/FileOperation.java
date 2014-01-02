@@ -39,6 +39,7 @@ public class FileOperation {
 	// Define the hashmap to record the basic information of files during the session
 	private HashMap<String, String> session =new HashMap<String, String>();
 	
+	
 	/**
 	 * Find the specified files according to the filepath
 	 * @param keyword The keyword
@@ -142,7 +143,7 @@ public class FileOperation {
 	private static String convertHashToString(byte[] hashBytes) {
 		String returnVal = "";
 		for (int i = 0; i < hashBytes.length; i++) {
-			returnVal += Integer.toString((hashBytes[i] & 0xff) + 0x100, 16).substring(1);
+			returnVal += Integer.toString((hashBytes[i] & 0x0ff) + 0x100, 16).substring(1);
 		}
 		return returnVal.toLowerCase();
 	}
@@ -193,7 +194,7 @@ public class FileOperation {
 				if (entity != null) { // The entity obtained is not null
 					String info = EntityUtils.toString(entity); // Convert the entity to string
 					
-					Log.d(Tag, info); // Log out the info
+					Log.d(Tag, info); // Log out the returned info
 					
 					JSONObject jsonObject=null;
 					// Flag to indicate whether login succeeded, others to store the data from server
@@ -204,7 +205,7 @@ public class FileOperation {
 					String fmd5 = "";	// The md5 value of the file.
 					String fsha1 = "";	// The sha1 value of the file.
 					String e_level = "";	// The encrypt level of the file.
-					String e_key = "";	// The encrypt key of the file.
+//					String e_key = "";	// The encrypt key of the file.
 					String sessionid = "";	// The session id.
 					try {
 						jsonObject = new JSONObject(info); // Construct an JsonObject instance from the name-value Json string
@@ -214,7 +215,7 @@ public class FileOperation {
 						fmd5 = jsonObject.getString("file_md5");	// Get the value mapped by name:file_md5.
 						fsha1 = jsonObject.getString("file_sha1");	// Get the value mapped by name:file_sha1.
 						e_level = jsonObject.getString("encrypt_level");	// Get the value mapped by name:encrypt_level.
-						e_key = jsonObject.getString("encrypt_key");	// Get the value mapped by name:encrypt_key
+					//	e_key = jsonObject.getString("encrypt_key");	// Get the value mapped by name:encrypt_key
 						sessionid = jsonObject.getString("sessionid"); // Get the value mapped by name:sessionid
 					
 					} catch (JSONException e) {
@@ -232,7 +233,7 @@ public class FileOperation {
 						session.put("file_md5", fmd5);
 						session.put("fsha1", fsha1);
 						session.put("encryption_flag", e_level);
-						session.put("encrypt_key", e_key);
+					//	session.put("encrypt_key", e_key);
 						session.put("sessionid", sessionid);
 						status = true;
 					} else { // If the operation type is unknown or some other errors, set status as false

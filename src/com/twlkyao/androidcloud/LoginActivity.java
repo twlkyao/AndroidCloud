@@ -159,7 +159,7 @@ public class LoginActivity extends Activity {
 				Intent intent = new Intent(LoginActivity.this, RegisterActivity.class); // Construct an intent to jump
 				startActivity(intent); // jump to the new activity
 				
-//				finish(); // destroy the activity
+				finish(); // destroy the activity
 			}
 		});
 		
