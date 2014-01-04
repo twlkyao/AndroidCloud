@@ -55,5 +55,10 @@
     <string name="cancel">取消</string>
     <string name="encrypt_level_hint">"请输入1~9的数字。"</string>
     <string name="choice_title">请选择操作</string>
+    <string name="can_not_read_sdcard">无法读写SD卡！</string>
+    <string name="decrypt_fail">文件已经被损坏！</string>
+    <string name="decrypt_succeed">文件解密成功！</string>
+    <string name="encrypt_fail">加密文件失败！</string>
+    <string name="encrypt_succeed">加密文件成功！</string>
 
 </resources>

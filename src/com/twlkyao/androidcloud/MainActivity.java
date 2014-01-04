@@ -9,18 +9,13 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
-
-import javax.crypto.NoSuchPaddingException;
-
+import java.util.HashMap;
 import com.twlkyao.utils.ConstantVariables;
 import com.twlkyao.utils.FileDEncryption;
 import com.twlkyao.utils.FileOperation;
@@ -33,25 +28,17 @@ import android.os.Message;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
-import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-import android.text.StaticLayout;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
-import android.view.ViewDebug.FlagToString;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -63,22 +50,25 @@ public class MainActivity extends Activity {
 	private String strKeyword; // The filename string
 	private String SDcard = Environment.getExternalStorageDirectory().getPath(); // Get the external storage directory
 	
-	private String file_info_url = ConstantVariables.BASE_URL + ConstantVariables.FILE_INFO_UPLOAD_URL; // Set the file information url
-	private String file_upload_url = ConstantVariables.BASE_URL + ConstantVariables.FILE_UPLOAD; // Set the file upload url
+	private String upload_file_info_url = ConstantVariables.BASE_URL + ConstantVariables.UPLOAD_FILE_INFO_URL; // Set the file information url
+	private String upload_file_url = ConstantVariables.BASE_URL + ConstantVariables.UPLOAD_FILE_URL; // Set the file upload url
+	private String check_file_info_url = ConstantVariables.BASE_URL + ConstantVariables.CHECK_FILE_INFO_URL; // Set the check file info url.
 //	private float rate; // To indicate the rating.
 	private int user_id;	// To store the user id.
-	private String Tag = "MainActivity"; // The logcat tag
+	private String Tag = "MainActivity"; // The logcat tag.
 	
-	private String encryptKey = "123456";
+	private String encryptKey = ConstantVariables.keys[0]; // DEncrypt key.
+	private String algorithm = ConstantVariables.algorithms[0]; // DEncrypt algorithm.
+	
 	private boolean DEncryptFlag; // DEncrypt flag.
 	
-	private ListView fileListView; // The listview to stotre the file information
+	private ListView fileListView; // The listview to store the file information
 	private ArrayList<File> filelist; // Used to store the filename
 	private TextView search_result_label; // The search_result_label
 	
 	private FileListAdapter fileListAdapter; // The self defined Adapter
 	private FileOperation fileOperation = new FileOperation(); // Construct an instance of FileOperation.
-	private FileDEncryption fileDEncryption = new FileDEncryption(); // Construct an instance of FileDEncryption.
+//	private FileDEncryption fileDEncryption = new FileDEncryption(); // Construct an instance of FileDEncryption.
 	
 	private ConstantVariables constantVariables = new ConstantVariables(); // Instance an ConstantVariables.
 	
@@ -90,20 +80,32 @@ public class MainActivity extends Activity {
 			// TODO Auto-generated method stub
 			super.handleMessage(msg);
 			if(constantVariables.operation_failed == msg.what) { // The operation is failed.
-				if(constantVariables.file_info_upload == msg.arg1) { // It is the file information upload.
+				if(constantVariables.upload_file_info == msg.arg1) { // It is the file information upload.
 					Toast.makeText(getApplicationContext(),
 							R.string.file_info_upload_fail, Toast.LENGTH_SHORT).show();
-				} else if(constantVariables.file_upload == msg.arg1) { // It is the file upload.
+				} else if(constantVariables.upload_file == msg.arg1) { // It is the file upload.
 					Toast.makeText(getApplicationContext(),
 							R.string.file_upload_fail, Toast.LENGTH_SHORT).show();
+				} else if(constantVariables.encrypt_file == msg.arg1) {
+					Toast.makeText(getApplicationContext(),
+							R.string.encrypt_fail, Toast.LENGTH_SHORT).show();
+				} else if(constantVariables.decrypt_file == msg.arg1) {
+					Toast.makeText(getApplicationContext(),
+							R.string.decrypt_fail, Toast.LENGTH_SHORT).show();
 				}
 			} else if(constantVariables.operation_succeed == msg.what){ // The operation is succeeded.
-				if(constantVariables.file_info_upload == msg.arg1) { // It is the file information upload.
+				if(constantVariables.upload_file_info == msg.arg1) { // It is the file information upload.
 					Toast.makeText(getApplicationContext(),
 							R.string.file_info_upload_succeed, Toast.LENGTH_SHORT).show();
-				} else if(constantVariables.file_upload == msg.arg1) {
+				} else if(constantVariables.upload_file == msg.arg1) {
 					Toast.makeText(getApplicationContext(),
 							R.string.file_upload_succeed, Toast.LENGTH_SHORT).show();
+				} else if(constantVariables.encrypt_file == msg.arg1) {
+					Toast.makeText(getApplicationContext(),
+							R.string.encrypt_succeed, Toast.LENGTH_SHORT).show();
+				} else if(constantVariables.decrypt_file == msg.arg1) {
+					Toast.makeText(getApplicationContext(),
+							R.string.decrypt_succeed, Toast.LENGTH_SHORT).show();
 				}
 			}
 		}
@@ -199,17 +201,20 @@ public class MainActivity extends Activity {
 			}
 		});
 		
-		// Set the fileListView click listener, start to upload file information.
+		/**
+		 * Set the fileListView click listener, chose the encrypt_level,
+		 * encrypt the file, upload file information, upload file.
+		 */
 		fileListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, 
 					int position, long id) {
 				// TODO Auto-generated method stub
 				
-				Log.d(Tag, "onclick");
+//				Log.d(Tag, "onclick");
 				
 				final File file = (File) fileListAdapter.getItem(position);
-				final String filepath = file.getPath();
+//				final String filepath = file.getPath();
 				
 				if(!file.canRead()) { // If the file can't read, alert
 					Log.w(Tag, "Can't read!");
@@ -217,27 +222,44 @@ public class MainActivity extends Activity {
 					initData(file);
 				} else { // If the clicked item is a file, get the file information, such as md5 or sha1
 					
-					final String md5 = fileOperation.fileToMD5(filepath);	// Get the md5 value of the file
-					final String sha1 = fileOperation.fileToSHA1(filepath);	// Get the sha1 value of the file
-					
-					Log.d(Tag, "md5:" + md5 + "\nsha1:" + sha1);			// Log out the md5 and sha1 value of the file
-					
 					Builder builder = new AlertDialog.Builder(MainActivity.this);
 					builder.setIcon(android.R.drawable.ic_dialog_info);
 					builder.setTitle(R.string.encrypt_level_title);
-					Log.d(Tag, "OnClick");
 					builder.setItems(R.array.encrypt_level, new OnClickListener() {
 						
 						@Override
-						public void onClick(DialogInterface dialog, int which) {
+						public void onClick(DialogInterface dialog, final int which) {
 							// TODO Auto-generated method stub
-							int encrypt_level;
 							
-							encrypt_level = which + 1; // Get the encrypt level.
+							// Create the directory to store the encrypted file.
+							final File dir1 = new File(Environment.getExternalStorageDirectory().toString()
+									+ File.separator + "ABB"); // Create a new directory to store the encrypted file.
+							if(!dir1.exists()) { // If the directory is not exist, create it.
+								dir1.mkdirs();
+							}
 							
-							// Call the startUploadFileInfo function to upload file information.
-							startUploadFileInfo(file_info_url, filepath,
-									String.valueOf(user_id), md5, sha1, String.valueOf(encrypt_level), encryptKey);
+							final Message msg = Message.obtain();
+							Thread thread = new Thread(new Runnable() {
+								
+								@Override
+								public void run() {
+									// TODO Auto-generated method stub
+									
+									msg.arg1 = constantVariables.encrypt_file; // Indicate this is the upload file type.
+									// First encrypt the file and then upload the info of encrypted file and the file.
+									if(startEncrypt(file.getPath(), which, ConstantVariables.keys[which],
+											dir1 + File.separator + file.getName(), upload_file_info_url)) { // Encrypt the file successfully.
+										
+										msg.what = constantVariables.operation_succeed;
+									} else {
+										msg.what = constantVariables.operation_failed;
+									}
+									
+									handler.sendMessage(msg);
+								}
+							});
+							
+							thread.start(); // Start the thread.
 						}
 					});
 					
@@ -247,7 +269,7 @@ public class MainActivity extends Activity {
 			}
 		});
 		
-		// Set the fileListView long click listener, encrypt the file and upload it to remote server.
+		// Set the fileListView long click listener, decrypt the file.
 		fileListView.setOnItemLongClickListener(new OnItemLongClickListener() {
 
 			@Override
@@ -255,15 +277,9 @@ public class MainActivity extends Activity {
 					int position, long id) {
 				// TODO Auto-generated method stub
 				
-				Log.d(Tag, "onLongClick");
+//				Log.d(Tag, "onLongClick");
 				
 				final File file = (File) fileListAdapter.getItem(position);
-				
-				final File dir1 = new File(Environment.getExternalStorageDirectory().toString()
-						+ File.separator + "ABB"); // Create a new directory to store the encrypted file.
-				if(!dir1.exists()) { // If the directory is not exist, create it.
-					dir1.mkdirs();
-				}
 				
 				final File dir2 = new File(Environment.getExternalStorageDirectory().toString()
 						+ File.separator + "ACC"); // Create a new directory to store the encrypted file.
@@ -271,42 +287,31 @@ public class MainActivity extends Activity {
 					dir2.mkdirs();
 				}
 				
-				// Create a encrypt and decrypt dialog.
-				Builder builder = new AlertDialog.Builder(MainActivity.this);
-				builder.setIcon(android.R.drawable.ic_dialog_info);
-				builder.setTitle(R.string.choice_title);
-				Log.d(Tag, "Decryption");
-				builder.setItems(R.array.choice, new OnClickListener() {
+				final Message msg = Message.obtain();
+				Thread thread = new Thread(new Runnable() {
 					
 					@Override
-					public void onClick(DialogInterface dialog, int which) {
+					public void run() {
 						// TODO Auto-generated method stub
 						
-						switch(which) {
-						case 0: // Encryption
-							// Call the startUploadFile function to upload file.
-							if(fileDEncryption.Encryption(file.getPath(), "desede",
-									"123456789012345678", dir1 + File.separator + file.getName())) {
-								startUploadFile(file.getPath(), file_upload_url);
-								Log.d(Tag, "Encrypted");
-							}
-							break;
-						case 1: // Decryption
-							fileDEncryption.Decryption(file.getPath(), "desede",
-									"123456789012345678", dir2 + File.separator + file.getName());
-								Log.d(Tag, "Decrypted");
-							break;
-						default:
-							break;
+						msg.arg1 = constantVariables.decrypt_file; // Set the operation flag.
+						/**
+						 * First get the file information from the server.
+						 * If the file is not in the server, stop;
+						 * if the file is in the server, then decrypt it.
+						 */
+						// Call the startDecryption function to decrypt the encrypted file.
+						if(startDecrypt(file.getPath(), dir2 + File.separator + file.getName())) {
+							msg.what = constantVariables.operation_succeed;
+						} else {
+							msg.what = constantVariables.operation_failed;
 						}
 						
+						handler.sendMessage(msg);
 					}
 				});
 				
-				AlertDialog alertDialog = builder.create(); // Create the dialog.
-				alertDialog.show(); // Show the dialog.
-				
-				
+				thread.start();
 				
 				return true; // Set true in order not to trigger the onItemClickListener.
 			}
@@ -315,95 +320,105 @@ public class MainActivity extends Activity {
 	}
 	
 	/**
-	 * Create a thread to do the encryption.
-	 * @param srcFilepath The file path of the file to be encrypted.
-	 * @param algorithm The encrypt algorithm.
-	 * @param encKey The encrypt key.
-	 * @param destFilepath The file path of the encrypted file to store.
-	 * @return The encrypt status.
+	 * Create the file and upload the file information to remote server,
+	 * upload the file to remote server.
+	 * @param srcFilePath The file path of the file to be encrypted.
+	 * @param encrypt_level The encrypt level.
+	 * @param encrypt_key The encrypt key.
+	 * @param destFilePath The file path of the encrypted file to store.
+	 * @param uploadFileInfoUrl The url of the file information to upload to.
+	 * @param uploadFileUrl The url of the file to upload to.
+	 * @return True, if encryption is succeeded.
 	 */
-	public boolean startEncrypt(final String srcFilepath, final String algorithm, final String encKey, final String destFilepath) {
+	public boolean startEncrypt(String srcFilePath,
+			int encrypt_level, String encrypt_key,
+			String destFilePath, String uploadFileInfoUrl) {
 		
-		File sd = Environment.getExternalStorageDirectory();
-		boolean can_write = sd.canWrite();
-		if(!can_write) {
-			Log.d("SDCard can't read.", Environment.getExternalStorageState());
-			Toast.makeText(MainActivity.this, "无法读写", Toast.LENGTH_SHORT).show();
+		boolean flag = false; // Initial the flag to be false.
+		File sd = Environment.getExternalStorageDirectory(); // Get the primary external storage directory.
+		boolean can_write = sd.canWrite(); // Indicates whether the current context is allowed to write to this file on SDCard.
+		if(!can_write) { // The SDCard is not allowed to write.
+			Log.d("startEncrypt", "SDCard can't read" + Environment.getExternalStorageState());
+//			Toast.makeText(MainActivity.this, R.string.can_not_read_sdcard, Toast.LENGTH_SHORT).show();
 		}
 		
-		DEncryptFlag = true; // Initial the flag to be true.
-		final FileDEncryption fileDEncryption = new FileDEncryption();
-		Thread thread = new Thread(){
-			public void run() {
+		FileDEncryption fileDEncryption = new FileDEncryption();
+		
+		if(fileDEncryption.Encryption(srcFilePath, ConstantVariables.algorithms[encrypt_level],
+				ConstantVariables.keys[encrypt_level], destFilePath)) { // File encryption is succeeded.
+			
+			String md5 = fileOperation.fileToMD5(destFilePath);	// Get the md5 value of the file
+			String sha1 = fileOperation.fileToSHA1(destFilePath);	// Get the sha1 value of the file
+			
+			Log.d("md5 and sha1", "md5:" + md5 + "\nsha1:" + sha1);			// Log out the md5 and sha1 value of the file
+			
+			// Call the startUploadFileInfo function to upload file information.
+			if(fileOperation.uploadFileInfo(uploadFileInfoUrl,
+					String.valueOf(user_id), md5, sha1,
+					String.valueOf(encrypt_level), encrypt_key)) {
 				
+				flag = true;
 				
-				if(!fileDEncryption.Encryption(srcFilepath, algorithm, encKey, destFilepath)) {
-					DEncryptFlag = false;
-				}
+				/**
+				 * This shoud call a third party application to do this stuff.
+				 */
+//				if(uploadFile(uploadFileUrl, destFilePath)) {
+//					flag = true;
+//				}
+				
+				// Call the upload app to do the stuff.
 			}
-		};
+		}
 		
-		thread.start();
-		
-		return DEncryptFlag;
-	}
-	
-	public boolean startDecrypt(final String srcFilepath, final String algorithm, final String encKey, final String destFilepath) {
-		
-		DEncryptFlag = true; // Initial the flag to be true.
-		final FileDEncryption fileDEncryption = new FileDEncryption();
-		Thread thread = new Thread(){
-			public void run() {
-				if(!fileDEncryption.Decryption(srcFilepath, algorithm, encKey, destFilepath)) {
-					DEncryptFlag = false;
-				}
-			}
-		};
-		
-		thread.start();
-		
-		return DEncryptFlag;
-		
+		return flag;
 	}
 	
 	/**
-	 * Create an new thread to upload the file information.
-	 * @param url The url of the server script.
-	 * @param filepath The filepath of the file on Android.
-	 * @param uid The user id.
-	 * @param md5 The md5 value of the file.
-	 * @param sha1 The sha1 value of the file.
-	 * @param encrypt_level The encrypt level of the file.
-	 * @param encrypt_key The password
+	 * Decrypt the file if the file is not broken.
+	 * @param srcFilepath The file path of the file to be decrypted.
+	 * @param algorithm The decrypt algorithm.
+	 * @param encKey he encrypt key.
+	 * @param destFilepath he file path of the decrypted file to store.
+	 * @return True, if the decryption is succeeded.
 	 */
-	public void startUploadFileInfo(final String url, final String filepath, final String uid,
-			final String md5, final String sha1, final String encrypt_level, final String encrypt_key) {
+	public boolean startDecrypt(final String srcFilePath, final String destFilePath) {
 		
-		final Message msg = Message.obtain(); // Get the Message object
-		new Thread(){
-			public void run() {
-				boolean flag = fileOperation.uploadFileInfo(url, filepath, uid,
-						md5, sha1, encrypt_level, encrypt_key); // Call the uploadFileInfo function to 
-																// upload the file information to the Secure Cloud
-				msg.arg1 = constantVariables.file_info_upload; // Indicate this is the file information upload type.
-				if(flag) { // The upload file information function succeed
-					msg.what = constantVariables.operation_succeed;
-					
-				} else { // The upload file information function failed
-					msg.what = constantVariables.operation_failed;
-				}
-				handler.sendMessage(msg);
+		boolean flag = false; // Initial the flag to be false.
+		final FileDEncryption fileDEncryption = new FileDEncryption();
+				
+		// First checksum the file
+		
+		String md5 = fileOperation.fileToMD5(srcFilePath);
+		String sha1 = fileOperation.fileToSHA1(srcFilePath);
+		
+		HashMap<String, String> resultHashMap;
+		
+		/**
+		 * Get the checkFileInfo result.
+		 * The result include <"encrypt_level", encrypt_level>, <"encrypt_key", encrypt_key>
+		 */
+		resultHashMap = fileOperation.checkFileInfo(check_file_info_url,
+			String.valueOf(user_id), md5, sha1);
+				
+		// Take different measures according to the status of checkFileInfo.
+		if(resultHashMap != null) { // The md5 and sha1 values are the same with the server.
+			int encrypt_level = Integer.parseInt(resultHashMap.get("encrypt_level"));
+			String encrypt_key = resultHashMap.get("encrypt_key");
+			if(fileDEncryption.Decryption(srcFilePath,
+				ConstantVariables.algorithms[encrypt_level], encrypt_key, destFilePath)) { // The decryption is succeeded.
+				flag = true; // Set the DEncryptFlag to false.
 			}
-		}.start();
+		}
+		
+		return flag;
 	}
 	
-
 	/**
 	 * Create a thread to upload the file.
 	 * @param filepath
 	 * @param uploadUrl
 	 */
-	public void startUploadFile(final String filepath, final String uploadUrl) {
+	public void startUploadFile(final String uploadFileUrl, final String filepath) {
 		
 		final Message msg = Message.obtain(); // Get the Message object
 		// Create a new thread to do the upload
@@ -412,8 +427,8 @@ public class MainActivity extends Activity {
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
-				msg.arg1 = constantVariables.file_upload; // Indicate this is the upload file type.
-				boolean flag = uploadFile(filepath, uploadUrl, constantVariables.charset); // Call the upload file function
+				msg.arg1 = constantVariables.upload_file; // Indicate this is the upload file type.
+				boolean flag = uploadFile(uploadFileUrl, filepath); // Call the upload file function
 				if(flag) {
 					msg.what = constantVariables.operation_succeed; // Upload file succeeded.
 					
@@ -430,12 +445,12 @@ public class MainActivity extends Activity {
 	
 	/**
 	 * Upload the specified file to remote server.
-	 * @param filepath The path of the local file.
 	 * @param uploadUrl The server url.
-	 * @param encode The encode type.
+	 * @param filepath The path of the local file.
 	 * @return The upload status.
 	 */
-	public boolean uploadFile(String filepath, String uploadUrl, String encode) {
+//	public boolean uploadFile( String uploadUrl, String filepath, String uid, String encode) {
+	public boolean uploadFile( String uploadUrl, String filepath) {
 		boolean status = true;
 		
 		String end = "\r\n";
@@ -471,6 +486,7 @@ public class MainActivity extends Activity {
 			
 			// Convert the encode type
 			String filename = filepath.substring(filepath.lastIndexOf("/") + 1);
+			
 //			filename = filename.getBytes(encode).toString();
 			
 			dos.writeBytes("Content-Disposition: form-data; name=\"uploadedfile\"; filename=\""
@@ -502,7 +518,7 @@ public class MainActivity extends Activity {
             BufferedReader br = new BufferedReader(isr, 8 * 1024); // Set to 8KB to get better performance.
             String result = br.readLine();
         
-            Log.d(Tag, result);
+            Log.d(Tag + "UploadFile", result);
             
 //          dos.close(); // Will respond I/O exception if closes.
             fis.close(); // Close the FileInputStream.

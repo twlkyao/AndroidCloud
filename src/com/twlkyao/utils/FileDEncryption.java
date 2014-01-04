@@ -30,7 +30,7 @@ import android.util.Log;
  */
 public class FileDEncryption {
 	
-			/*
+		 /*
 	      * 根据字符串生成密钥字节数组 
 	      * @param keyStr 密钥字符串
 	      * @return 
@@ -67,7 +67,7 @@ public class FileDEncryption {
 	 * @param algorithm The algorithm to be used.
 	 * @param encKey The encrypt key to be used.
 	 * @param destFilepath The file path to save the encrypted file.
-	 * @return The encrypt status.
+	 * @return True, if the encryption succeeds.
 	 */
 	public boolean Encryption (String srcFilepath, String algorithm, String encKey, String destFilepath) {
 		

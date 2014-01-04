@@ -16,6 +16,7 @@ import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -151,16 +152,17 @@ public class FileOperation {
 	/**
 	 * Upload the file information to specified url.
 	 * @param strUploadFileInfoUrl The url of the file information server.
-	 * @param filepath The filepath of the local file.
+	 * @param user_id The ID of the user.
 	 * @param file_md5 The md5 value of the file.
 	 * @param file_sha1 The sha1 value of the file.
 	 * @param encrypt_level The encrypt level of the file.
 	 * @param encrypt_key The encrypt key of the file.
+	 * @return True, if the file information uploaded successfully.
 	 */
-	public boolean uploadFileInfo(String strUploadFileInfoUrl, String filepath, String user_id,
+	public boolean uploadFileInfo(String strUploadFileInfoUrl, String user_id,
 			String file_md5, String file_sha1, String encrypt_level, String encrypt_key){
 		
-		boolean status = false;	// The flag to indicate the return state
+		boolean status = false;	// The flag to indicate the return status.
 		
 		HttpPost httpRequest =new HttpPost(strUploadFileInfoUrl); // Construct a new HttpPost instance according to the uri
 		
@@ -181,6 +183,7 @@ public class FileOperation {
 			
 		} catch (UnsupportedEncodingException e){
 			e.printStackTrace();
+			status = false;
 		}
 		try{
 			// Execute an HTTP request and ge the result
@@ -221,6 +224,7 @@ public class FileOperation {
 					} catch (JSONException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
+						status = false;
 					}
 					
 					// Judge whether the validation if succeeded according to the flag
@@ -231,7 +235,7 @@ public class FileOperation {
 						session.put("uid", uid);
 						session.put("file_id", file_id);
 						session.put("file_md5", fmd5);
-						session.put("fsha1", fsha1);
+						session.put("file_sha1", fsha1);
 						session.put("encryption_flag", e_level);
 					//	session.put("encrypt_key", e_key);
 						session.put("sessionid", sessionid);
@@ -246,10 +250,107 @@ public class FileOperation {
 		} catch (ClientProtocolException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			status = false;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			status = false;
 		}
 		return status;
+	}
+	
+	
+	/**
+	 * Check the file information from the specified url.
+	 * @param strCheckFileInfoUrl The url of the check file inforamtion server.
+	 * @param user_id The ID of the user.
+	 * @param file_md5 The md5 value of the file.
+	 * @param file_sha1 The sha1 value of the file.
+	 * @return The HashMap that includes the encrypt_level and encrypt_key.
+	 */
+	public HashMap<String, String> checkFileInfo(String strCheckFileInfoUrl, String user_id,
+			String file_md5, String file_sha1){
+		
+		HashMap<String, String> resultHashMap = new HashMap<String, String>();	// The flag to indicate the return status.
+		
+		HttpPost httpRequest =new HttpPost(strCheckFileInfoUrl); // Construct a new HttpPost instance according to the uri
+		
+		// use name-value pair to store the parameters to pass
+		List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>();
+		params.add(new BasicNameValuePair("user_id", user_id)); 			// Add the user_id name-value
+		params.add(new BasicNameValuePair("file_md5", file_md5)); 			// Add the file_md5 name-value
+		params.add(new BasicNameValuePair("file_sha1", file_sha1)); 		// Add the file_sha1 name-value
+		
+		Log.d(Tag, "params to send:" + params.toString());	// Log out the parameters
+		
+		try{
+			
+			// Encode the entity with utf8, and send the entity to the request
+			httpRequest.setEntity(new UrlEncodedFormEntity(params,HTTP.UTF_8)); 
+			
+		} catch (UnsupportedEncodingException e){
+			e.printStackTrace();
+		}
+		try{
+			// Execute an HTTP request and ge the result
+			HttpResponse httpResponse = new DefaultHttpClient().execute(httpRequest); // execute the http request
+			
+			// Response status is ok
+			if(httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK){	
+			
+				// Get the response string and parse it
+				HttpEntity entity = httpResponse.getEntity(); // Obtain the HTTP response entity
+				if (entity != null) { // The entity obtained is not null
+					String info = EntityUtils.toString(entity); // Convert the entity to string
+					
+					Log.d(Tag, info); // Log out the returned info
+					
+					JSONObject jsonObject=null;
+					
+					// Flag to indicate whether login succeeded, others to store the data from server
+					String flag = ""; 	// The flag to indicate the upload status.
+					
+					// The string to store the encrypt level(choose algorithm according to the encrypt level).
+					String encrypt_level;
+					
+					// The string to store the encrypt key.
+					String encrypt_key;
+//					String sessionid = "";	// The session id.
+					
+					jsonObject = new JSONObject(info); // Construct an JsonObject instance from the name-value Json string
+					flag = jsonObject.getString("flag"); // Get the value mapped by name:flag
+//						sessionid = jsonObject.getString("sessionid"); // Get the value mapped by name:sessionid
+					
+					// Judge whether the validation if succeeded according to the flag
+					if(flag.equals("true")) { // If the flag is true, put the encrypt_level and encrypt_key to the resultHashMap.
+						
+						// Set values to record the file-related information.
+						encrypt_level = jsonObject.getString("encrypt_level");
+						encrypt_key = jsonObject.getString("encrypt_key");
+						
+						resultHashMap.put("encrypt_level", encrypt_level);
+						resultHashMap.put("encrypt_key", encrypt_key);
+						
+						Log.d(Tag, "encrypt_key:" + encrypt_key + "encrypt_level" + encrypt_level);
+						
+					} else { // The flag is false.
+						resultHashMap = null;
+					}
+				}
+			} // Status code equal ok 
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			resultHashMap = null;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			resultHashMap = null;
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			resultHashMap = null;
+		}
+		return resultHashMap;
 	}
 }

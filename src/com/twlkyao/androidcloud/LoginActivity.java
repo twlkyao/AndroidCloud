@@ -98,7 +98,7 @@ public class LoginActivity extends Activity {
 					intent.putExtras(bundle);		// Put the bundle into intent
 					startActivity(intent); // Jump to the MainActivity
 					
-//					finish(); // Destroy itself
+					finish(); // Destroy itself
 				}
 			}
 		}
@@ -108,7 +108,7 @@ public class LoginActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		Log.d(Tag, "onCreate");
+//		Log.d(Tag, "onCreate");
 		
 		setContentView(R.layout.login); //Set content view
 		findViewsById(); 	//Find the views 
@@ -257,7 +257,7 @@ public class LoginActivity extends Activity {
 		params.add(new BasicNameValuePair("username", strUsername)); // add the username name-value
 		params.add(new BasicNameValuePair("password", strPassword)); // add the password name-value
 		
-		System.out.println("params to send:" + params.toString()); // system out the parameters
+//		System.out.println("params to send:" + params.toString()); // system out the parameters
 		
 		try{
 			
@@ -292,7 +292,9 @@ public class LoginActivity extends Activity {
 						flag = jsonObject.getString("flag"); // get the value mapped by name:flag							
 						username = jsonObject.getString("username"); // get the value mapped by name:name
 						uid = jsonObject.getString("uid"); // get the value mapped by name:userid
-						Log.d(Tag, uid);
+						
+						Log.d(Tag, "uid:" + uid);
+						
 						sessionid = jsonObject.getString("sessionid"); // get the value mapped by name:sessionid				
 					
 					} catch (JSONException e) {

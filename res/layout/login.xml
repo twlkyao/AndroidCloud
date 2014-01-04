@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="@color/green"
     android:orientation="vertical" >
 
     <!-- User name Label -->
@@ -10,6 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/username_label"
+        android:textColor="@android:color/black"
         android:textSize="18sp" >
     </TextView>
 
@@ -21,7 +23,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:hint="@string/username_hint"
-        android:inputType="text" >
+        android:inputType="text"
+        android:textColor="@android:color/black" >
     </EditText>
 
     <!-- Password label -->
@@ -30,6 +33,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/password_label"
+        android:textColor="@android:color/black"
         android:textSize="18sp" >
     </TextView>
 
@@ -40,7 +44,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:hint="@string/password_hint"
-        android:inputType="textPassword" >
+        android:inputType="textPassword"
+        android:textColor="@android:color/black" >
     </EditText>
 
     <!-- Remember CheckBox -->
@@ -60,6 +65,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/forget_password"
+        android:textColor="@android:color/black"
         android:textSize="18sp" />
 
     <!-- Buttons -->
@@ -76,6 +82,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/login"
+            android:textColor="@android:color/black"
             android:textSize="24sp" >
         </Button>
 
@@ -85,6 +92,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/register"
+            android:textColor="@android:color/black"
             android:textSize="24sp" >
         </Button>
     </LinearLayout>
