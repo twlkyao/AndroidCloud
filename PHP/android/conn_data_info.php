@@ -45,8 +45,8 @@
         file_id int(20) AUTO_INCREMENT, 
         user_id int(20),
         file_md5 varchar(32),
-        file_sha1 varchar(40),
-        encrypt_level varchar(3),
+        file_sha1 varchar(80),
+        encrypt_level int(1),
         encrypt_key varchar(40),
         PRIMARY KEY(file_id, user_id, file_md5, file_sha1)                
     )charset=utf8"; // Define the create table sql

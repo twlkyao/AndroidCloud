@@ -5,7 +5,7 @@
     
     /*mobile version */
     //$username = htmlspecialchars($_POST["username"]);
-	$user_id = $_POST["user_id"];            // The file owner id
+	$user_id = $_POST["user_id"];            // The file owner's id
 	$file_md5 = $_POST["file_md5"];		// file md5 value	
 	$file_sha1 = $_POST["file_sha1"];		// file sha1 value
 	$encrypt_level = $_POST["encrypt_level"];	// file encrypt level
@@ -24,16 +24,11 @@
     $select_result= mysql_query($mysql_select)
         or die("Could not execute the SELECT operation! ".mysql_error()."<br>"); // get the SELECT result
     $result = mysql_fetch_array($select_result); // get the query result into array 
-    
-    //echo $select_result;
-    
-    //必须放在if之前，否则else无法使用变量
-    //$result_array =array(); // define an empty array to store data
-    
+        
     
     $sessionid = session_id();	// Get the session id
 
-    if(!is_array($result)){ // the file information is not in the database
+    if(!is_array($result)){ // The file information is not in the database.
 		
         $mysql_insert = "INSERT INTO $tableName (file_id, user_id, file_md5, file_sha1, encrypt_level, encrypt_key)
 			VALUES('$file_id', '$user_id', '$file_md5', '$file_sha1', '$encrypt_level', '$encrypt_key')";	// Insert string
@@ -57,7 +52,8 @@
         
     } else { // The file information is already in the database, update the file information
 		
-        $mysql_update = "UPDATE $tableName SET encrypt_level ='$encrypt_level', encrypt_key = '$encrypt_key' WHERE file_md5 = '$file_md5' AND file_sha1 = '$file_sha1' AND user_id = '$user_id'";	// Update string
+        $mysql_update = "UPDATE $tableName SET encrypt_level ='$encrypt_level', encrypt_key = '$encrypt_key'
+			WHERE file_md5 = '$file_md5' AND file_sha1 = '$file_sha1' AND user_id = '$user_id'";	// Update string
 				
         mysql_query($mysql_update) 
             or die("Could not INSER INTO the $tableName table! ".mysql_error()."<br>"); // execute the IUPDATE operation
@@ -70,8 +66,8 @@
             'user_id'=> $result['user_id'],  
 			'file_md5' => $result['file_md5'],
 			'file_sha1' => $result['file_sha1'],
-			'encrypt_level' => $result['encrypt_level'],
-			'encrypt_key' => $result['encrypt_key'],
+			'encrypt_level' => $encrypt_level,
+			'encrypt_key' => $encrypt_key,
             'sessionid'=>$sessionid
         ); 
         echo json_encode($result_array);  
