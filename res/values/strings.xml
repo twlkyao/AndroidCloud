@@ -50,11 +50,11 @@
     <string name="upload_file_info">上传文件信息</string>
     <string name="wait">请稍候……</string>
     <string name="title_activity_rating_bar">RatingBar</string>
-    <string name="encrypt_level_title">请设置密级</string>
+    <string name="encrypt_level_title">请设置密级！</string>
     <string name="submit">确定</string>
     <string name="cancel">取消</string>
     <string name="encrypt_level_hint">"请输入1~9的数字。"</string>
-    <string name="choice_title">请选择操作</string>
+    <string name="apps_choice">请选择应用！</string>
     <string name="can_not_read_sdcard">无法读写SD卡！</string>
     <string name="decrypt_fail">文件已经被损坏！</string>
     <string name="decrypt_succeed">文件解密成功！</string>

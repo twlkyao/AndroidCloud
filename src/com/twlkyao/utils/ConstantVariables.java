@@ -48,4 +48,16 @@ public class ConstantVariables {
 		"12345678abcdefgh1234567812345678abcdefgh1234567812345678abcdefgh12345678"
 
 	};
-}
+	
+	public static String[] packageNames = {
+		"com.baidu.netdisk",
+		"com.owncloud.android",
+		"com.qq.qcloud"
+	};
+	
+	public static String[] classNames= {
+		"com.baidu.netdisk.ui.activity.FileDisplayActivity",
+		"com.owncloud.android.ui.activity.FileDisplayActivity",
+		"com.qq.qcloud.LaunchActivity"
+	};
+  }

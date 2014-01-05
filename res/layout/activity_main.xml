@@ -67,6 +67,7 @@
         android:background="@android:color/background_light"
         android:divider="@android:color/black"
         android:dividerHeight="2dp"
+        android:fadingEdge="none"
         android:footerDividersEnabled="true"
         android:headerDividersEnabled="true"
         android:textColor="@android:color/background_dark" >

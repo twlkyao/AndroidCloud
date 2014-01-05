@@ -28,7 +28,9 @@ import android.os.Message;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
+import android.content.ComponentName;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
 import android.util.Log;
 import android.view.Menu;
@@ -79,6 +81,7 @@ public class MainActivity extends Activity {
 		public void handleMessage(Message msg) {
 			// TODO Auto-generated method stub
 			super.handleMessage(msg);
+			
 			if(constantVariables.operation_failed == msg.what) { // The operation is failed.
 				if(constantVariables.upload_file_info == msg.arg1) { // It is the file information upload.
 					Toast.makeText(getApplicationContext(),
@@ -103,6 +106,27 @@ public class MainActivity extends Activity {
 				} else if(constantVariables.encrypt_file == msg.arg1) {
 					Toast.makeText(getApplicationContext(),
 							R.string.encrypt_succeed, Toast.LENGTH_SHORT).show();
+					
+					Builder builder = new AlertDialog.Builder(MainActivity.this);
+					builder.setIcon(android.R.drawable.ic_dialog_info);
+					builder.setTitle(R.string.apps_choice);
+					builder.setItems(R.array.apps_choice, new OnClickListener() {
+
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							// TODO Auto-generated method stub
+							ComponentName componentName = new ComponentName(
+									ConstantVariables.packageNames[which],
+									ConstantVariables.classNames[which]);
+							Intent intent = new Intent();
+							intent.setComponent(componentName);
+							startActivity(intent);
+						}
+						
+					});
+					
+					AlertDialog alertDialog = builder.create(); // Create the dialog.
+					alertDialog.show(); // Show the dialog.
 				} else if(constantVariables.decrypt_file == msg.arg1) {
 					Toast.makeText(getApplicationContext(),
 							R.string.decrypt_succeed, Toast.LENGTH_SHORT).show();
@@ -412,6 +436,30 @@ public class MainActivity extends Activity {
 		
 		return flag;
 	}
+	
+	/**
+	 * Upload file use upload file application that specified by packageName. 
+	 * @param packageName The package name of the upload file application.
+	 */
+	public void startUpload(String packageName, String className) {
+		
+		Intent intent = new Intent();
+        ComponentName componentname = new ComponentName( packageName, className);
+        intent.setComponent(componentname);
+        startActivity(intent);
+	}
+	
+	/**
+	 * Retrieve the password from a website specified by passwordUrl.
+	 * @param passwordUrl The url of the password generator to retrieve password from.
+	 * @param encrypt_level The encrypt level.
+	 * @return The retrieved password.
+	 */
+	/*public String retrivePassword(String passwordUrl, int encrypt_level) {
+		String passwordString = "";
+		
+		return passwordString;
+	}*/
 	
 	/**
 	 * Create a thread to upload the file.

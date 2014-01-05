@@ -9,5 +9,10 @@
         <item>4 高等密级</item>
         <item>5 绝密级别</item>
     </string-array>
+    <string-array name="apps_choice">
+        <item>百度云盘</item>
+        <item>OwnCloud</item>
+        <item>腾讯微云</item>
+    </string-array>
 
 </resources>
