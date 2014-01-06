@@ -150,6 +150,76 @@ public class FileOperation {
 	}
 	
 	/**
+	 * Retrieve encrypt key from remote key generator server
+	 * according to the encrypt level of file.
+	 * @param retrieveEncryptKeyUrl The url of the password generator server.
+	 * @param encrypt_level The encrypt file of the file.
+	 * @return The retrieved encrypt key.
+	 */
+	public String retrieveEncryptKey(String retrieveEncryptKeyUrl, int encrypt_level) {
+		
+		String encrypt_key = ""; // To store the retrieved encrypt_key.
+		
+		HttpPost httpRequest =new HttpPost(retrieveEncryptKeyUrl); // Construct a new HttpPost instance according to the uri
+		
+		// use name-value pair to store the parameters to pass
+		List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>();
+		params.add(new BasicNameValuePair("encrypt_level", String.valueOf(encrypt_level))); // Add the encrypt level name-value
+		
+		Log.d(Tag, "params to send:" + params.toString());	// Log out the parameters
+		
+		try {
+			// Encode the entity with utf8, and send the entity to the request
+			httpRequest.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		try{
+			// Execute an HTTP request and ge the result
+			HttpResponse httpResponse = new DefaultHttpClient().execute(httpRequest); // execute the http request
+			
+			// Response status is ok
+			if(httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK){	
+			
+				// Get the response string and parse it
+				HttpEntity entity = httpResponse.getEntity(); // Obtain the HTTP response entity
+				if (entity != null) { // The entity obtained is not null
+					String info = EntityUtils.toString(entity); // Convert the entity to string
+					
+					Log.d(Tag, info); // Log out the returned info
+					
+					JSONObject jsonObject=null;
+					// Flag to indicate whether login succeeded, others to store the data from server
+					
+					String flag = ""; 	// The flag to indicate the upload status.
+					
+					jsonObject = new JSONObject(info); // Construct an JsonObject instance from the name-value Json string
+					flag = jsonObject.getString("flag"); // Get the value mapped by name:flag							
+					
+					// Judge whether the validation if succeeded according to the flag
+					if(flag.equals("success")) { // If the operation type is success, get the encrypt key.
+						
+						encrypt_key = jsonObject.getString("encrypt_key");	// Get the value mapped by name:encrypt_key
+					}
+				}
+			} // Status code equal OK 
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return encrypt_key;
+	}
+	
+	/**
 	 * Upload the file information to specified url.
 	 * @param strUploadFileInfoUrl The url of the file information server.
 	 * @param user_id The ID of the user.
@@ -203,24 +273,10 @@ public class FileOperation {
 					// Flag to indicate whether login succeeded, others to store the data from server
 					
 					String flag = ""; 	// The flag to indicate the upload status.
-					String file_id = ""; // The file id.
-					String uid = "";		// The user id.
-					String fmd5 = "";	// The md5 value of the file.
-					String fsha1 = "";	// The sha1 value of the file.
-					String e_level = "";	// The encrypt level of the file.
-//					String e_key = "";	// The encrypt key of the file.
-					String sessionid = "";	// The session id.
 					try {
 						jsonObject = new JSONObject(info); // Construct an JsonObject instance from the name-value Json string
 						flag = jsonObject.getString("flag"); // Get the value mapped by name:flag							
-						file_id = jsonObject.getString("file_id"); // Get the value mapped by name:file_id
-						uid = jsonObject.getString("user_id");	// Get the value mapped by name:user_id.
-						fmd5 = jsonObject.getString("file_md5");	// Get the value mapped by name:file_md5.
-						fsha1 = jsonObject.getString("file_sha1");	// Get the value mapped by name:file_sha1.
-						e_level = jsonObject.getString("encrypt_level");	// Get the value mapped by name:encrypt_level.
-					//	e_key = jsonObject.getString("encrypt_key");	// Get the value mapped by name:encrypt_key
-						sessionid = jsonObject.getString("sessionid"); // Get the value mapped by name:sessionid
-					
+						
 					} catch (JSONException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -230,16 +286,10 @@ public class FileOperation {
 					// Judge whether the validation if succeeded according to the flag
 					if(flag.equals("insert")
 							|| flag.equals("update")) { // If the operation type is insert or update, set status as true
-						
-						// Set values to record the file-related information 
-						session.put("uid", uid);
-						session.put("file_id", file_id);
-						session.put("file_md5", fmd5);
-						session.put("file_sha1", fsha1);
-						session.put("encryption_flag", e_level);
-					//	session.put("encrypt_key", e_key);
-						session.put("sessionid", sessionid);
 						status = true;
+						String md5 = jsonObject.getString("file_md5");
+						String sha1 = jsonObject.getString("file_sha1");
+						Log.d(Tag, "md5:" + md5 + "\nsha1:" + sha1);
 					} else { // If the operation type is unknown or some other errors, set status as false
 						status = false;
 					}
@@ -255,10 +305,13 @@ public class FileOperation {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			status = false;
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			status = false;
 		}
 		return status;
 	}
-	
 	
 	/**
 	 * Check the file information from the specified url.

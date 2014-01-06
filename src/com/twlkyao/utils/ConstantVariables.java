@@ -19,7 +19,7 @@ public class ConstantVariables {
 	final public static String UPLOAD_FILE_INFO_URL = "cloud/android/data_info.php"; // The locaion of the file information PHP script
 	final public static String UPLOAD_FILE_URL = "cloud/storage/file_operation.php"; // The location of the file upload PHP script
 	final public static String CHECK_FILE_INFO_URL = "cloud/android/check_data_info.php"; // The locaion of the file information PHP script
-
+	final public static String RETRIEVE_ENCRYPT_KEY = "cloud/android/keys_generator.php"; // The location of the keys generator PHP script.
 
 	final public int operation_succeed= 1; // Indicating that the operation is succeeded.
 	final public int operation_failed = 0; // Indicating that the operation is failed.
@@ -33,30 +33,29 @@ public class ConstantVariables {
 	final public static String charset = "UTF-8";
 	
 	/**
-	 * DES THe length of DES algorithm is 64bits, 56bits are alid.
+	 * DES THe length of DES algorithm is 64bits, 56bits are valid.
 	 * DESede The length of DESede algorithm is 192bits.
 	 * Blowfish The length of Blowfish algorithm is 8bits to 448bits.
 	 */
 	
 	final public static String[] algorithms = {
-			"DESede", "DES", "Blowfish"
+			"DESede", "AES"
 	};
 	
 	public static String[] keys = {
-		"12345678abcdefgh12345678",
-		"12345678",
-		"12345678abcdefgh1234567812345678abcdefgh1234567812345678abcdefgh12345678"
+		"12345678abcd",
+		"12345678"
 
 	};
 	
 	public static String[] packageNames = {
-		"com.baidu.netdisk",
+//		"com.baidu.netdisk",
 		"com.owncloud.android",
 		"com.qq.qcloud"
 	};
 	
 	public static String[] classNames= {
-		"com.baidu.netdisk.ui.activity.FileDisplayActivity",
+//		"com.baidu.netdisk.NetDiskApplication",
 		"com.owncloud.android.ui.activity.FileDisplayActivity",
 		"com.qq.qcloud.LaunchActivity"
 	};

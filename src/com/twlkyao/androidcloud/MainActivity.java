@@ -25,6 +25,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.R.integer;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -53,7 +54,7 @@ public class MainActivity extends Activity {
 	private String SDcard = Environment.getExternalStorageDirectory().getPath(); // Get the external storage directory
 	
 	private String upload_file_info_url = ConstantVariables.BASE_URL + ConstantVariables.UPLOAD_FILE_INFO_URL; // Set the file information url
-	private String upload_file_url = ConstantVariables.BASE_URL + ConstantVariables.UPLOAD_FILE_URL; // Set the file upload url
+//	private String upload_file_url = ConstantVariables.BASE_URL + ConstantVariables.UPLOAD_FILE_URL; // Set the file upload url
 	private String check_file_info_url = ConstantVariables.BASE_URL + ConstantVariables.CHECK_FILE_INFO_URL; // Set the check file info url.
 //	private float rate; // To indicate the rating.
 	private int user_id;	// To store the user id.
@@ -270,12 +271,21 @@ public class MainActivity extends Activity {
 									// TODO Auto-generated method stub
 									
 									msg.arg1 = constantVariables.encrypt_file; // Indicate this is the upload file type.
-									// First encrypt the file and then upload the info of encrypted file and the file.
-									if(startEncrypt(file.getPath(), which, ConstantVariables.keys[which],
-											dir1 + File.separator + file.getName(), upload_file_info_url)) { // Encrypt the file successfully.
-										
-										msg.what = constantVariables.operation_succeed;
-									} else {
+									
+									String encrypt_key = fileOperation.retrieveEncryptKey(
+											ConstantVariables.BASE_URL + ConstantVariables.RETRIEVE_ENCRYPT_KEY,
+											which);
+									
+									if(!encrypt_key.equals("")) { // The retrieved encrypt key is not null.
+										// First encrypt the file and then upload the info of encrypted file and the file.
+										if(startEncrypt(file.getPath(), which, encrypt_key,
+												dir1 + File.separator + file.getName(), upload_file_info_url)) { // Encrypt the file successfully.
+											
+											msg.what = constantVariables.operation_succeed;
+										} else { // The encryption is failed.
+											msg.what = constantVariables.operation_failed;
+										}
+									} else { // The retrieved encrypt key is empty.
 										msg.what = constantVariables.operation_failed;
 									}
 									

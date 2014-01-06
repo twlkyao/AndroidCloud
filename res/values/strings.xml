@@ -46,7 +46,7 @@
     <string name="file_info_upload_succeed">上传文件信息成功！</string>
     <string name="file_upload_succeed">文件上传成功！</string>
     <string name="file_upload_fail">文件上传失败！</string>
-    <string name="help">使用帮助：\n1.点击文件，计算特征值。\n2.长按文件，选择加密还是解密文件。</string>
+    <string name="help">使用帮助：\n1.点击文件，设置加密级别，获取加密密钥，加密文件，计算文件特征值并存储，选择应用存储文件。\n2.长按文件，解密文件。</string>
     <string name="upload_file_info">上传文件信息</string>
     <string name="wait">请稍候……</string>
     <string name="title_activity_rating_bar">RatingBar</string>

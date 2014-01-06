@@ -3,14 +3,10 @@
 
     <!-- The encrypt level string array. -->
     <string-array name="encrypt_level">
-        <item>1 不用加密</item>
-        <item>2 低等密级</item>
-        <item>3 中等秘密</item>
-        <item>4 高等密级</item>
-        <item>5 绝密级别</item>
+        <item>1 中等秘密</item>
+        <item>2 绝密级别</item>
     </string-array>
     <string-array name="apps_choice">
-        <item>百度云盘</item>
         <item>OwnCloud</item>
         <item>腾讯微云</item>
     </string-array>
