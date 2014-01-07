@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -57,7 +58,6 @@ public class RegisterActivity extends Activity {
 	
 	// record user's basic information during the session
 	private HashMap<String, String> session =new HashMap<String, String>();
-	
 	
 	// Deal with the time-consuming matters
 	private Handler handler = new Handler() {

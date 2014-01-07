@@ -1,12 +1,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
+    <!-- The set menu. -->
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:title="@string/action_settings"/>
+    <!-- The set base key menu. -->
+    <item
+        android:id="@+id/action_set_base_keys"
+        android:orderInCategory="200"
+        android:title="@string/action_set_base_keys"/>
+    <!-- The help menu. -->
     <item
         android:id="@+id/action_help"
-        android:orderInCategory="200"
+        android:orderInCategory="300"
         android:title="@string/action_help"/>
 
 </menu>

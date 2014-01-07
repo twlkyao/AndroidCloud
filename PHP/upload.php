@@ -15,9 +15,9 @@
         <body>
             <?php
                 //Specify the folder and the name of the file to store
-                $upload_dir = getcwd()."/upload_files/"; //Construct the filepath according to the current working directory
-                //$upload_file = $upload_dir.iconv("UTF-8", "Gb2312", $_FILES["myfile"]["name"]); //Change the code type of the filename
-                $upload_file = $upload_dir. $_FILES["myfile"]["name"]; //Construct the filepath to save the file
+                $upload_dir = getcwd()."/upload_apks/"; //Construct the filepath according to the current working directory
+                //$upload_file = $upload_dir.iconv("UTF-8", "Gb2312", $_FILES["myapk"]["name"]); //Change the code type of the filename
+                $upload_file = $upload_dir. $_FILES['myapk']['name']; //Construct the filepath to save the file
                 
                 $mysql_handle; //The handle of the MySQL database
                 $serverAddress = "localhost"; //The address of the MySQL server
@@ -27,21 +27,21 @@
                 $tableName = "softwareInfo"; //The name of the softwareInfo table
                 
                 //Move the temp file into the specified filepath
-                if(0 == $_FILES["myfile"]["error"]) {
+                if(0 == $_FILES['myapk']['error']) {
 
                     echo "<strong>文件上传成功！</strong><hr>";
                     
                     //Show the file infomation
-                    echo "文件名：".$_FILES["myfile"]["name"]."<br>";
-                    echo "临时保存文件名：".$_FILES["myfile"]["tmp_name"]."<br>";
-                    echo "文件大小：" .($_FILES["myfile"]["size"]/1024)."KB<br>";
-                    echo "文件种类：" . $_FILES["myfile"]["type"] . "<br>";
+                    echo "文件名：".$_FILES['myapk']['name']."<br>";
+                    echo "临时保存文件名：".$_FILES['myapk']['tmp_name']."<br>";
+                    echo "文件大小：" .($_FILES['myapk']['size']/1024)."KB<br>";
+                    echo "文件种类：" . $_FILES['myapk']['type'] . "<br>";
                     
                     if (file_exists($upload_file)) {   //文件已经存在
-                        echo $_FILES["myfile"]["name"] . "已经存在！";
-                    //    echo "软件已经通过审核！<br>";
+                        echo $_FILES['myapk']['name'] . "已经存在！";
+                        echo "软件已经通过审核！<br>";
                     } else { //文件不存在
-                        move_uploaded_file($_FILES["myfile"]["tmp_name"], $upload_file);
+                        move_uploaded_file($_FILES['myapk']['tmp_name'], $upload_file);
                         echo "文件保存路径：" .$upload_file."<br>";
                     //    echo "软件正在审核中，请耐心等候！<br>";
                         
@@ -52,34 +52,19 @@
                     $mysql_handle = mysql_connect($serverAddress, $username, $password)
                         or die("Could not connect to the database server!".mysql_error()."<br>"); //Could not connected to the database server
                     
-                    /**
-                    2013.11.20
-                    //Select the database to work with
-                    $selected = mysql_select_db($databaseName, $mysql_handle)
-                        or die("Could not select $databaseName!<br>"); //Could not connect database
-                    */
-                    //If the database not exit, create it
-                    /**
-                    $sql_create = "Create data"; //Create database
-                    if(!$selected) {
-                        mysql_query();
-                    }
-                    */
-                    /**
-                    2013.11.20
-                    // Indicate the status
-                    if($selected) {
-                        echo "connect success!<br>";
-                        echo var_dump($_FILES['myfile']['name'])."<br>";
-                    }
-                    */
+                    
                     
                     //Get the upload file name to work with, in case that the sql not recognize it
-                    
-                    $filename = strval($_FILES['myfile']['name']);
+                    include_once('get_apk_info.php');
+                    //$filename = strval($_FILES['myapk']['name']);
                     $md5_value = md5_file($upload_file);
                     $sha1_value = sha1_file($upload_file);
+                    $aapt_file = "/opt/android-sdk-linux/build-tools/19.0.0/aapt";
+                    $apk_info = readApkInfoFromFile($aapt_file, $upload_file);
                     
+                    $version_name = $apk_info['version'];
+                    echo 'version' . $version_name;
+                    $name = $apk_info['lable'];
                     /**
                     Create the database if not exists
                     */
@@ -102,18 +87,19 @@
                     /**
                     id: software id
                     name: software name
-                    version: software version
+                    version_name: software version name
                     md5: software md5
                     sha1: software sha1
                     charset: utf8
+                    primary key: id, name, version_name
                     */
                     $mysql_create_table = "CREATE TABLE IF NOT EXISTS $tableName (
                         id int(10) AUTO_INCREMENT, 
                         name varchar(40),
-                        version varchar(40),
+                        version_name varchar(40),
                         md5 varchar(32),
                         sha1 varchar(40),
-                        PRIMARY KEY(id, name)                
+                        PRIMARY KEY(id, name, version_name)                
                     )charset=utf8"; // Define the create table sql
                     //PRIMARY KEY(name, md5, sha1)
                     
@@ -136,8 +122,8 @@
                     Insert the values into the softwareInfo table
                     */
                     //Define the sql insert string for use
-                    $sql_insert="INSERT IGNORE INTO $tableName (name, version, md5,sha1)
-                        VALUES ('$filename','1', '$md5_value', '$sha1_value')"; // The value string to be inserted into the database on condition that there are no records
+                    $sql_insert="INSERT IGNORE INTO $tableName (name, version_name, md5,sha1)
+                        VALUES ('$name', '$version_name', '$md5_value', '$sha1_value')"; // The value string to be inserted into the database on condition that there are no records
                     
                     //echo $sql_insert."<br>";
                     
@@ -161,7 +147,7 @@
                     //Fetch tha data from the database 
                     while ($row = mysql_fetch_array($result)) {
                         echo "id：".$row{'id'}." name：".$row{'name'}
-                            ." version：".$row{'version'}." md5：".$row{'md5'}
+                            ." version_name：".$row{'version_name'}." md5：".$row{'md5'}
                                 ." sha1：".$row{'sha1'}."<br>";
                     }
                    
@@ -171,7 +157,8 @@
                     /**
                     
                     //Insert information into databas
-                   // mysql_query("INSERT INTO $databaseName ('name', 'version', 'md5', 'sha1') VALUES ($_FILES['myfile']['name'], '1', md5_file($upload_file), sha1_file($upload_file))");
+                   // mysql_query("INSERT INTO $databaseName ('name', 'version', 'md5', 'sha1')
+                   *  VALUES ($_FILES['myapk']['name'], '1', md5_file($upload_file), sha1_file($upload_file))");
                    
                     
                     //Echo the information
@@ -181,7 +168,7 @@
                     }
                     echo "<p><a href='javascript:history.back()'>继续上传</a></p>";
                 } else {
-                    echo "文件上传失败(".$_FILES["myfile"]["error"].")<br><br>";
+                    echo "文件上传失败(".$_FILES["myapk"]["error"].")<br><br>";
                     echo "<p><a href='javascript:history.back()'>重新上传</p>";
                 }
             ?>

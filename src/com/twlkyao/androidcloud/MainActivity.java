@@ -25,14 +25,17 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.R.integer;
+import android.R.anim;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
+import android.app.Dialog;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -42,6 +45,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,17 +57,16 @@ public class MainActivity extends Activity {
 	private String strKeyword; // The filename string
 	private String SDcard = Environment.getExternalStorageDirectory().getPath(); // Get the external storage directory
 	
-	private String upload_file_info_url = ConstantVariables.BASE_URL + ConstantVariables.UPLOAD_FILE_INFO_URL; // Set the file information url
+	private ConstantVariables constantVariables = new ConstantVariables(); // Instance an ConstantVariables.
+	private String upload_file_info_url = constantVariables.BASE_URL + constantVariables.UPLOAD_FILE_INFO_URL; // Set the file information url
 //	private String upload_file_url = ConstantVariables.BASE_URL + ConstantVariables.UPLOAD_FILE_URL; // Set the file upload url
-	private String check_file_info_url = ConstantVariables.BASE_URL + ConstantVariables.CHECK_FILE_INFO_URL; // Set the check file info url.
+	private String check_file_info_url = constantVariables.BASE_URL + constantVariables.CHECK_FILE_INFO_URL; // Set the check file info url.
 //	private float rate; // To indicate the rating.
 	private int user_id;	// To store the user id.
 	private String Tag = "MainActivity"; // The logcat tag.
 	
-	private String encryptKey = ConstantVariables.keys[0]; // DEncrypt key.
-	private String algorithm = ConstantVariables.algorithms[0]; // DEncrypt algorithm.
-	
-	private boolean DEncryptFlag; // DEncrypt flag.
+//	private String encryptKey = ConstantVariables.keys[0]; // DEncrypt key.
+//	private String algorithm = ConstantVariables.algorithms[0]; // DEncrypt algorithm.
 	
 	private ListView fileListView; // The listview to store the file information
 	private ArrayList<File> filelist; // Used to store the filename
@@ -73,7 +76,7 @@ public class MainActivity extends Activity {
 	private FileOperation fileOperation = new FileOperation(); // Construct an instance of FileOperation.
 //	private FileDEncryption fileDEncryption = new FileDEncryption(); // Construct an instance of FileDEncryption.
 	
-	private ConstantVariables constantVariables = new ConstantVariables(); // Instance an ConstantVariables.
+	
 	
 	// Deal with the time-consuming matters
 	private Handler handler = new Handler() {
@@ -117,8 +120,8 @@ public class MainActivity extends Activity {
 						public void onClick(DialogInterface dialog, int which) {
 							// TODO Auto-generated method stub
 							ComponentName componentName = new ComponentName(
-									ConstantVariables.packageNames[which],
-									ConstantVariables.classNames[which]);
+									constantVariables.packageNames[which],
+									constantVariables.classNames[which]);
 							Intent intent = new Intent();
 							intent.setComponent(componentName);
 							startActivity(intent);
@@ -164,16 +167,61 @@ public class MainActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// TODO Auto-generated method stub
-		switch(item.getItemId()) {
-		case R.id.action_settings:
-			Toast.makeText(getApplicationContext(),
-					R.string.action_settings, Toast.LENGTH_SHORT).show();
-			break;
-		case R.id.action_help:
-			Toast.makeText(getApplicationContext(),
-					R.string.help, Toast.LENGTH_SHORT).show();
-			break;
-			
+		switch(item.getItemId()) { // Act according to the menu item clicked.
+			case R.id.action_settings: // The action_settings item.
+				Toast.makeText(getApplicationContext(),
+						R.string.action_settings, Toast.LENGTH_SHORT).show();
+				break;
+			case R.id.action_set_base_keys: // The action_set_base_keys item.
+				final Dialog set_base_key_dialog = new Dialog(MainActivity.this, R.style.FullHeightDialog);
+				set_base_key_dialog.setContentView(R.layout.set_base_key_dialog);
+				set_base_key_dialog.setCancelable(true);
+
+				// Find the submit button.
+				Button btn_submit = (Button) set_base_key_dialog.findViewById(R.id.btn_submit);
+				
+				// Find the edit text.
+				final EditText editText = (EditText) set_base_key_dialog.findViewById(R.id.edittext_base_key);
+				
+				btn_submit.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						// Store the base key in to SharedPreferences.
+						String base_key = editText.getText().toString();
+						
+						// Get the SharedPreferences object, the SharedPreferences can only accessed by the calling application.
+						SharedPreferences sp = getSharedPreferences(constantVariables.PREF_NAME,
+								Context.MODE_PRIVATE);
+						
+						// Create a new Editor for SharedPreferences.
+						SharedPreferences.Editor editor = sp.edit(); 
+						
+						// Set data.
+						editor.putString(constantVariables.PREF_KEY, base_key);
+						
+						// Call the commit method to save changes.
+						editor.commit();
+						Toast.makeText(MainActivity.this,
+								R.string.base_key_success, Toast.LENGTH_SHORT).show();
+						set_base_key_dialog.dismiss();
+					}
+				});
+				
+				Button btn_cancel= (Button) set_base_key_dialog.findViewById(R.id.btn_cancel);
+				btn_cancel.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						set_base_key_dialog.dismiss();
+					}
+				});
+				//now that the dialog is set up, it's time to show it    
+				set_base_key_dialog.show(); 
+				
+				break;
+			case R.id.action_help: // The help item.
+				Toast.makeText(getApplicationContext(),
+						R.string.help, Toast.LENGTH_SHORT).show();
+				break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -236,8 +284,6 @@ public class MainActivity extends Activity {
 					int position, long id) {
 				// TODO Auto-generated method stub
 				
-//				Log.d(Tag, "onclick");
-				
 				final File file = (File) fileListAdapter.getItem(position);
 //				final String filepath = file.getPath();
 				
@@ -264,6 +310,7 @@ public class MainActivity extends Activity {
 							}
 							
 							final Message msg = Message.obtain();
+							
 							Thread thread = new Thread(new Runnable() {
 								
 								@Override
@@ -272,20 +319,26 @@ public class MainActivity extends Activity {
 									
 									msg.arg1 = constantVariables.encrypt_file; // Indicate this is the upload file type.
 									
-									String encrypt_key = fileOperation.retrieveEncryptKey(
-											ConstantVariables.BASE_URL + ConstantVariables.RETRIEVE_ENCRYPT_KEY,
+									String remote_encrypt_key = fileOperation.retrieveEncryptKey(
+											constantVariables.BASE_URL + constantVariables.RETRIEVE_ENCRYPT_KEY,
 											which);
 									
-									if(!encrypt_key.equals("")) { // The retrieved encrypt key is not null.
+									// Get the base key from SharedPreferences.
+									String base_key = getBaseKey(constantVariables.PREF_NAME,
+											constantVariables.PREF_KEY);
+									
+									if(!remote_encrypt_key.equals("")) { // The retrieved encrypt key is not null.
+										
+										
 										// First encrypt the file and then upload the info of encrypted file and the file.
-										if(startEncrypt(file.getPath(), which, encrypt_key,
+										if(startEncrypt(file.getPath(), which, remote_encrypt_key,
 												dir1 + File.separator + file.getName(), upload_file_info_url)) { // Encrypt the file successfully.
 											
 											msg.what = constantVariables.operation_succeed;
 										} else { // The encryption is failed.
 											msg.what = constantVariables.operation_failed;
 										}
-									} else { // The retrieved encrypt key is empty.
+									} else { // The retrieved encrypt key or the SharedPreferences key is empty.
 										msg.what = constantVariables.operation_failed;
 									}
 									
@@ -354,6 +407,24 @@ public class MainActivity extends Activity {
 	}
 	
 	/**
+	 * Get the data from SharedPreferences.
+	 * @param sharedPreferencesName The name of the SharedPreferences.
+	 * @param sharedPreferencesKey The key of the SharedPreferences.
+	 * @return The retrieved data.
+	 */
+	public String getBaseKey(String sharedPreferencesName, String sharedPreferencesKey) {
+		String base_key = "";
+		
+		// Get the SharedPreferences object.
+		SharedPreferences sp = getSharedPreferences(sharedPreferencesName,
+				Context.MODE_PRIVATE);
+		
+		// Get the data.
+		base_key = sp.getString(sharedPreferencesKey, "");
+		return base_key;
+	}
+
+	/**
 	 * Create the file and upload the file information to remote server,
 	 * upload the file to remote server.
 	 * @param srcFilePath The file path of the file to be encrypted.
@@ -378,8 +449,8 @@ public class MainActivity extends Activity {
 		
 		FileDEncryption fileDEncryption = new FileDEncryption();
 		
-		if(fileDEncryption.Encryption(srcFilePath, ConstantVariables.algorithms[encrypt_level],
-				ConstantVariables.keys[encrypt_level], destFilePath)) { // File encryption is succeeded.
+		if(fileDEncryption.Encryption(srcFilePath, constantVariables.algorithms[encrypt_level],
+				constantVariables.keys[encrypt_level], destFilePath)) { // File encryption is succeeded.
 			
 			String md5 = fileOperation.fileToMD5(destFilePath);	// Get the md5 value of the file
 			String sha1 = fileOperation.fileToSHA1(destFilePath);	// Get the sha1 value of the file
@@ -439,8 +510,8 @@ public class MainActivity extends Activity {
 			int encrypt_level = Integer.parseInt(resultHashMap.get("encrypt_level"));
 			String encrypt_key = resultHashMap.get("encrypt_key");
 			if(fileDEncryption.Decryption(srcFilePath,
-				ConstantVariables.algorithms[encrypt_level], encrypt_key, destFilePath)) { // The decryption is succeeded.
-				flag = true; // Set the DEncryptFlag to false.
+				constantVariables.algorithms[encrypt_level], encrypt_key, destFilePath)) { // The decryption is succeeded.
+				flag = true; // Set the flag to false.
 			}
 		}
 		

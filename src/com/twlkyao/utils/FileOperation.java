@@ -38,7 +38,7 @@ public class FileOperation {
 	private String Tag = "FileOperation"; // The logcat tag
 	
 	// Define the hashmap to record the basic information of files during the session
-	private HashMap<String, String> session =new HashMap<String, String>();
+//	private HashMap<String, String> session =new HashMap<String, String>();
 	
 	
 	/**

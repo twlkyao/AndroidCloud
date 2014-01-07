@@ -6,9 +6,15 @@
         <item>1 中等秘密</item>
         <item>2 绝密级别</item>
     </string-array>
+    <!-- The cloud applications array. -->
     <string-array name="apps_choice">
         <item>OwnCloud</item>
         <item>腾讯微云</item>
+<!--         <item>百度云盘</item> -->
+    </string-array>
+    <!-- The setting choices array. -->
+    <string-array name="settting_choice">
+        <item>变更基础密码</item>
     </string-array>
 
 </resources>

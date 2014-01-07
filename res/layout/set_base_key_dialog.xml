@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/green"
+    android:orientation="vertical"
+    android:padding="2dp" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal" >
+
+        <!-- The dialog icon. -->
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_dialog_info" />
+        <!-- Dialog Title. -->
+
+        <TextView
+            android:id="@+id/rank_dialog_text1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginTop="10dp"
+            android:text="@string/action_set_base_keys"
+            android:textSize="@dimen/title" />
+        <!-- Dialog Rating. -->
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/edittext_base_key"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/base_key_hint"
+        android:inputType="textCapCharacters"
+        android:textSize="@dimen/edittext" />
+    <!-- Dialog Button. -->
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal" >
+
+        <!-- Submit button. -->
+
+        <Button
+            android:id="@+id/btn_submit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/layout_margin"
+            android:layout_weight="1"
+            android:focusable="false"
+            android:text="@string/submit"
+            android:textSize="@dimen/btn_text" />
+        <!-- Cancel button. -->
+
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/layout_margin"
+            android:layout_weight="1"
+            android:focusable="false"
+            android:text="@string/cancel"
+            android:textSize="@dimen/btn_text" />
+    </LinearLayout>
+
+</LinearLayout>
