@@ -1,7 +1,4 @@
 <!--
-    作者： 齐士垚
-    日期： 2013.11.18
-    功能： 处理文件上传，文件审核通过后，将上传文件保存在本地文件夹。
     Author: Qi Shiyao
     Data:   2013.11.18
     Function:   Handle the uploaded file, if the file passed the audit, then store the file into specified folder.
