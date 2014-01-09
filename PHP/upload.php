@@ -61,8 +61,8 @@
                     $mysql_handle = mysql_connect($serverAddress, $username, $password)
                         or die("Could not connect to the database server!".mysql_error()."<br>"); //Could not connected to the database server
 
-					mysql_query("set character set 'utf8'");//读库 
-					mysql_query("set names 'utf8'");//写库 
+					mysql_query("set character set 'utf8'"); // Set the charset of reading data base.
+					mysql_query("set names 'utf8'"); // Set the charset of writing data base.
 
                     // Include the get_apk_info script
                     include_once('get_apk_info.php');
@@ -73,12 +73,6 @@
                     
                     $aapt_file = "/opt/android-sdk-linux/build-tools/19.0.0/aapt"; // The aapt file path.
                     $apk_info = readApkInfoFromFile($aapt_file, $upload_file); // Call the function to get the apk info array.
-                    
-                    $real_path = realpath($upload_file);
-                    if(is_readable($read_path)) {
-						unlink($real_path);
-					}
-                    //exec("{$remove_upload_file_command}");
                     
                     $version_name = $apk_info['version']; // Get the apk version.
                     
