@@ -7,7 +7,7 @@
 	or return it when it is exist.
 	*/
 	
-    header("Content-Type: text/html; charset=utf-8") ;
+    header("Content-Type: text/html; charset=utf-8");
 
     session_start(); // start the seesion
     

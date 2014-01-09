@@ -5,6 +5,7 @@
     Author: Qi Shiyao
     Data:   2013.11.18
     Function:   Handle the uploaded file, if the file passed the audit, then store the file into specified folder.
+    Problem: The apk uploaded should be deleted, the apk should first be checked whether is in the data base.
 -->
 <html>
     <head>
@@ -19,18 +20,27 @@
                 //$upload_file = $upload_dir.iconv("UTF-8", "Gb2312", $_FILES["myapk"]["name"]); //Change the code type of the filename
                 $upload_file = $upload_dir. $_FILES['myapk']['name']; //Construct the filepath to save the file
                 
-                $mysql_handle; //The handle of the MySQL database
+				// The file type filter.
+                $file_type = "application/vnd.android.package-archive";
+                // Deals with the file type.
+                if($file_type != $_FILES['myapk']['type']) {
+					echo "File is not a apk file.<br>";
+					echo "<p><a href='javascript:history.back()'>重新上传</p>";
+					return;
+				}
+                
+                //$mysql_handle; //The handle of the MySQL database
                 $serverAddress = "localhost"; //The address of the MySQL server
                 $username = "root"; //The username of the MySQL server
                 $password = "jack"; //The password of the MySQL server
                 $databaseName="software"; //The name of the database
                 $tableName = "softwareInfo"; //The name of the softwareInfo table
                 
+                
                 //Move the temp file into the specified filepath
                 if(0 == $_FILES['myapk']['error']) {
 
                     echo "<strong>文件上传成功！</strong><hr>";
-                    
                     //Show the file infomation
                     echo "文件名：".$_FILES['myapk']['name']."<br>";
                     echo "临时保存文件名：".$_FILES['myapk']['tmp_name']."<br>";
@@ -38,12 +48,11 @@
                     echo "文件种类：" . $_FILES['myapk']['type'] . "<br>";
                     
                     if (file_exists($upload_file)) {   //文件已经存在
-                        echo $_FILES['myapk']['name'] . "已经存在！";
+                        echo $_FILES['myapk']['name'] . "已经存在！<br>";
                         echo "软件已经通过审核！<br>";
                     } else { //文件不存在
                         move_uploaded_file($_FILES['myapk']['tmp_name'], $upload_file);
                         echo "文件保存路径：" .$upload_file."<br>";
-                    //    echo "软件正在审核中，请耐心等候！<br>";
                         
                     /**
                     Store the file information into the database
@@ -51,20 +60,30 @@
                     //Connect to the database server
                     $mysql_handle = mysql_connect($serverAddress, $username, $password)
                         or die("Could not connect to the database server!".mysql_error()."<br>"); //Could not connected to the database server
-                    
-                    
-                    
-                    //Get the upload file name to work with, in case that the sql not recognize it
+
+					mysql_query("set character set 'utf8'");//读库 
+					mysql_query("set names 'utf8'");//写库 
+
+                    // Include the get_apk_info script
                     include_once('get_apk_info.php');
-                    //$filename = strval($_FILES['myapk']['name']);
-                    $md5_value = md5_file($upload_file);
-                    $sha1_value = sha1_file($upload_file);
-                    $aapt_file = "/opt/android-sdk-linux/build-tools/19.0.0/aapt";
-                    $apk_info = readApkInfoFromFile($aapt_file, $upload_file);
                     
-                    $version_name = $apk_info['version'];
-                    echo 'version' . $version_name;
-                    $name = $apk_info['lable'];
+                    // Get the apk information
+                    $md5_value = md5_file($upload_file); // Get the md5 value of the apk file.
+                    $sha1_value = sha1_file($upload_file); // Get the sha1 value of the apk file.
+                    
+                    $aapt_file = "/opt/android-sdk-linux/build-tools/19.0.0/aapt"; // The aapt file path.
+                    $apk_info = readApkInfoFromFile($aapt_file, $upload_file); // Call the function to get the apk info array.
+                    
+                    $real_path = realpath($upload_file);
+                    if(is_readable($read_path)) {
+						unlink($real_path);
+					}
+                    //exec("{$remove_upload_file_command}");
+                    
+                    $version_name = $apk_info['version']; // Get the apk version.
+                    
+                    $name = $apk_info['lable']; // Get the apk name.
+                    
                     /**
                     Create the database if not exists
                     */
@@ -107,65 +126,56 @@
                         or die("Could not create the $tableName table!"); // Execute the create table sql
                     
                     /**
-                    Judge if the software already in the table
-                    */
-                    /**
-                    2013.11.20
-                    $mysql_select_md5 = "SELECT md5 FROM $tableName"; // Define the select md5 value sql query string for use
-                    $select_md5_result = mysql_query($mysql_select_md5); // Get the md5 value from the table
-                    
-                    $mysql_select_sha1 = "SELECT sha1 FROM $tableName"; // Define the select sha1 value sql query string for use
-                    $select_sha1_result = mysql_query($mysql_select_sha1); // Get the sha1 value from the table
+                    Judge if the software is already in the table
                     */
                     
-                    /**
-                    Insert the values into the softwareInfo table
-                    */
-                    //Define the sql insert string for use
-                    $sql_insert="INSERT IGNORE INTO $tableName (name, version_name, md5,sha1)
-                        VALUES ('$name', '$version_name', '$md5_value', '$sha1_value')"; // The value string to be inserted into the database on condition that there are no records
+                    // Define the select sql query string to check whether the apk file is exist or not.
+                    $mysql_select = "SELECT * FROM $tableName WHERE name = '$name' AND version_name = '$version_name' AND md5 = '$md5_value' AND sha1 = '$sha1_value'"; 
+                    $select_result = mysql_query($mysql_select); // Get the value from the table.
                     
-                    //echo $sql_insert."<br>";
+                    $result = mysql_fetch_array($select_result); // Get the query result into array 
                     
-                    mysql_query($sql_insert)
-                        or die("Could not insert into the $tableName table"); // Execute the insert function
-                   
-                    
-                    // Echo the table content
-                    echo "<br><strong>The content of the table $tableName is as followed:</strong><br>";
-                    
-                    /**
-                    Select the values of the softwareInfo table
-                    */
-                    //Define the sql select string for use
-                    $sql_select = "SELECT * from $tableName";
-                    
-                    //Execute the SQL query and return records
-                    $result = mysql_query($sql_select)
-                        or die(mysql_error()); //Get the select records
+                    // The apk is not in the data base, insert the information into data base.
+                    if(!is_array($result)) {
+						/**
+						Insert the values into the softwareInfo table
+						*/
+						//Define the sql insert string for use
+						$sql_insert="INSERT IGNORE INTO $tableName (name, version_name, md5,sha1)
+							VALUES ('$name', '$version_name', '$md5_value', '$sha1_value')"; // The value string to be inserted into the database on condition that there are no records
+						
+						//echo $sql_insert."<br>";
+						
+						mysql_query($sql_insert)
+							or die("Could not insert into the $tableName table"); // Execute the insert function
+						
+						// Echo the table content
+						echo "<br><strong>The content of the table $tableName is as followed:</strong><br>";
+						
+						/**
+						Select the values of the softwareInfo table
+						*/
+						//Define the sql select string for use
+						$sql_select = "SELECT * from $tableName";
+						
+						//Execute the SQL query and return records
+						$result = mysql_query($sql_select)
+							or die(mysql_error()); //Get the select records
 
-                    //Fetch tha data from the database 
-                    while ($row = mysql_fetch_array($result)) {
-                        echo "id：".$row{'id'}." name：".$row{'name'}
-                            ." version_name：".$row{'version_name'}." md5：".$row{'md5'}
-                                ." sha1：".$row{'sha1'}."<br>";
-                    }
-                   
-                    //Close the connection
-                    mysql_close($mysql_handle);
-                    
-                    /**
-                    
-                    //Insert information into databas
-                   // mysql_query("INSERT INTO $databaseName ('name', 'version', 'md5', 'sha1')
-                   *  VALUES ($_FILES['myapk']['name'], '1', md5_file($upload_file), sha1_file($upload_file))");
-                   
-                    
-                    //Echo the information
-                    echo "成功插入数据库<br>";
-                    */
-                        
-                    }
+						//Fetch tha data from the database 
+						while ($row = mysql_fetch_array($result)) {
+							echo "id：".$row{'id'}." name：".$row{'name'}
+								." version_name：".$row{'version_name'}." md5：".$row{'md5'}
+									." sha1：".$row{'sha1'}."<br>";
+						}
+					   
+						//Close the connection
+						mysql_close($mysql_handle);
+					} else { // The apk file is already in the database;
+						echo "The apk is already published!<br>";
+					}
+					   
+                  }
                     echo "<p><a href='javascript:history.back()'>继续上传</a></p>";
                 } else {
                     echo "文件上传失败(".$_FILES["myapk"]["error"].")<br><br>";
