@@ -41,7 +41,6 @@
                 if(0 == $_FILES['myapk']['error']) {
 
                     echo "<strong>文件上传成功！</strong><hr>";
-                    echo $upload_file . "<br>";
                     //Show the file infomation
                     echo "文件名：".$_FILES['myapk']['name']."<br>";
                     echo "临时保存文件名：".$_FILES['myapk']['tmp_name']."<br>";
@@ -61,6 +60,9 @@
                     //Connect to the database server
                     $mysql_handle = mysql_connect($serverAddress, $username, $password)
                         or die("Could not connect to the database server!".mysql_error()."<br>"); //Could not connected to the database server
+
+					mysql_query("set character set 'utf8'"); // Set the charset of reading data base.
+					mysql_query("set names 'utf8'"); // Set the charset of writing data base.
 
                     // Include the get_apk_info script
                     include_once('get_apk_info.php');
