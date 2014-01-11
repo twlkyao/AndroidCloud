@@ -19,6 +19,7 @@ public class ConstantVariables {
 	final public static String UPLOAD_FILE_URL = "cloud/storage/file_operation.php"; // The location of the file upload PHP script
 	final public static String CHECK_FILE_INFO_URL = "cloud/android/check_data_info.php"; // The locaion of the file information PHP script
 	final public static String RETRIEVE_ENCRYPT_KEY = "cloud/android/keys_generator.php"; // The location of the keys generator PHP script.
+	final public static String CHECK_APK_INFO = "cloud/check_apk_info"; // The location of the check apk info PHP script.
 	
 	// The SharedPreferences name and key of base key.
 	public String PREF_NAME = "base_key"; // The SharedPreferences name. of the base key.

@@ -21,6 +21,7 @@ import javax.crypto.spec.SecretKeySpec;
 import android.util.Log;
 
 /**
+ * File encryption and decryption.
  * @author Shiyao Qi
  * @date 2013.12.16
  * @email qishiyao2008@126.com

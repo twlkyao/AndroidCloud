@@ -390,7 +390,7 @@ public class FileOperation {
 						resultHashMap = null;
 					}
 				}
-			} // Status code equal ok 
+			}
 		} catch (ClientProtocolException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

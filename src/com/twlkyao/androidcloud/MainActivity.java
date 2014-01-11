@@ -15,6 +15,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import com.twlkyao.utils.ConstantVariables;
 import com.twlkyao.utils.FileDEncryption;
@@ -677,7 +678,6 @@ public class MainActivity extends Activity {
 				files.add(file);
 			}
 		}
-		Collections.sort(files); // Sort the files.
 		
 		fileListAdapter= new FileListAdapter(getApplicationContext(), files, isSDcard); // Update the fileListAdapter
 		fileListView.setAdapter(fileListAdapter); // Update the fileListView's adapter
