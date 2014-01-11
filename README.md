@@ -19,4 +19,5 @@ Step 4 and step 5 wil use a third party application, in order to be safe.
 
 ##TODO list
 
-1. The apk check on the Android side.
+<del>1. The apk check on the Android side.</del>  
+2. Fix the FileObserver's jump condition(When to start another Activity).
