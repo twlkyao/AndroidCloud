@@ -13,11 +13,22 @@ An Android Application to synchronize your data to the cloud with some extra sec
 7. When you download an apk file, the file will be checked whether it is authorized or not.  
 8. If the apk is not authorized, it will be deleted, or it is OK to install.  
 
+##Architecture
+
+1. The device side has part of the key.
+2. The server side randomly generate part of the key.
+3. Set file important level and encrypts the file when uploads.(TODO)
+4. Pass the key in ciphpertext.(TODO)
+5. Validate the integrity of the stored data.
+6. Validate the integritey of the downloaded Apps.
+
 ##Attention  
 
-Step 4 and step 5 wil use a third party application, in order to be safe.  
+Part 4 and part 5 of Directions wil use a third party application, in order to be safe.  
 
 ##TODO list
 
-<del>1. The apk check on the Android side.</del>  
-2. Fix the FileObserver's jump condition(When to start another Activity).
+<del>1. The Apps validation on the Android side.</del>  
+<del>2. Fix the FileObserver's jump condition(When to start another Activity, solved by using Notification).</del>
+<del>3. The device side has part of the key.</del>
+4. Implement the same function for contacts and message parts.
