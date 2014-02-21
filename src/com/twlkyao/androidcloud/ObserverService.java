@@ -1,12 +1,15 @@
-package com.twlkyao.utils;
+package com.twlkyao.androidcloud;
 
 import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Stack;
 
-import android.app.Activity;
+import com.twlkyao.utils.LogUtils;
+
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
@@ -14,63 +17,50 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.FileObserver;
 import android.os.IBinder;
-import android.util.Log;
 
 public class ObserverService extends Service {
 	private FileObserver mFileObserver;
-	ArrayList<String> pathList=new ArrayList<String>(); // Used to store the file full path.
-//	private ServiceBinder serviceBinder;
-
+	private ServiceBinder serviceBinder;
+	
+	private boolean debug = false; // Indicate whether is debug.
+	private String tag = "ObserverService";
+	private LogUtils logUtils = new LogUtils(debug, tag);
+	private NotificationManager notificationManager; // NotificationManager.
+	private int notification_number = 0; // The number of notifications.
+	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		Log.d("Service", "onCreate");
+		
 		if(null == mFileObserver) {
 			String filePath = Environment.getExternalStorageDirectory().getPath();
 			
 			mFileObserver = new RecursiveFileObserver(filePath); // mine
 			mFileObserver.startWatching(); // Start watching.
-			
-			// There should be something delay the time, or move the code here to another place.
-			/*if(!pathList.isEmpty()) {
-				Intent intent = new Intent(ObserverService.this,SecondActivity.class);
-				intent.putStringArrayListExtra("path", pathList);
-				*//**
-				 * When using this flag, if a task is already running for the activity you are now starting,
-				 * then a new activity will not be started;
-				 * instead, the current task will simply be brought to
-				 * the front of the screen with the state it was last in.
-				 * See FLAG_ACTIVITY_MULTIPLE_TASK for a flag to disable this behavior.
-				 * This flag can not be used when the caller is requesting 
-				 * a result from the activity being launched.
-				 *//*
-				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				startActivity(intent);
-			}*/
 		}
+		
+		notificationManager = (NotificationManager) this.getSystemService(NOTIFICATION_SERVICE);
 	}
 	
 	@Override
 	public IBinder onBind(Intent intent) {
 		// TODO Auto-generated method stub
-		Log.d("Service", "onBind");
-		return null;
+		return serviceBinder;
 	}
 	
 	@Override
 	public void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
-		Log.d("Service", "onDestroy");
 		if(null != mFileObserver) mFileObserver.stopWatching(); //Stop watching.
 	}
 
-	/*class ServiceBinder extends Binder {
+	class ServiceBinder extends Binder {
 		public ObserverService getService() {
 			return ObserverService.this;
 		}
-	}*/
+	}
 
 
 	/**
@@ -81,12 +71,11 @@ public class ObserverService extends Service {
 	 * @email qishiyao2008@126.com
 	 * @attention
 	 * 			You should protect the FileObserver not to be garbage collected,
-	 * 			or it will not be able to detect the file or directory changes
+	 * 			or it will not be able to detect the file or directory changes.
 	 */
 	class RecursiveFileObserver extends FileObserver {
 		
-		ArrayList<SingleFileObserver> mObservers; // An ArrayList of SingleFileObservers to observer files.
-		
+		ArrayList<SingleFileObserver> mObservers; // An ArrayList of SingleFileObservers to observer files. 
 		String mPath; // The file path to be observed.
 		int mMask; // Observation mask, specify the file operation that we want to monitor.
 		
@@ -189,7 +178,7 @@ public class ObserverService extends Service {
 		 * ALL_EVENTS ： 包括上面的所有事件
 		 */
 		/**
-		 * ACCESS	Event type: Data was read from a file, constant value 1.
+		 * ACCESS	Event typic_notification_clear_alle: Data was read from a file, constant value 1.
 		 * MODIFY	Event type: Data was written to a file, constant value 2.
 		 * ATTRIB	Event type: Metadata (permissions, owner, timestamp) was changed explicitly, constant value 4
 		 * CLOSE_NOWRITE	Event type: Someone had a file or directory open read-only, and closed it, Constant value 8
@@ -212,68 +201,74 @@ public class ObserverService extends Service {
 		 */
 		@Override
 		public void onEvent(int event, String path) { // The path here is a full path.
+			
 			// The param is the value | 0x40000000, before operate, first & FileObserver.ALL_EVENTS
-
 			switch (event & FileObserver.ALL_EVENTS) {
 			
 			// If you want to do some time-costing work under onEvent, you'd better use a thread,
 			// in case for that you will not receive the following event.
 				case FileObserver.ACCESS: // 1
-					Log.i("RecursiveFileObserver", "ACCESS: " + path);
+					logUtils.d(tag, "ACCESS: " + path);
 					break;
 				case FileObserver.MODIFY: // 2
-					Log.i("RecursiveFileObserver", "MODIFY: " + path);
+					logUtils.d(tag, "MODIFY: " + path);
 					break;
 				case FileObserver.ATTRIB: // 4
-					Log.i("RecursiveFileObserver", "ATTRIB: " + path);
+					logUtils.d(tag, "ATTRIB: " + path);
 					break;
 				case FileObserver.CLOSE_NOWRITE: // 8
-					Log.i("RecursiveFileObserver", "CLOSE_NOWRITE: " + path);
+					logUtils.d(tag, "CLOSE_NOWRITE: " + path);
 					break;
-				/**
-				 * The operation that OwnCloud produces when download a file:
-				 * 1. create
-				 * 2. open
-				 * 3. close_nowrite
-				 * 4. modify
-				 * 5. open
-				 * 6. close_write
-				 * 7. move_to
-				 * 8. move_from
-				 * 9. move_to
-				 */
-				case FileObserver.CLOSE_WRITE:// 16
-					Log.i("RecursiveFileObserver", "CLOSE_WRITE: " + path);
-					if(path.endsWith(".apk") && !pathList.contains(path)) {
-						pathList.add(path); // Add the full path to the 
-					}
-				case FileObserver.MOVED_TO: // 128
-					Log.i("RecursiveFileObserver", "MOVED_TO: " + path);
-					if(path.endsWith(".apk") && !pathList.contains(path)) {
-						pathList.add(path); // Add the full path to the 
+				case FileObserver.CLOSE_WRITE: // 16
+					logUtils.d(tag, "CLOSE_WRITE: " + path);
+					if(path.endsWith(".apk")) {
+						Notification notification = new Notification(android.R.drawable.ic_dialog_info,
+								path, System.currentTimeMillis());
+						notification.flags = Notification.FLAG_AUTO_CANCEL; // The notification should be canceled when click the Clear all button.
+						Intent i = new Intent(getApplicationContext(), ApkValidate.class);
+						Bundle bundle = new Bundle();
+						bundle.putString("filepath", path);
+						i.putExtras(bundle);
+						logUtils.d(tag, path);
+						
+						i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
+						//PendingIntent
+						PendingIntent contentIntent = PendingIntent.getActivity(getApplicationContext(),
+								0,
+								i,
+								PendingIntent.FLAG_UPDATE_CURRENT);
+						
+						notification.setLatestEventInfo(
+						        getApplicationContext(),
+						        getString(R.string.apk_downloaded),
+						        path,
+						        contentIntent);
+						notificationManager.notify(notification_number++, notification);
 					}
 					break;
 				case FileObserver.OPEN: // 32
-					Log.i("RecursiveFileObserver", "OPEN: " + path);
+					logUtils.d(tag, "OPEN: " + path);
 					break;
 				case FileObserver.MOVED_FROM: // 64
-					Log.i("RecursiveFileObserver", "MOVED_FROM: " + path);
+					logUtils.d(tag, "MOVED_FROM: " + path);
 					break;
-				
+				case FileObserver.MOVED_TO: // 128
+					logUtils.d(tag, "MOVED_TO: " + path);
+					break;
 				case FileObserver.CREATE: // 256
-					Log.i("RecursiveFileObserver", "CREATE: " + path);
+					logUtils.d(tag, "CREATE: " + path);
 					break;
 				case FileObserver.DELETE: // 512
-					Log.i("RecursiveFileObserver", "DELETE: " + path);
+					logUtils.d(tag, "DELETE: " + path);
 					break;
 				case FileObserver.DELETE_SELF: // 1024
-					Log.i("RecursiveFileObserver", "DELETE_SELF: " + path);
+					logUtils.d(tag, "DELETE_SELF: " + path);
 					break;
 				case FileObserver.MOVE_SELF: // 2048
-					Log.i("RecursiveFileObserver", "MOVE_SELF: " + path);
+					logUtils.d(tag, "MOVE_SELF: " + path);
 					break;
 				default: //FileObserver.ALL_EVENTS: // 4095
-					Log.i("RecursiveFileObserver", "ALL_EVENTS: " + path);
+					logUtils.d(tag, "ALL_EVENTS: " + path);
 					break;
 			}
 		}

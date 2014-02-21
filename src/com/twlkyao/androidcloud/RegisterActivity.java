@@ -22,6 +22,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.twlkyao.utils.ConstantVariables;
+import com.twlkyao.utils.LogUtils;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -36,6 +37,10 @@ import android.widget.Toast;
 
 public class RegisterActivity extends Activity {
 
+	private String TAG = "RegisterActivity";
+	private boolean DEBUG = true;
+	private LogUtils logUtils = new LogUtils(DEBUG, TAG);
+	
 	/*Register UI*/
 	private EditText usernameEditText; // user name
 	private EditText emailEditText; // email address
@@ -266,7 +271,7 @@ public class RegisterActivity extends Activity {
 		params.add(new BasicNameValuePair("email", email)); // add the email name-value
 		params.add(new BasicNameValuePair("password",password)); // add the password name-value
 		
-		System.out.println("params to send:" + params.toString()); // system out the parameters
+		logUtils.d(TAG, "params to send:" + params.toString()); // system out the parameters
 		
 		try {
 			

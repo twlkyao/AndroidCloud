@@ -1,4 +1,4 @@
-#AndroidCloud
+#AndroidCloud [![Build Status](https://travis-ci.org/twlkyao/AndroidCloud.png?branch=master)](https://travis-ci.org/twlkyao/AndroidCloud)
 
 An Android Application to synchronize your data to the cloud with some extra secure measures.
 

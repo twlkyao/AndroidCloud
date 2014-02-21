@@ -31,11 +31,13 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.util.Log;
+import com.twlkyao.utils.LogUtils;
 
 public class FileOperation {
 	
 	private String Tag = "FileOperation"; // The logcat tag
+	private boolean DEBUG = true;
+	private LogUtils logUtils = new LogUtils(DEBUG, Tag);
 	
 	// Define the hashmap to record the basic information of files during the session
 //	private HashMap<String, String> session =new HashMap<String, String>();
@@ -166,7 +168,7 @@ public class FileOperation {
 		List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>();
 		params.add(new BasicNameValuePair("encrypt_level", String.valueOf(encrypt_level))); // Add the encrypt level name-value
 		
-		Log.d(Tag, "params to send:" + params.toString());	// Log out the parameters
+		logUtils.d(Tag, "params to send:" + params.toString());	// Log out the parameters
 		
 		try {
 			// Encode the entity with utf8, and send the entity to the request
@@ -188,7 +190,7 @@ public class FileOperation {
 				if (entity != null) { // The entity obtained is not null
 					String info = EntityUtils.toString(entity); // Convert the entity to string
 					
-					Log.d(Tag, info); // Log out the returned info
+					logUtils.d(Tag, info); // Log out the returned info
 					
 					JSONObject jsonObject=null;
 					// Flag to indicate whether login succeeded, others to store the data from server
@@ -244,7 +246,7 @@ public class FileOperation {
 		params.add(new BasicNameValuePair("encrypt_level", encrypt_level)); 	// Add the encrypt_level name_value
 		params.add(new BasicNameValuePair("encrypt_key", encrypt_key)); 	// Add the encrypt_key name-value
 		
-		Log.d(Tag, "params to send:" + params.toString());	// Log out the parameters
+		logUtils.d(Tag, "params to send:" + params.toString());	// Log out the parameters
 		
 		try{
 			
@@ -267,7 +269,7 @@ public class FileOperation {
 				if (entity != null) { // The entity obtained is not null
 					String info = EntityUtils.toString(entity); // Convert the entity to string
 					
-					Log.d(Tag, info); // Log out the returned info
+					logUtils.d(Tag, info); // Log out the returned info
 					
 					JSONObject jsonObject=null;
 					// Flag to indicate whether login succeeded, others to store the data from server
@@ -289,7 +291,7 @@ public class FileOperation {
 						status = true;
 						String md5 = jsonObject.getString("file_md5");
 						String sha1 = jsonObject.getString("file_sha1");
-						Log.d(Tag, "md5:" + md5 + "\nsha1:" + sha1);
+						logUtils.d(Tag, "md5:" + md5 + "\nsha1:" + sha1);
 					} else { // If the operation type is unknown or some other errors, set status as false
 						status = false;
 					}
@@ -334,7 +336,7 @@ public class FileOperation {
 		params.add(new BasicNameValuePair("file_md5", file_md5)); 			// Add the file_md5 name-value
 		params.add(new BasicNameValuePair("file_sha1", file_sha1)); 		// Add the file_sha1 name-value
 		
-		Log.d(Tag, "params to send:" + params.toString());	// Log out the parameters
+		logUtils.d(Tag, "params to send:" + params.toString());	// Log out the parameters
 		
 		try{
 			
@@ -356,7 +358,7 @@ public class FileOperation {
 				if (entity != null) { // The entity obtained is not null
 					String info = EntityUtils.toString(entity); // Convert the entity to string
 					
-					Log.d(Tag, info); // Log out the returned info
+					logUtils.d(Tag, info); // Log out the returned info
 					
 					JSONObject jsonObject=null;
 					
@@ -384,7 +386,7 @@ public class FileOperation {
 						resultHashMap.put("encrypt_level", encrypt_level);
 						resultHashMap.put("encrypt_key", encrypt_key);
 						
-						Log.d(Tag, "encrypt_key:" + encrypt_key + "encrypt_level" + encrypt_level);
+						logUtils.d(Tag, "encrypt_key:" + encrypt_key + "encrypt_level" + encrypt_level);
 						
 					} else { // The flag is false.
 						resultHashMap = null;

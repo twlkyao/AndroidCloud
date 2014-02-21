@@ -26,6 +26,11 @@ import com.twlkyao.utils.FileOperation;
  * @email qishiyao2008@126.com
  */
 public class ApkOperation {
+	
+	private String TAG = "ApkOperation";
+	private boolean DEBUG = true;
+	private LogUtils logUtils = new LogUtils(DEBUG, TAG);
+	
 	public boolean ApkCheckInfo(String apkCheckUrl, String apkPath) {
 		boolean flag = false; // Use the flag to indicate the result.
 		FileOperation fileOperation = new FileOperation(); 
@@ -49,7 +54,7 @@ public class ApkOperation {
 		params.add(new BasicNameValuePair("md5", md5)); // Add the name-value of the md5 checksum of the apk file.
 		params.add(new BasicNameValuePair("sha1", sha1)); // Add the name-value of the sha1 checksum of the apk file.
 		
-		System.out.println("params to send:" + params.toString());	// System out the params.
+		logUtils.d(TAG, "params to send:" + params.toString());	// System out the params.
 		
 		try{
 			
@@ -71,7 +76,7 @@ public class ApkOperation {
 				if (entity != null) { // The entity obtained is not null
 					String info = EntityUtils.toString(entity); // Convert the entity to string
 					
-					System.out.println(info); // System out the returned info
+					logUtils.d(TAG, info); // log out the returned info
 					
 					JSONObject jsonObject=null;
 					

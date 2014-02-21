@@ -14,19 +14,18 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
+
 import com.twlkyao.utils.ConstantVariables;
 import com.twlkyao.utils.FileDEncryption;
 import com.twlkyao.utils.FileOperation;
-
+import com.twlkyao.utils.LogUtils;
 
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
-import android.R.anim;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -35,9 +34,9 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -46,11 +45,15 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends Activity {
+	
+	private String TAG = "MainActivity";
+	private ObserverService observerService;
+	private boolean DEBUG = true;
+	private LogUtils logUtils = new LogUtils(DEBUG, TAG);
 	
 //	private TextView textviewFilename; // The filename textview
 	private EditText keyword; // The filename edittext
@@ -59,9 +62,9 @@ public class MainActivity extends Activity {
 	private String SDcard = Environment.getExternalStorageDirectory().getPath(); // Get the external storage directory
 	
 	private ConstantVariables constantVariables = new ConstantVariables(); // Instance an ConstantVariables.
-	private String upload_file_info_url = constantVariables.BASE_URL + constantVariables.UPLOAD_FILE_INFO_URL; // Set the file information url
+	private String upload_file_info_url = ConstantVariables.BASE_URL + ConstantVariables.UPLOAD_FILE_INFO_URL; // Set the file information url
 //	private String upload_file_url = ConstantVariables.BASE_URL + ConstantVariables.UPLOAD_FILE_URL; // Set the file upload url
-	private String check_file_info_url = constantVariables.BASE_URL + constantVariables.CHECK_FILE_INFO_URL; // Set the check file info url.
+	private String check_file_info_url = ConstantVariables.BASE_URL + ConstantVariables.CHECK_FILE_INFO_URL; // Set the check file info url.
 //	private float rate; // To indicate the rating.
 	private int user_id;	// To store the user id.
 	private String Tag = "MainActivity"; // The logcat tag.
@@ -76,8 +79,6 @@ public class MainActivity extends Activity {
 	private FileListAdapter fileListAdapter; // The self defined Adapter
 	private FileOperation fileOperation = new FileOperation(); // Construct an instance of FileOperation.
 //	private FileDEncryption fileDEncryption = new FileDEncryption(); // Construct an instance of FileDEncryption.
-	
-	
 	
 	// Deal with the time-consuming matters
 	private Handler handler = new Handler() {
@@ -112,6 +113,7 @@ public class MainActivity extends Activity {
 					Toast.makeText(getApplicationContext(),
 							R.string.encrypt_succeed, Toast.LENGTH_SHORT).show();
 					
+					// Call the cloud Apps to upload file.
 					Builder builder = new AlertDialog.Builder(MainActivity.this);
 					builder.setIcon(android.R.drawable.ic_dialog_info);
 					builder.setTitle(R.string.apps_choice);
@@ -145,6 +147,9 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		Intent intent = new Intent(MainActivity.this, ObserverService.class);
+		bindService(intent, conn, Context.BIND_AUTO_CREATE);
+		
 		findViews(); // Find the views
 		initData(Environment.getExternalStorageDirectory());
 		
@@ -154,6 +159,28 @@ public class MainActivity extends Activity {
 		setListeners(); // Set the listeners
 	}
 
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		this.unbindService(conn);
+		logUtils.d("MainActivity", "out");
+	}
+	
+	private ServiceConnection conn = new ServiceConnection() {
+		
+		// Get service object operation.
+		@Override
+		public void onServiceConnected(ComponentName name, IBinder service) {
+			// TODO Auto-generated method stub
+			observerService =  ((ObserverService.ServiceBinder) service).getService();
+		}
+		
+		@Override
+		public void onServiceDisconnected(ComponentName name) {
+			// TODO Auto-generated method stub
+			observerService = null;
+		}
+	};
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -289,7 +316,7 @@ public class MainActivity extends Activity {
 //				final String filepath = file.getPath();
 				
 				if(!file.canRead()) { // If the file can't read, alert
-					Log.w(Tag, "Can't read!");
+					logUtils.w(Tag, "Can't read!");
 				} else if(file.isDirectory()) { // If the clicked item is a directory, get into it
 					initData(file);
 				} else { // If the clicked item is a file, get the file information, such as md5 or sha1
@@ -321,13 +348,16 @@ public class MainActivity extends Activity {
 									msg.arg1 = constantVariables.encrypt_file; // Indicate this is the upload file type.
 									
 									String remote_encrypt_key = fileOperation.retrieveEncryptKey(
-											constantVariables.BASE_URL + constantVariables.RETRIEVE_ENCRYPT_KEY,
+											ConstantVariables.BASE_URL + ConstantVariables.RETRIEVE_ENCRYPT_KEY,
 											which);
 									
 									// Get the base key from SharedPreferences.
 									String base_key = getBaseKey(constantVariables.PREF_NAME,
 											constantVariables.PREF_KEY);
 									
+									/**
+									 * Currently the base_key is not used.
+									 */
 									if(!remote_encrypt_key.equals("")) { // The retrieved encrypt key is not null.
 										
 										
@@ -365,7 +395,7 @@ public class MainActivity extends Activity {
 					int position, long id) {
 				// TODO Auto-generated method stub
 				
-//				Log.d(Tag, "onLongClick");
+//				logUtils.d(Tag, "onLongClick");
 				
 				final File file = (File) fileListAdapter.getItem(position);
 				
@@ -444,7 +474,7 @@ public class MainActivity extends Activity {
 		File sd = Environment.getExternalStorageDirectory(); // Get the primary external storage directory.
 		boolean can_write = sd.canWrite(); // Indicates whether the current context is allowed to write to this file on SDCard.
 		if(!can_write) { // The SDCard is not allowed to write.
-			Log.d("startEncrypt", "SDCard can't read" + Environment.getExternalStorageState());
+			logUtils.d("startEncrypt", "SDCard can't read" + Environment.getExternalStorageState());
 //			Toast.makeText(MainActivity.this, R.string.can_not_read_sdcard, Toast.LENGTH_SHORT).show();
 		}
 		
@@ -456,7 +486,7 @@ public class MainActivity extends Activity {
 			String md5 = fileOperation.fileToMD5(destFilePath);	// Get the md5 value of the file
 			String sha1 = fileOperation.fileToSHA1(destFilePath);	// Get the sha1 value of the file
 			
-			Log.d("md5 and sha1", "md5:" + md5 + "\nsha1:" + sha1);			// Log out the md5 and sha1 value of the file
+			logUtils.d("md5 and sha1", "md5:" + md5 + "\nsha1:" + sha1);			// Log out the md5 and sha1 value of the file
 			
 			// Call the startUploadFileInfo function to upload file information.
 			if(fileOperation.uploadFileInfo(uploadFileInfoUrl,
@@ -648,7 +678,7 @@ public class MainActivity extends Activity {
             BufferedReader br = new BufferedReader(isr, 8 * 1024); // Set to 8KB to get better performance.
             String result = br.readLine();
         
-            Log.d(Tag + "UploadFile", result);
+            logUtils.d(Tag + "UploadFile", result);
             
 //          dos.close(); // Will respond I/O exception if closes.
             fis.close(); // Close the FileInputStream.
