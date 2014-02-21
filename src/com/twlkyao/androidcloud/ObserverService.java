@@ -46,7 +46,8 @@ public class ObserverService extends Service {
 	@Override
 	public IBinder onBind(Intent intent) {
 		// TODO Auto-generated method stub
-		return serviceBinder;
+//		return serviceBinder;
+		return null; // Service not being allowed to bind.
 	}
 	
 	@Override

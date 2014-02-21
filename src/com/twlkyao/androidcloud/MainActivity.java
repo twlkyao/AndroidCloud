@@ -148,7 +148,7 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 
 		Intent intent = new Intent(MainActivity.this, ObserverService.class);
-		bindService(intent, conn, Context.BIND_AUTO_CREATE);
+		startService(intent);
 		
 		findViews(); // Find the views
 		initData(Environment.getExternalStorageDirectory());
@@ -162,25 +162,8 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		this.unbindService(conn);
 		logUtils.d("MainActivity", "out");
 	}
-	
-	private ServiceConnection conn = new ServiceConnection() {
-		
-		// Get service object operation.
-		@Override
-		public void onServiceConnected(ComponentName name, IBinder service) {
-			// TODO Auto-generated method stub
-			observerService =  ((ObserverService.ServiceBinder) service).getService();
-		}
-		
-		@Override
-		public void onServiceDisconnected(ComponentName name) {
-			// TODO Auto-generated method stub
-			observerService = null;
-		}
-	};
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
