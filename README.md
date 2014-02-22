@@ -20,7 +20,8 @@ An Android Application to synchronize your data to the cloud with some extra sec
 3. Set file important level and encrypts the file when uploads.(TODO)
 4. Pass the key in ciphpertext.(TODO)
 5. Validate the integrity of the stored data.
-6. Validate the integritey of the downloaded Apps.
+6. Validate the integritey of the downloaded Apps.  
+7. Encrypt the contacts and messages.
 
 ##Attention  
 
@@ -29,6 +30,11 @@ Part 4 and part 5 of Directions wil use a third party application, in order to b
 ##TODO list
 
 <del>1. The Apps validation on the Android side.</del>  
-<del>2. Fix the FileObserver's jump condition(When to start another Activity, solved by using Notification).</del>
-<del>3. The device side has part of the key.</del>
-4. Implement the same function for contacts and message parts.
+  
+<del>2. Fix the FileObserver's jump condition(When to start another Activity, solved by using Notification).</del>  
+
+<del>3. The device side has part of the key.</del>  
+
+4. Implement the same function for contacts and message parts.  
+5. Implement the key splice.
+
