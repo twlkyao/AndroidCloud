@@ -1,7 +1,69 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:id="@+id/apk_validate_layout"
+    android:layout_width="280dp"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@drawable/confirm_dialog_bg2"
+    android:gravity="center_horizontal"
     android:orientation="vertical" >
+
+    <!-- App validate title. -->
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:padding="5dp"
+        android:text="@string/app_validate_title"
+        android:textColor="#111"
+        android:textSize="20sp" />
+
+    <!-- App validate message. -->
+
+    <TextView
+        android:id="@+id/tx_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        android:gravity="center_horizontal"
+        android:padding="10dp"
+        android:text="@string/app_validating"
+        android:textColor="#333"
+        android:textSize="16sp" />
+    <!-- Button layout. -->
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="55dp" >
+
+        <!-- Cancel/Delete button. -->
+
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_width="110dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_style_green"
+            android:gravity="center"
+            android:onClick="exitbutton0"
+            android:text="@string/btn_cancel"
+            android:textColor="#fff"
+            android:textSize="16sp" />
+        <!-- Positivie button. -->
+
+        <Button
+            android:id="@+id/btn_ok"
+            android:layout_width="110dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/btn_style_white"
+            android:gravity="center"
+            android:onClick="exitbutton1"
+            android:text="@string/btn_ok"
+            android:textColor="#333"
+            android:textSize="16sp" />
+    </LinearLayout>
 
 </LinearLayout>
