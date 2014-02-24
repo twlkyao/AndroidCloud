@@ -24,7 +24,6 @@ import com.twlkyao.utils.LogUtils;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.IBinder;
 import android.os.Message;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -34,7 +33,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences;
 import android.view.Menu;
@@ -179,6 +177,8 @@ public class MainActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// TODO Auto-generated method stub
 		switch(item.getItemId()) { // Act according to the menu item clicked.
+		
+		// The switch-case need to be reorganized.
 			case R.id.action_settings: // The action_settings item.
 				Toast.makeText(getApplicationContext(),
 						R.string.action_settings, Toast.LENGTH_SHORT).show();
@@ -228,6 +228,14 @@ public class MainActivity extends Activity {
 				//now that the dialog is set up, it's time to show it    
 				set_base_key_dialog.show(); 
 				
+				break;
+			case R.id.action_show_contacts: // The show contacts item.
+				Intent intent_contacts = new Intent(getApplicationContext(), ContactsActivity.class);
+				startActivity(intent_contacts);				
+				break;
+			case R.id.action_show_messages:
+				Intent intent_messages = new Intent(getApplicationContext(), MessageActivity.class);
+				startActivity(intent_messages);
 				break;
 			case R.id.action_help: // The help item.
 				Toast.makeText(getApplicationContext(),

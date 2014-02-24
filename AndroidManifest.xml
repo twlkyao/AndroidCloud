@@ -15,6 +15,12 @@
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
     <!-- The permission to receive the ACTION_BOOT_COMPLETED boradcast after the sysytem finishes booting. -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!-- The permission to read contacts. -->
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <!-- The permission to write SMS. -->
+    <uses-permission android:name="android.permission.WRITE_SMS" />
+    <!-- The permission to read SMS. -->
+    <uses-permission android:name="android.permission.READ_SMS" />
 
     <application
         android:allowBackup="true"
@@ -60,6 +66,14 @@
         <service android:name="android.net.VpnService" >
         </service>
         -->
+        <activity
+            android:name="com.twlkyao.androidcloud.MessageActivity"
+            android:label="@string/title_activity_message" >
+        </activity>
+        <activity
+            android:name="com.twlkyao.androidcloud.ContactsActivity"
+            android:label="@string/title_activity_contacts" >
+        </activity>
     </application>
 
 </manifest>

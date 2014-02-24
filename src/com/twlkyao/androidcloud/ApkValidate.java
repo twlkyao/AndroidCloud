@@ -1,3 +1,8 @@
+/**
+ * Author:	Shiyao Qi
+ * Date:	2014.01.11
+ * Function:	Validate the downloaded apks.
+ */
 package com.twlkyao.androidcloud;
 
 import java.io.File;

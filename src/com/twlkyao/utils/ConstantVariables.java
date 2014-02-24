@@ -5,12 +5,12 @@ public class ConstantVariables {
 	/**
 	 * AVD base address
 	 */
-	final public static String BASE_URL= "http://10.0.2.2/"; //Set the login url; 
+//	final public static String BASE_URL= "http://10.0.2.2/"; //Set the login url; 
 
 	/**
 	 * Real world base address
 	 */
-//	final public static String BASE_URL= "http://219.245.80.4/"; //Set the login url
+	final public static String BASE_URL= "http://219.245.80.4/"; //Set the login url
 	
 	// The string of website.
 	final public static String REGISTER_URL = "cloud/android/register.php"; // The location of the register PHP script
@@ -20,6 +20,16 @@ public class ConstantVariables {
 	final public static String CHECK_FILE_INFO_URL = "cloud/android/check_data_info.php"; // The locaion of the file information PHP script
 	final public static String RETRIEVE_ENCRYPT_KEY = "cloud/android/keys_generator.php"; // The location of the keys generator PHP script.
 	final public static String CHECK_APK_INFO = "cloud/check_apk_info"; // The location of the check apk info PHP script.
+	
+	// The type of message.
+	final String SMS_URI_ALL = "content://sms/"; // All sms.
+	final String SMS_URI_INBOX = "content://sms/inbox"; // Inbox sms.
+	final String SMS_URI_SEND = "content://sms/sent"; // Sent sms.
+	final String SMS_URI_DRAFT = "content://sms/draft"; // Draft sms.
+	final String SMS_URI_OUTBOX = "content://sms/outbox"; // Outbox sms.
+	final String SMS_URI_FAILED = "content://sms/failed"; // Failed sms.
+	final String SMS_URI_QUEUED = "content://sms/queued"; // Queued sms.
+	
 	
 	// The SharedPreferences name and key of base key.
 	public String PREF_NAME = "base_key"; // The SharedPreferences name. of the base key.
