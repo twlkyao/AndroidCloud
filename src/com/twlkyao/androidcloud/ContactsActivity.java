@@ -1,7 +1,8 @@
 /**
- * Author:	Network
- * Editor:	Shiyao Qi
- * Date:	2014.02.23
+ * @author:	Network
+ * @editor:	Shiyao Qi
+ * @date:	2014.02.23
+ * @email: qishiyao2008@126.com
  * Function:	Get all the contacts and display them for use.
  */
 package com.twlkyao.androidcloud;

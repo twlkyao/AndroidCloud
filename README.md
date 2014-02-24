@@ -29,11 +29,11 @@ Part 4 and part 5 of Directions wil use a third party application, in order to b
 
 ##TODO list
 
-<del>1. The Apps validation on the Android side.</del>  
+<del>1. The Apps validation on the Android side.</del><br>  
   
-<del>2. Fix the FileObserver's jump condition(When to start another Activity, solved by using Notification).</del>  
+<del>2. Fix the FileObserver's jump condition(When to start another Activity, solved by using Notification).</del><br>
 
-<del>3. The device side has part of the key.</del>  
+<del>3. The device side has part of the key.</del><br>
 
 4. Implement the same function for contacts and message parts.  
 5. Implement the key splice.
