@@ -33,8 +33,12 @@ Part 4 and part 5 of Directions wil use a third party application, in order to b
   
 <del>2. Fix the FileObserver's jump condition(When to start another Activity, solved by using Notification).</del><br>
 
-<del>3. The device side has part of the key.</del><br>
+<del>3. The device side has part of the key.</del><br>  
 
-4. Implement the same function for contacts and message parts.  
-5. Implement the key splice.
+4. Add more implements of Encryption.  
 
+5. Implement the same function for contacts and message parts.  
+
+6. Implement the key splice.  
+
+7. Encrypt the communication data.  
