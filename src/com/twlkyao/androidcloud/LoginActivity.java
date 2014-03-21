@@ -27,6 +27,7 @@ import org.json.JSONObject;
 
 import com.twlkyao.utils.ConstantVariables;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -326,4 +327,14 @@ public class LoginActivity extends Activity {
 		}
 		return status;
 	}
+	
+	/**
+	 * The method to deal with the forget password.
+	 * @param v
+	 */
+	public void forget_password(View v) { // Forget password.
+    	Uri uri = Uri.parse("http://3g.qq.com"); 
+    	Intent intent = new Intent(Intent.ACTION_VIEW, uri); 
+    	startActivity(intent);
+      }
 }

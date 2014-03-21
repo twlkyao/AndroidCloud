@@ -10,7 +10,7 @@ public class ConstantVariables {
 	/**
 	 * Real world base address
 	 */
-	final public static String BASE_URL= "http://219.245.80.247/"; //Set the login url
+	final public static String BASE_URL= "http://219.245.80.17/"; //Set the login url
 	
 	// The string of website.
 	final public static String REGISTER_URL = "cloud/android/register.php"; // The location of the register PHP script

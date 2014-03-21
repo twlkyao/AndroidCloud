@@ -86,7 +86,7 @@ public class MessageActivity extends Activity {
 				smsBuilder.append("no result!");
 			} // end if
 			
-			smsBuilder.append("getSmsInPhone has executed!");
+//			smsBuilder.append("getSmsInPhone has executed!");
 			
 		} catch (SQLiteException ex) {
 			logUtils.d("SQLiteException in getSmsInPhone", ex.getMessage());
