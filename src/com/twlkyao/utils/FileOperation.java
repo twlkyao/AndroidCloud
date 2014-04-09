@@ -162,11 +162,15 @@ public class FileOperation {
 		
 		String encrypt_key = ""; // To store the retrieved encrypt_key.
 		
+		if(0 == encrypt_level) { // If there is no need to encrypt the file, return empty encrypt key.
+			return encrypt_key;
+		}
+		
 		HttpPost httpRequest =new HttpPost(retrieveEncryptKeyUrl); // Construct a new HttpPost instance according to the uri
 		
 		// use name-value pair to store the parameters to pass
 		List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>();
-		params.add(new BasicNameValuePair("encrypt_level", String.valueOf(encrypt_level))); // Add the encrypt level name-value
+		params.add(new BasicNameValuePair("encrypt_level", String.valueOf(encrypt_level - 1))); // Add the encrypt level name-value
 		
 		logUtils.d(Tag, "params to send:" + params.toString());	// Log out the parameters
 		
@@ -202,8 +206,9 @@ public class FileOperation {
 					
 					// Judge whether the validation if succeeded according to the flag
 					if(flag.equals("success")) { // If the operation type is success, get the encrypt key.
-						
 						encrypt_key = jsonObject.getString("encrypt_key");	// Get the value mapped by name:encrypt_key
+						
+						logUtils.d(Tag, encrypt_key); // Log out the return encrypt key.
 					}
 				}
 			} // Status code equal OK 
@@ -217,7 +222,6 @@ public class FileOperation {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 		return encrypt_key;
 	}
 	

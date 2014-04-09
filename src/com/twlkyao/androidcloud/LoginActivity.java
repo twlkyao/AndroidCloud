@@ -146,7 +146,6 @@ public class LoginActivity extends Activity {
 				
 				startValidate(strUsername, strPassword, loginUrl); // Start a thread to validate
 			}
-
 		});
 		
 		

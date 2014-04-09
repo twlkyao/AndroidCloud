@@ -5,7 +5,7 @@
     <string name="action_settings">设置</string>
     <string name="action_help">帮助</string>
     <string name="action_set_base_keys">设置本地密码</string>
-    <string name="base_key_hint">输入要设置的本地密码</string>
+    <string name="base_key_hint">输入8位字符</string>
     <string name="username_label">用户名：</string>
     <string name="password_label">密码：</string>
     <string name="username_hint">请输入用户名</string>
@@ -77,5 +77,7 @@
     <string name="title_activity_contacts">ContactsActivity</string>
     <string name="action_show_contacts">显示联系人</string>
     <string name="action_show_messages">显示短信</string>
+    <string name="encrypt_directory">EncryptedDir</string>
+    <string name="decrypt_directory">DecryptedDir</string>
 
 </resources>

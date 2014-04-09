@@ -49,12 +49,4 @@ public class ContactsActivity extends Activity {
 		cursor.close();
 		contacts.setText(result);
 	}
-	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.contacts, menu);
-		return true;
-	}
-
 }

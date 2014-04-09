@@ -25,14 +25,6 @@ public class MessageActivity extends Activity {
 		tv_message.setText(getSmsInPhone("content://sms/")); // Get all the message.
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.message, menu);
-		return true;
-	}
-	
-	
 	public String getSmsInPhone(String messageType) {  
 		
 		StringBuilder smsBuilder = new StringBuilder();  

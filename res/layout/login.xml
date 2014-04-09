@@ -10,10 +10,12 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginLeft="@dimen/layout_margin_left"
+        android:layout_marginRight="@dimen/layout_margin_right"
+        android:layout_marginTop="@dimen/layout_margin_top"
         android:text="@string/username_label"
         android:textColor="@android:color/black"
-        android:textSize="18sp" >
+        android:textSize="@dimen/text_size" >
     </TextView>
 
     <!-- Username EditText -->
@@ -22,7 +24,9 @@
         android:id="@+id/username"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginLeft="@dimen/layout_margin_left"
+        android:layout_marginRight="@dimen/layout_margin_right"
+        android:layout_marginTop="@dimen/layout_margin_top"
         android:hint="@string/username_hint"
         android:inputType="text"
         android:textColor="@android:color/black" >
@@ -33,9 +37,12 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/layout_margin_left"
+        android:layout_marginRight="@dimen/layout_margin_right"
+        android:layout_marginTop="@dimen/layout_margin_top"
         android:text="@string/password_label"
         android:textColor="@android:color/black"
-        android:textSize="18sp" >
+        android:textSize="@dimen/text_size" >
     </TextView>
 
     <!-- Password EditText -->
@@ -44,6 +51,9 @@
         android:id="@+id/password"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/layout_margin_left"
+        android:layout_marginRight="@dimen/layout_margin_right"
+        android:layout_marginTop="@dimen/layout_margin_top"
         android:hint="@string/password_hint"
         android:inputType="textPassword"
         android:textColor="@android:color/black" >
@@ -65,40 +75,44 @@
         android:id="@+id/forget_passwd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="23dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginLeft="@dimen/layout_margin_left"
+        android:layout_marginTop="@dimen/layout_margin_top"
         android:background="#0000"
         android:onClick="forget_password"
         android:text="@string/forget_password"
         android:textColor="#00f"
-        android:textSize="18sp" />
+        android:textSize="@dimen/text_size" />
 
     <!-- Buttons -->
 
     <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="@dimen/layout_margin_left"
+        android:layout_marginRight="@dimen/layout_margin_right"
+        android:layout_marginTop="@dimen/layout_margin_top"
         android:orientation="horizontal" >
 
         <Button
             android:id="@+id/login"
-            android:layout_width="fill_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/login"
             android:textColor="@android:color/black"
-            android:textSize="24sp" >
+            android:textSize="@dimen/btn_text" >
         </Button>
 
         <Button
             android:id="@+id/register"
-            android:layout_width="fill_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/layout_margin_left"
             android:layout_weight="1"
             android:text="@string/register"
             android:textColor="@android:color/black"
-            android:textSize="24sp" >
+            android:textSize="@dimen/btn_text" >
         </Button>
     </LinearLayout>
 

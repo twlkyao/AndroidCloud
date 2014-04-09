@@ -5,12 +5,14 @@ public class ConstantVariables {
 	/**
 	 * AVD base address
 	 */
-//	final public static String BASE_URL= "http://10.0.2.2/"; //Set the login url; 
+//	final public static String BASE_URL= "http://10.0.2.2/"; //Set the base url; 
 
 	/**
 	 * Real world base address
 	 */
-	final public static String BASE_URL= "http://219.245.80.17/"; //Set the login url
+//	final public static String BASE_URL = "http://219.245.80.192/"; //Set the base url
+	final public static String BASE_URL = "http://219.245.80.2:20080/"; // Set the base url.
+//	final public static String BASE_URL = "http://192.168.0.1:20080/"; // Set the base url.
 	
 	// The string of website.
 	final public static String REGISTER_URL = "cloud/android/register.php"; // The location of the register PHP script
@@ -57,14 +59,14 @@ public class ConstantVariables {
 	 */
 	
 	public String[] algorithms = {
-			"DESede", "AES"
+			"AES", "AES", "AES", "DESede"
 	};
 	
-	public String[] keys = {
+	/*public String[] keys = {
 		"12345678abcd",
 		"12345678"
-
-	};
+	};*/
+	
 	
 	public String[] packageNames = {
 		"com.owncloud.android",

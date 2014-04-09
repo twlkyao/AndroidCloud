@@ -2,60 +2,61 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="5dp"
+    android:layout_marginTop="@dimen/layout_margin_top"
     android:background="@color/green"
     android:orientation="vertical" >
 
-    <!-- The label of the filename -->
-
-    <TextView
-        android:id="@+id/keyword_label"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/linear_layout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="10dp"
-        android:text="@string/keyword_label"
-        android:textColor="@android:color/background_dark"
-        android:textSize="20sp" />
-    <!-- EditText for input the keyword -->
+        android:orientation="horizontal" >
 
-    <EditText
-        android:id="@+id/keyword"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@id/keyword_label"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_toRightOf="@id/keyword_label"
-        android:hint="@string/keyword_hint"
-        android:textColor="@android:color/background_dark"
-        android:textSize="15sp" />
-    <!-- The search button -->
+        <!-- The label of the filename -->
 
-    <Button
-        android:id="@+id/button_search"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@id/keyword"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_toRightOf="@id/keyword"
-        android:text="@string/search"
-        android:textColor="@android:color/background_dark"
-        android:textSize="15sp" />
+        <TextView
+            android:id="@+id/keyword_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
+            android:text="@string/keyword_label"
+            android:textColor="@android:color/background_dark"
+            android:textSize="@dimen/text_size_small" />
+
+        <!-- EditText for input the keyword -->
+
+        <EditText
+            android:id="@+id/keyword"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/layout_margin_left"
+            android:layout_weight="1"
+            android:hint="@string/keyword_hint"
+            android:textColor="@android:color/background_dark"
+            android:textSize="@dimen/text_size_small" />
+        <!-- The search button -->
+
+        <Button
+            android:id="@+id/button_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:text="@string/search"
+            android:textColor="@android:color/background_dark"
+            android:textSize="@dimen/text_size_small" />
+    </LinearLayout>
     <!-- The search result label -->
 
     <TextView
         android:id="@+id/search_result_label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/keyword"
+        android:layout_below="@id/linear_layout"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="20dp"
         android:text="@string/search_result"
         android:textColor="@android:color/background_dark"
-        android:textSize="18sp"
+        android:textSize="@dimen/text_size_small"
         android:visibility="gone" />
     <!-- The search result -->
 

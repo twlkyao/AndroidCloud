@@ -179,10 +179,6 @@ public class MainActivity extends Activity {
 		switch(item.getItemId()) { // Act according to the menu item clicked.
 		
 		// The switch-case need to be reorganized.
-			case R.id.action_settings: // The action_settings item.
-				Toast.makeText(getApplicationContext(),
-						R.string.action_settings, Toast.LENGTH_SHORT).show();
-				break;
 			case R.id.action_set_base_keys: // The action_set_base_keys item.
 				final Dialog set_base_key_dialog = new Dialog(MainActivity.this, R.style.FullHeightDialog);
 				set_base_key_dialog.setContentView(R.layout.set_base_key_dialog);
@@ -323,7 +319,7 @@ public class MainActivity extends Activity {
 							
 							// Create the directory to store the encrypted file.
 							final File dir1 = new File(Environment.getExternalStorageDirectory().toString()
-									+ File.separator + "ABB"); // Create a new directory to store the encrypted file.
+									+ File.separator + getString(R.string.encrypt_directory)); // Create a new directory to store the encrypted file.
 							if(!dir1.exists()) { // If the directory is not exist, create it.
 								dir1.mkdirs();
 							}
@@ -336,15 +332,18 @@ public class MainActivity extends Activity {
 								public void run() {
 									// TODO Auto-generated method stub
 									
-									msg.arg1 = constantVariables.encrypt_file; // Indicate this is the upload file type.
+									msg.arg1 = constantVariables.encrypt_file; // Indicate this is the encrypt file type.
 									
+									// Get the remote generated encrypt key.
 									String remote_encrypt_key = fileOperation.retrieveEncryptKey(
 											ConstantVariables.BASE_URL + ConstantVariables.RETRIEVE_ENCRYPT_KEY,
 											which);
 									
+									logUtils.d(Tag, "Encrypt Key:" + remote_encrypt_key);
+									
 									// Get the base key from SharedPreferences.
-									String base_key = getBaseKey(constantVariables.PREF_NAME,
-											constantVariables.PREF_KEY);
+									SharedPreferences sp = getSharedPreferences(constantVariables.PREF_NAME, MODE_PRIVATE); // Get the SharedPreferences.
+									String base_key = sp.getString(constantVariables.PREF_KEY, ""); // Get the string value.
 									
 									/**
 									 * Currently the base_key is not used.
@@ -360,7 +359,9 @@ public class MainActivity extends Activity {
 										} else { // The encryption is failed.
 											msg.what = constantVariables.operation_failed;
 										}
-									} else { // The retrieved encrypt key or the SharedPreferences key is empty.
+									} else if(remote_encrypt_key.equals("")){ // There is no need to encrypt.
+										msg.what = constantVariables.operation_succeed;
+									} else { // The remote key is not passed correctly.
 										msg.what = constantVariables.operation_failed;
 									}
 									
@@ -391,7 +392,7 @@ public class MainActivity extends Activity {
 				final File file = (File) fileListAdapter.getItem(position);
 				
 				final File dir2 = new File(Environment.getExternalStorageDirectory().toString()
-						+ File.separator + "ACC"); // Create a new directory to store the encrypted file.
+						+ File.separator + getString(R.string.decrypt_directory)); // Create a new directory to store the encrypted file.
 				if(!dir2.exists()) { // If the directory is not exist, create it.
 					dir2.mkdirs();
 				}
@@ -466,17 +467,17 @@ public class MainActivity extends Activity {
 		boolean can_write = sd.canWrite(); // Indicates whether the current context is allowed to write to this file on SDCard.
 		if(!can_write) { // The SDCard is not allowed to write.
 			logUtils.d("startEncrypt", "SDCard can't read" + Environment.getExternalStorageState());
-//			Toast.makeText(MainActivity.this, R.string.can_not_read_sdcard, Toast.LENGTH_SHORT).show();
 		}
 		
 		FileDEncryption fileDEncryption = new FileDEncryption();
 		
-		if(fileDEncryption.Encryption(srcFilePath, constantVariables.algorithms[encrypt_level],
-				constantVariables.keys[encrypt_level], destFilePath)) { // File encryption is succeeded.
+		if(fileDEncryption.Encryption(srcFilePath, constantVariables.algorithms[encrypt_level - 1], // Minus 1 for the reason that the level 0 is not encrypted.
+				encrypt_key, destFilePath)) { // File encryption is succeeded.
 			
 			String md5 = fileOperation.fileToMD5(destFilePath);	// Get the md5 value of the file
 			String sha1 = fileOperation.fileToSHA1(destFilePath);	// Get the sha1 value of the file
 			
+			logUtils.d(Tag, "Algorithm:" + constantVariables.algorithms[encrypt_level - 1]); // Log out the algorithms.
 			logUtils.d("md5 and sha1", "md5:" + md5 + "\nsha1:" + sha1);			// Log out the md5 and sha1 value of the file
 			
 			// Call the startUploadFileInfo function to upload file information.
@@ -531,6 +532,9 @@ public class MainActivity extends Activity {
 		if(resultHashMap != null) { // The md5 and sha1 values are the same with the server.
 			int encrypt_level = Integer.parseInt(resultHashMap.get("encrypt_level"));
 			String encrypt_key = resultHashMap.get("encrypt_key");
+			
+			logUtils.d(Tag, "Decrypt Key:" + encrypt_key);
+			
 			if(fileDEncryption.Decryption(srcFilePath,
 				constantVariables.algorithms[encrypt_level], encrypt_key, destFilePath)) { // The decryption is succeeded.
 				flag = true; // Set the flag to false.

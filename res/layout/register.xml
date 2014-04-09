@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/green"
+    android:layout_height="fill_parent"
+    android:background="#eee"
     android:orientation="vertical" >
 
     <!-- User name label -->
@@ -10,8 +10,12 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/layout_margin_left"
+        android:layout_marginRight="@dimen/layout_margin_right"
+        android:layout_marginTop="@dimen/layout_margin_top"
         android:text="@string/username_label"
-        android:textColor="@android:color/black" >
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/text_size" >
     </TextView>
 
     <!-- User name EditText -->
@@ -20,8 +24,12 @@
         android:id="@+id/username"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/layout_margin_left"
+        android:layout_marginRight="@dimen/layout_margin_right"
+        android:layout_marginTop="@dimen/layout_margin_top"
         android:hint="@string/username_hint"
-        android:textColor="@android:color/black" >
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/text_size" >
     </EditText>
 
     <!-- Email label -->
@@ -29,8 +37,12 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/layout_margin_left"
+        android:layout_marginRight="@dimen/layout_margin_right"
+        android:layout_marginTop="@dimen/layout_margin_top"
         android:text="@string/email_label"
-        android:textColor="@android:color/black" >
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/text_size" >
     </TextView>
 
     <!-- Email address -->
@@ -39,9 +51,13 @@
         android:id="@+id/email"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/layout_margin_left"
+        android:layout_marginRight="@dimen/layout_margin_right"
+        android:layout_marginTop="@dimen/layout_margin_top"
         android:hint="@string/email_hint"
         android:inputType="textEmailAddress"
-        android:textColor="@android:color/black" >
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/text_size" >
     </EditText>
 
     <!-- Password label -->
@@ -49,9 +65,13 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/layout_margin_left"
+        android:layout_marginRight="@dimen/layout_margin_right"
+        android:layout_marginTop="@dimen/layout_margin_top"
         android:hint="@string/password_hint"
         android:text="@string/password_label"
-        android:textColor="@android:color/black" >
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/text_size" >
     </TextView>
 
     <!-- Password EditText -->
@@ -60,9 +80,13 @@
         android:id="@+id/password"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/layout_margin_left"
+        android:layout_marginRight="@dimen/layout_margin_right"
+        android:layout_marginTop="@dimen/layout_margin_top"
         android:hint="@string/password_hint"
         android:inputType="textPassword"
-        android:textColor="@android:color/black" >
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/text_size" >
     </EditText>
 
     <!-- Confirm password label -->
@@ -70,8 +94,12 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/layout_margin_left"
+        android:layout_marginRight="@dimen/layout_margin_right"
+        android:layout_marginTop="@dimen/layout_margin_top"
         android:text="@string/confirm_password_label"
-        android:textColor="@android:color/black" >
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/text_size" >
     </TextView>
 
     <!-- Confirm password EditText -->
@@ -80,38 +108,48 @@
         android:id="@+id/confirm_password"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/layout_margin_left"
+        android:layout_marginRight="@dimen/layout_margin_right"
+        android:layout_marginTop="@dimen/layout_margin_top"
         android:hint="@string/confirm_password_hint"
         android:inputType="textPassword"
-        android:textColor="@android:color/black" >
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/text_size" >
     </EditText>
 
     <!-- Buttons -->
 
     <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="horizontal" >
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/layout_margin_left"
+        android:layout_marginRight="@dimen/layout_margin_right"
+        android:layout_marginTop="@dimen/layout_margin_top"
+        android:orientation="horizontal"
+        android:textSize="@dimen/text_size" >
 
         <!-- Register Button -->
 
         <Button
             android:id="@+id/register"
-            android:layout_width="fill_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/register"
-            android:textColor="@android:color/black" >
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/btn_text" >
         </Button>
 
         <!-- Reset Button -->
 
         <Button
             android:id="@+id/reset"
-            android:layout_width="fill_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/reset"
-            android:textColor="@android:color/black" >
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/btn_text" >
         </Button>
     </LinearLayout>
 
