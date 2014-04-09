@@ -17,6 +17,8 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <!-- The permission to read contacts. -->
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <!-- The permission to write contacts. -->
+    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
     <!-- The permission to write SMS. -->
     <uses-permission android:name="android.permission.WRITE_SMS" />
     <!-- The permission to read SMS. -->

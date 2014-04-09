@@ -23,6 +23,9 @@ public class ConstantVariables {
 	final public static String RETRIEVE_ENCRYPT_KEY = "cloud/android/keys_generator.php"; // The location of the keys generator PHP script.
 	final public static String CHECK_APK_INFO = "cloud/check_apk_info"; // The location of the check apk info PHP script.
 	
+	public static String smsBackupLocation = "/SMSBackup/";
+	public static String smsFile = "sms.xml";
+	
 	// The type of message.
 	final String SMS_URI_ALL = "content://sms/"; // All sms.
 	final String SMS_URI_INBOX = "content://sms/inbox"; // Inbox sms.

@@ -75,9 +75,12 @@
     <string name="btn_reserve">保留</string>
     <string name="title_activity_message">MessageActivity</string>
     <string name="title_activity_contacts">ContactsActivity</string>
-    <string name="action_show_contacts">显示联系人</string>
-    <string name="action_show_messages">显示短信</string>
+    <string name="action_show_contacts">联系人操作</string>
+    <string name="action_show_messages">短信操作</string>
     <string name="encrypt_directory">EncryptedDir</string>
     <string name="decrypt_directory">DecryptedDir</string>
+    <string name="sms_textview">短信操作</string>
+    <string name="backup_sms">备份</string>
+    <string name="recover_sms">恢复</string>
 
 </resources>

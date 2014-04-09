@@ -229,13 +229,13 @@ public class MainActivity extends Activity {
 				Intent intent_contacts = new Intent(getApplicationContext(), ContactsActivity.class);
 				startActivity(intent_contacts);				
 				break;
-			case R.id.action_show_messages:
+			case R.id.action_show_messages: // The show message item.
 				Intent intent_messages = new Intent(getApplicationContext(), MessageActivity.class);
 				startActivity(intent_messages);
 				break;
 			case R.id.action_help: // The help item.
 				Toast.makeText(getApplicationContext(),
-						R.string.help, Toast.LENGTH_SHORT).show();
+						R.string.help, Toast.LENGTH_LONG).show();
 				break;
 		}
 		return super.onOptionsItemSelected(item);
