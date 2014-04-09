@@ -36,10 +36,12 @@ Part 4 and part 5 of Directions wil use a third party application, in order to b
 
 <del>3. The device side has part of the key.</del><br>  
 
-4. Add more implements of Encryption/Decryption.  
+<del>4. Add more implements of Encryption/Decryption.</del><br>  
 
 5. Implement the same function for contacts and message parts.  
 
 6. Implement the key splice.  
 
 7. Encrypt the communication data.  
+
+8. Encrypt the SMS data.  
