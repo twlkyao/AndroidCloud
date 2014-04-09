@@ -38,10 +38,14 @@ Part 4 and part 5 of Directions wil use a third party application, in order to b
 
 <del>4. Add more implements of Encryption/Decryption.</del><br>  
 
-5. Implement the same function for contacts and message parts.  
+<del>5. Implement the same function for contacts and message parts.</del><br>
+  
+6. Implement the same function for contacts.  
 
-6. Implement the key splice.  
+7. Implement the key splice.  
 
-7. Encrypt the communication data.  
+8. Encrypt the communication data.  
 
-8. Encrypt the SMS data.  
+9. Encrypt the SMS data.  
+
+10. Integrate the third party cloud APIs.
