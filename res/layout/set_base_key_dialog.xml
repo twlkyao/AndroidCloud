@@ -35,7 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/base_key_hint"
-        android:inputType="textCapCharacters"
+        android:inputType="textPassword"
         android:textSize="@dimen/text_size" />
     <!-- Dialog Button. -->
 

@@ -20,11 +20,13 @@ import com.twlkyao.utils.ConstantVariables;
 import com.twlkyao.utils.FileDEncryption;
 import com.twlkyao.utils.FileOperation;
 import com.twlkyao.utils.LogUtils;
+import com.twlkyao.utils.StringSplice;
 
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.R.integer;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -334,35 +336,36 @@ public class MainActivity extends Activity {
 									
 									msg.arg1 = constantVariables.encrypt_file; // Indicate this is the encrypt file type.
 									
-									// Get the remote generated encrypt key.
-									String remote_encrypt_key = fileOperation.retrieveEncryptKey(
-											ConstantVariables.BASE_URL + ConstantVariables.RETRIEVE_ENCRYPT_KEY,
-											which);
+									if(0 == which) { // There is no need to encrypt the files.
+										msg.what = constantVariables.operation_succeed;
+									} else { // Choose algorithms and keys to encrypt the files.
+										// Get the remote generated encrypt key.
+										String remote_encrypt_key = fileOperation.retrieveEncryptKey(
+												ConstantVariables.BASE_URL + ConstantVariables.RETRIEVE_ENCRYPT_KEY,
+												which);
 									
-									logUtils.d(Tag, "Encrypt Key:" + remote_encrypt_key);
+										logUtils.d(Tag, "Encrypt Key:" + remote_encrypt_key);
 									
-									// Get the base key from SharedPreferences.
-									SharedPreferences sp = getSharedPreferences(constantVariables.PREF_NAME, MODE_PRIVATE); // Get the SharedPreferences.
-									String base_key = sp.getString(constantVariables.PREF_KEY, ""); // Get the string value.
+										// Get the base key from SharedPreferences.
+										SharedPreferences sp = getSharedPreferences(constantVariables.PREF_NAME, MODE_PRIVATE); // Get the SharedPreferences.
+										String base_key = sp.getString(constantVariables.PREF_KEY, ""); // Get the string value.
 									
-									/**
-									 * Currently the base_key is not used.
-									 */
-									if(!remote_encrypt_key.equals("")) { // The retrieved encrypt key is not null.
+										/**
+										 * Currently the base_key is not used.
+										 */
+										if(!remote_encrypt_key.equals("")) { // The retrieved encrypt key is not null.
 										
-										
-										// First encrypt the file and then upload the info of encrypted file and the file.
-										if(startEncrypt(file.getPath(), which, remote_encrypt_key,
+											// First encrypt the file and then upload the info of encrypted file and the file.
+											if(startEncrypt(file.getPath(), which, remote_encrypt_key, base_key,
 												dir1 + File.separator + file.getName(), upload_file_info_url)) { // Encrypt the file successfully.
 											
-											msg.what = constantVariables.operation_succeed;
-										} else { // The encryption is failed.
+												msg.what = constantVariables.operation_succeed;
+											} else { // The encryption is failed.
+												msg.what = constantVariables.operation_failed;
+											}
+										} else { // The remote key is not passed correctly.
 											msg.what = constantVariables.operation_failed;
 										}
-									} else if(remote_encrypt_key.equals("")){ // There is no need to encrypt.
-										msg.what = constantVariables.operation_succeed;
-									} else { // The remote key is not passed correctly.
-										msg.what = constantVariables.operation_failed;
 									}
 									
 									handler.sendMessage(msg);
@@ -452,15 +455,16 @@ public class MainActivity extends Activity {
 	 * upload the file to remote server.
 	 * @param srcFilePath The file path of the file to be encrypted.
 	 * @param encrypt_level The encrypt level.
-	 * @param encrypt_key The encrypt key.
+	 * @param remote_key The remote encrypt key.
+	 * @param base_key The base encrypt key.
 	 * @param destFilePath The file path of the encrypted file to store.
 	 * @param uploadFileInfoUrl The url of the file information to upload to.
 	 * @param uploadFileUrl The url of the file to upload to.
 	 * @return True, if encryption is succeeded.
 	 */
 	public boolean startEncrypt(String srcFilePath,
-			int encrypt_level, String encrypt_key,
-			String destFilePath, String uploadFileInfoUrl) {
+			int encrypt_level, String remote_key,
+			String base_key, String destFilePath, String uploadFileInfoUrl) {
 		
 		boolean flag = false; // Initial the flag to be false.
 		File sd = Environment.getExternalStorageDirectory(); // Get the primary external storage directory.
@@ -470,6 +474,9 @@ public class MainActivity extends Activity {
 		}
 		
 		FileDEncryption fileDEncryption = new FileDEncryption();
+		
+		String encrypt_key = StringSplice.stringSplice(remote_key,
+				base_key);
 		
 		if(fileDEncryption.Encryption(srcFilePath, constantVariables.algorithms[encrypt_level - 1], // Minus 1 for the reason that the level 0 is not encrypted.
 				encrypt_key, destFilePath)) { // File encryption is succeeded.
@@ -483,16 +490,13 @@ public class MainActivity extends Activity {
 			// Call the startUploadFileInfo function to upload file information.
 			if(fileOperation.uploadFileInfo(uploadFileInfoUrl,
 					String.valueOf(user_id), md5, sha1,
-					String.valueOf(encrypt_level), encrypt_key)) {
+					String.valueOf(encrypt_level), remote_key)) {
 				
 				flag = true;
 				
 				/**
 				 * This shoud call a third party application to do this stuff.
 				 */
-//				if(uploadFile(uploadFileUrl, destFilePath)) {
-//					flag = true;
-//				}
 				
 				// Call the upload app to do the stuff.
 			}
@@ -535,8 +539,14 @@ public class MainActivity extends Activity {
 			
 			logUtils.d(Tag, "Decrypt Key:" + encrypt_key);
 			
+			// Get the base key from SharedPreferences.
+			SharedPreferences sp = getSharedPreferences(constantVariables.PREF_NAME, MODE_PRIVATE); // Get the SharedPreferences.
+			String base_key = sp.getString(constantVariables.PREF_KEY, ""); // Get the string value.
+			
+			String decrypt_key = StringSplice.stringSplice(encrypt_key, base_key);
+			
 			if(fileDEncryption.Decryption(srcFilePath,
-				constantVariables.algorithms[encrypt_level], encrypt_key, destFilePath)) { // The decryption is succeeded.
+				constantVariables.algorithms[encrypt_level - 1], decrypt_key, destFilePath)) { // The decryption is succeeded.
 				flag = true; // Set the flag to false.
 			}
 		}

@@ -42,10 +42,12 @@ Part 4 and part 5 of Directions wil use a third party application, in order to b
   
 6. Implement the same function for contacts.  
 
-7. Implement the key splice.  
+<del>7. Implement the key splice.</del><br>  
 
-8. Encrypt the communication data.  
+8. Encrypt the voice communication data.  
 
 9. Encrypt the SMS data.  
 
-10. Integrate the third party cloud APIs.
+10. Integrate the third party cloud APIs.  
+
+11. Key management.
