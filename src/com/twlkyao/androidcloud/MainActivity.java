@@ -36,6 +36,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -172,6 +173,20 @@ public class MainActivity extends Activity {
 	}
 
 	/**
+	 * Make the Activity run in background rather than exit.
+	 */
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (KeyEvent.KEYCODE_BACK == keyCode) {
+			Intent intent = new Intent(Intent.ACTION_MAIN);
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			intent.addCategory(Intent.CATEGORY_HOME);
+			startActivity(intent);
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
+	}
+	
+	/**
 	 * Set the menu item selected operation.
 	 */
 	@Override
@@ -286,6 +301,7 @@ public class MainActivity extends Activity {
 		search_result_label= (TextView) this.findViewById(R.id.search_result_label); // The search result label
 		fileListView = (ListView) this.findViewById(R.id.file_listview); // The listview to store file information
 	}
+	
 	
 	/**
 	 * Set the search button listener
@@ -483,6 +499,8 @@ public class MainActivity extends Activity {
 		base_key = sp.getString(sharedPreferencesKey, "");
 		return base_key;
 	}
+	
+	
 
 	/**
 	 * Create the file and upload the file information to remote server,
@@ -736,7 +754,7 @@ public class MainActivity extends Activity {
 	 */
 	private void initData(File folder) {
 		boolean isSDcard = folder.equals(Environment.getExternalStorageDirectory()); // Judge is the folder is the SDcard
-		ArrayList<File> files = new ArrayList<File>();   
+		ArrayList<File> files = new ArrayList<File>();
 		if (!isSDcard) { // If the current folder is not the SDcard
 			files.add(Environment.getExternalStorageDirectory()); // Back to the SDcard
 			files.add(folder.getParentFile()); // Back to parent
