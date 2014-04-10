@@ -42,7 +42,9 @@
         </activity>
         <activity android:name="com.twlkyao.androidcloud.WelcomeActivity" >
         </activity>
-        <activity android:name="com.twlkyao.androidcloud.MainActivity" >
+        <activity
+            android:name="com.twlkyao.androidcloud.MainActivity"
+            android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity android:name="com.twlkyao.androidcloud.ApkValidate" >
         </activity>
