@@ -2,13 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_gravity="center_vertical"
     android:background="@color/green"
-    android:orientation="vertical"
-    android:padding="2dp" >
+    android:orientation="vertical" >
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
         android:orientation="horizontal" >
 
         <!-- The dialog icon. -->
@@ -20,22 +21,35 @@
         <!-- Dialog Title. -->
 
         <TextView
-            android:id="@+id/rank_dialog_text1"
+            android:id="@+id/base_key_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
-            android:layout_marginTop="10dp"
             android:text="@string/action_set_base_keys"
             android:textSize="@dimen/title" />
         <!-- Dialog Rating. -->
     </LinearLayout>
+    <!-- Base key EditText. -->
 
     <EditText
         android:id="@+id/edittext_base_key"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
         android:hint="@string/base_key_hint"
         android:inputType="textPassword"
+        android:maxLength="8"
+        android:textSize="@dimen/text_size" />
+    <!-- Confirm base key EditText. -->
+
+    <EditText
+        android:id="@+id/edittext_base_key_confirm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:hint="@string/base_key_hint_confirm"
+        android:inputType="textPassword"
+        android:maxLength="8"
         android:textSize="@dimen/text_size" />
     <!-- Dialog Button. -->
 

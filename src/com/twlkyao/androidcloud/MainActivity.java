@@ -26,7 +26,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.R.integer;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -51,7 +50,7 @@ import android.widget.Toast;
 public class MainActivity extends Activity {
 	
 	private String TAG = "MainActivity";
-	private ObserverService observerService;
+//	private ObserverService observerService;
 	private boolean DEBUG = true;
 	private LogUtils logUtils = new LogUtils(DEBUG, TAG);
 	
@@ -182,49 +181,84 @@ public class MainActivity extends Activity {
 		
 		// The switch-case need to be reorganized.
 			case R.id.action_set_base_keys: // The action_set_base_keys item.
-				final Dialog set_base_key_dialog = new Dialog(MainActivity.this, R.style.FullHeightDialog);
-				set_base_key_dialog.setContentView(R.layout.set_base_key_dialog);
-				set_base_key_dialog.setCancelable(true);
+				
+				// Judge whether the base_key is already exist.
+				SharedPreferences sp = getSharedPreferences(constantVariables.PREF_NAME, MODE_PRIVATE); // Get the SharedPreferences.
+				String base_key = sp.getString(constantVariables.PREF_KEY, ""); // Get the string value.
+				
+//				logUtils.d(Tag, "本地密码：" + base_key);
+				
+				// Only show the set base key dialog when there is no base key.
+				if(base_key.equals("")) { 
+					final Dialog set_base_key_dialog = new Dialog(MainActivity.this, R.style.AppThemeDialog);
+					set_base_key_dialog.setContentView(R.layout.set_base_key_dialog);
+					set_base_key_dialog.setCancelable(true);
 
-				// Find the submit button.
-				Button btn_submit = (Button) set_base_key_dialog.findViewById(R.id.btn_submit);
-				
-				// Find the edit text.
-				final EditText editText = (EditText) set_base_key_dialog.findViewById(R.id.edittext_base_key);
-				
-				btn_submit.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						// Store the base key in to SharedPreferences.
-						String base_key = editText.getText().toString();
+					// Find the submit button.
+					Button btn_submit = (Button) set_base_key_dialog.findViewById(R.id.btn_submit);
+					
+					// Find the edit text.
+					final EditText editText = (EditText) set_base_key_dialog.findViewById(R.id.edittext_base_key);
+					final EditText editTextConfirm = (EditText) set_base_key_dialog.findViewById(R.id.edittext_base_key_confirm);
+					
+					btn_submit.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							// Store the base key in to SharedPreferences.
+							String base_key = editText.getText().toString();
+							String base_key_confirm = editTextConfirm.getText().toString();
+							
+							if(base_key.equals(base_key_confirm)) {
+								// Get the SharedPreferences object, the SharedPreferences can only accessed by the calling application.
+								SharedPreferences sp = getSharedPreferences(constantVariables.PREF_NAME,
+										Context.MODE_PRIVATE);
+								
+								// Create a new Editor for SharedPreferences.
+								SharedPreferences.Editor editor = sp.edit(); 
+								
+								// Set data.
+								editor.putString(constantVariables.PREF_KEY, base_key);
+								
+								// Call the commit method to save changes.
+								editor.commit();
+								Toast.makeText(MainActivity.this,
+										R.string.base_key_success, Toast.LENGTH_SHORT).show();
+								set_base_key_dialog.dismiss();
+							} else {
+								editText.setText("");
+								editTextConfirm.setText("");
+								Toast.makeText(MainActivity.this,
+										R.string.base_key_conflict, Toast.LENGTH_SHORT).show();
+							}
+							
+							
+						}
+					});
+					
+					Button btn_cancel= (Button) set_base_key_dialog.findViewById(R.id.btn_cancel);
+					btn_cancel.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							set_base_key_dialog.dismiss();
+						}
+					});
+					//now that the dialog is set up, it's time to show it    
+					set_base_key_dialog.show(); 
+				} else { // Show the alert dialog when the base key is already exist.
+					Dialog alertDialog = new AlertDialog.Builder(MainActivity.this)
+					.setTitle(getString(R.string.base_key_alert_title))
+					.setIcon(android.R.drawable.ic_dialog_alert)
+					.setPositiveButton(R.string.btn_ok, new OnClickListener() {
 						
-						// Get the SharedPreferences object, the SharedPreferences can only accessed by the calling application.
-						SharedPreferences sp = getSharedPreferences(constantVariables.PREF_NAME,
-								Context.MODE_PRIVATE);
-						
-						// Create a new Editor for SharedPreferences.
-						SharedPreferences.Editor editor = sp.edit(); 
-						
-						// Set data.
-						editor.putString(constantVariables.PREF_KEY, base_key);
-						
-						// Call the commit method to save changes.
-						editor.commit();
-						Toast.makeText(MainActivity.this,
-								R.string.base_key_success, Toast.LENGTH_SHORT).show();
-						set_base_key_dialog.dismiss();
-					}
-				});
-				
-				Button btn_cancel= (Button) set_base_key_dialog.findViewById(R.id.btn_cancel);
-				btn_cancel.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						set_base_key_dialog.dismiss();
-					}
-				});
-				//now that the dialog is set up, it's time to show it    
-				set_base_key_dialog.show(); 
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							// TODO Auto-generated method stub
+							dialog.dismiss();
+						}
+					})
+					.create();
+					alertDialog.show(); 
+				}
 				
 				break;
 			case R.id.action_show_contacts: // The show contacts item.
@@ -476,7 +510,7 @@ public class MainActivity extends Activity {
 		FileDEncryption fileDEncryption = new FileDEncryption();
 		
 		String encrypt_key = StringSplice.stringSplice(remote_key,
-				base_key);
+				base_key); // Splice the remote_encrypt_key and base_key.
 		
 		if(fileDEncryption.Encryption(srcFilePath, constantVariables.algorithms[encrypt_level - 1], // Minus 1 for the reason that the level 0 is not encrypted.
 				encrypt_key, destFilePath)) { // File encryption is succeeded.

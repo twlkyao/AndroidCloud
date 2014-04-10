@@ -5,7 +5,10 @@
     <string name="action_settings">设置</string>
     <string name="action_help">帮助</string>
     <string name="action_set_base_keys">设置本地密码</string>
+    <string name="base_key_alert_title">请勿重复设置！</string>
     <string name="base_key_hint">输入8位字符</string>
+    <string name="base_key_hint_confirm">再次输入本地密码</string>
+    <string name="base_key_conflict">本地密码不一致，请重新输入！</string>
     <string name="username_label">用户名：</string>
     <string name="password_label">密码：</string>
     <string name="username_hint">请输入用户名</string>
@@ -48,14 +51,12 @@
     <string name="file_info_upload_succeed">上传文件信息成功！</string>
     <string name="file_upload_succeed">文件上传成功！</string>
     <string name="file_upload_fail">文件上传失败！</string>
-    <string name="help">使用帮助：\n1.点击文件，设置加密级别，获取加密密钥，加密文件，计算文件特征值并存储，选择应用存储文件。\n2.长按文件，解密文件。</string>
+    <string name="help">使用帮助：\n1.点击文件，设置加密级别，获取加密密钥，加密文件，计算文件特征值并存储，选择应用存储文件。\n2.长按文件，解密文件。\n\n</string>
     <string name="upload_file_info">上传文件信息</string>
     <string name="wait">请稍候……</string>
-    <string name="title_activity_rating_bar">RatingBar</string>
     <string name="encrypt_level_title">请设置密级！</string>
     <string name="submit">确定</string>
     <string name="cancel">取消</string>
-    <string name="encrypt_level_hint">"请输入1~9的数字。"</string>
     <string name="apps_choice">请选择应用！</string>
     <string name="can_not_read_sdcard">无法读写SD卡！</string>
     <string name="decrypt_fail">文件已经被损坏！</string>
