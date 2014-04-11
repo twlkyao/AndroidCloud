@@ -47,14 +47,6 @@ public class ApkValidate extends Activity {
 			case 1: // Validation passed.
 				tv_message.setText(getString(R.string.app_passed));
 				
-				// Need a better way to show the result.
-//				try {
-//					Thread.sleep(10000);
-//					finish();
-//				} catch (InterruptedException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
 				btn_ok.setOnClickListener(new View.OnClickListener() {
 					
 					@Override
@@ -105,38 +97,6 @@ public class ApkValidate extends Activity {
 						finish();
 					}
 				});
-				
-				
-				/*Builder builder = new AlertDialog.Builder(ApkValidate.this);
-				builder.setTitle(R.string.app_validate_title);
-				builder.setIcon(android.R.drawable.ic_dialog_alert);
-				builder.setMessage(R.string.app_failed);
-				builder.setPositiveButton(R.string.btn_delete, new OnClickListener() {
-					
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						// TODO Auto-generated method stub
-						File file = new File(filePath);
-						if(file.exists()) {
-							file.delete();
-						
-							logUtils.d(tag, "File deleted");
-						}
-						finish();
-					}
-				});
-				builder.setNegativeButton(R.string.btn_ok, new OnClickListener() {
-
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						// TODO Auto-generated method stub
-						logUtils.d(tag, "No operation");
-						finish();
-					}
-				});
-				builder.create();
-				builder.show();
-				break;*/
 			default:
 				break;
 			}
