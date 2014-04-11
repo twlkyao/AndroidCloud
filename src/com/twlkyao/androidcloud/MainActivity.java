@@ -223,7 +223,7 @@ public class MainActivity extends Activity {
 							String base_key = editText.getText().toString();
 							String base_key_confirm = editTextConfirm.getText().toString();
 							
-							if(base_key.equals(base_key_confirm)) {
+							if(!base_key.equals("") && !base_key_confirm.equals("") && base_key.equals(base_key_confirm)) {
 								// Get the SharedPreferences object, the SharedPreferences can only accessed by the calling application.
 								SharedPreferences sp = getSharedPreferences(constantVariables.PREF_NAME,
 										Context.MODE_PRIVATE);

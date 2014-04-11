@@ -8,7 +8,7 @@
     <string name="base_key_alert_title">请勿重复设置！</string>
     <string name="base_key_hint">输入8位字符</string>
     <string name="base_key_hint_confirm">再次输入本地密码</string>
-    <string name="base_key_conflict">本地密码不一致，请重新输入！</string>
+    <string name="base_key_conflict">密码不一致或者为空，请重新输入！</string>
     <string name="username_label">用户名：</string>
     <string name="password_label">密码：</string>
     <string name="username_hint">请输入用户名</string>

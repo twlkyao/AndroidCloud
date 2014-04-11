@@ -1,14 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:id="@+id/apk_validate_layout"
+    android:layout_width="@dimen/activity_width"
     android:layout_height="wrap_content"
-    android:layout_gravity="center_vertical"
-    android:background="@color/green"
+    android:layout_gravity="center_horizontal"
     android:orientation="vertical" >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:orientation="horizontal" >
 
@@ -24,7 +25,6 @@
             android:id="@+id/base_key_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="left"
             android:text="@string/action_set_base_keys"
             android:textSize="@dimen/title" />
         <!-- Dialog Rating. -->
@@ -35,6 +35,8 @@
         android:id="@+id/edittext_base_key"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/layout_margin_left"
+        android:layout_marginRight="@dimen/layout_margin_right"
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:hint="@string/base_key_hint"
         android:inputType="textPassword"
@@ -46,6 +48,8 @@
         android:id="@+id/edittext_base_key_confirm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/layout_margin_left"
+        android:layout_marginRight="@dimen/layout_margin_right"
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:hint="@string/base_key_hint_confirm"
         android:inputType="textPassword"
@@ -56,28 +60,30 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="@dimen/layout_margin_bottom"
+        android:layout_marginTop="@dimen/layout_margin_top"
+        android:gravity="center_horizontal"
         android:orientation="horizontal" >
 
         <!-- Submit button. -->
 
         <Button
             android:id="@+id/btn_submit"
-            android:layout_width="0dp"
+            android:layout_width="@dimen/btn_width"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/layout_margin"
-            android:layout_weight="1"
+            android:background="@drawable/btn_style_white"
             android:text="@string/submit"
             android:textSize="@dimen/btn_text" />
         <!-- Cancel button. -->
 
         <Button
             android:id="@+id/btn_cancel"
-            android:layout_width="0dp"
+            android:layout_width="@dimen/btn_width"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/layout_margin"
-            android:layout_weight="1"
+            android:layout_marginLeft="@dimen/layout_margin_left"
+            android:background="@drawable/btn_style_green"
             android:text="@string/cancel"
+            android:textColor="@color/white"
             android:textSize="@dimen/btn_text" />
     </LinearLayout>
 

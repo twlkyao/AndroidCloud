@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/apk_validate_layout"
-    android:layout_width="280dp"
+    android:layout_width="@dimen/activity_width"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:background="@drawable/confirm_dialog_bg2"
@@ -13,11 +13,11 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:padding="5dp"
+        android:layout_marginTop="@dimen/layout_margin_top"
+        android:padding="@dimen/padding"
         android:text="@string/app_validate_title"
-        android:textColor="#111"
-        android:textSize="20sp" />
+        android:textColor="@color/title"
+        android:textSize="@dimen/text_size" />
 
     <!-- App validate message. -->
 
@@ -25,45 +25,43 @@
         android:id="@+id/tx_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="1dp"
+        android:layout_marginTop="@dimen/layout_margin_top"
         android:gravity="center_horizontal"
-        android:padding="10dp"
+        android:padding="@dimen/padding"
         android:text="@string/app_validating"
-        android:textColor="#333"
-        android:textSize="16sp" />
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_size_small" />
     <!-- Button layout. -->
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="55dp" >
+        android:layout_marginBottom="@dimen/layout_margin_bottom"
+        android:layout_marginTop="60dp" >
 
         <!-- Cancel/Delete button. -->
 
         <Button
             android:id="@+id/btn_cancel"
-            android:layout_width="110dp"
+            android:layout_width="@dimen/btn_width"
             android:layout_height="wrap_content"
             android:background="@drawable/btn_style_green"
             android:gravity="center"
-            android:onClick="exitbutton0"
             android:text="@string/btn_cancel"
-            android:textColor="#fff"
-            android:textSize="16sp" />
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size" />
         <!-- Positivie button. -->
 
         <Button
             android:id="@+id/btn_ok"
-            android:layout_width="110dp"
+            android:layout_width="@dimen/btn_width"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="@dimen/layout_margin_left"
             android:background="@drawable/btn_style_white"
             android:gravity="center"
-            android:onClick="exitbutton1"
             android:text="@string/btn_ok"
-            android:textColor="#333"
-            android:textSize="16sp" />
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size" />
     </LinearLayout>
 
 </LinearLayout>
