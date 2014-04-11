@@ -13,7 +13,9 @@
     <string-array name="apps_choice">
         <item>OwnCloud</item>
         <item>腾讯微云</item>
-        <!-- <item>百度云盘</item> -->
+        <item>百度云盘</item>
+        <item>115网盘</item>
+        <item>360云盘</item>
     </string-array>
     <!-- The setting choices array. -->
     <string-array name="settting_choice">

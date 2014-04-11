@@ -73,13 +73,17 @@ public class ConstantVariables {
 	
 	public String[] packageNames = {
 		"com.owncloud.android",
-		"com.qq.qcloud"
-//		"com.baidu.netdisk",
+		"com.qq.qcloud",
+		"com.baidu.netdisk",
+		"com.ylmf.androidclient",
+		"com.qihoo.yunpan"
 	};
 	
 	public String[] classNames= {
 		"com.owncloud.android.ui.activity.FileDisplayActivity",
-		"com.qq.qcloud.LaunchActivity"
-//		"com.baidu.netdisk.ui.Navigate",
+		"com.qq.qcloud.LaunchActivity",
+		"com.baidu.netdisk.ui.Navigate",
+		"com.ylmf.androidclient.UI.LogActivity",
+		"com.qihoo.yunpan.SplashyActivity"
 	};
   }
