@@ -32,6 +32,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
@@ -62,6 +63,8 @@ public class LoginActivity extends Activity {
 	private Button login_button; //Login button
 	private Button register_button; //Register button
 	
+	ProgressDialog progressDialog;
+	
 	// define the hashmap to record the basic information of users during the session
 	private HashMap<String, String> session =new HashMap<String, String>();
 	
@@ -86,13 +89,13 @@ public class LoginActivity extends Activity {
 				if(0 == msg.arg2) { // The login validate is failed
 					Toast.makeText(getApplicationContext(),
 							R.string.login_fail, Toast.LENGTH_SHORT).show();
-					/*
-					username_editText.setText(""); // Reset the username
-					password_editText.setText(""); // Reset the password
-					*/
 				} else if(1 == msg.arg2) { // The login validate is passed
-					Toast.makeText(getApplicationContext(),
-							R.string.login_success, Toast.LENGTH_SHORT).show();
+					
+					progressDialog.dismiss();
+					
+					/*Toast.makeText(getApplicationContext(),
+							R.string.login_success, Toast.LENGTH_SHORT).show();*/
+					
 					Intent intent = new Intent(LoginActivity.this, MainActivity.class);
 					Bundle bundle = new Bundle();	// Construct a bundle to store data.
 					bundle.putString("uid", uid);	// Put the uid into bundle.
@@ -140,6 +143,15 @@ public class LoginActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 
+				// Show the login ProgressDialog.
+				progressDialog = new ProgressDialog(LoginActivity.this);
+				progressDialog.setTitle(R.string.login);
+				progressDialog.setMessage(getString(R.string.waiting));
+				// Set ProgressDialog display style, ProgressDialog.STYLE_SPINNER represent for circle styple.
+				progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+				progressDialog.setCancelable(true);
+				progressDialog.show();
+				
 				// get the user name and password
 				strUsername = username_editText.getText().toString(); //Get the username string
 				strPassword = password_editText.getText().toString(); //get the password string
@@ -162,14 +174,6 @@ public class LoginActivity extends Activity {
 				finish(); // destroy the activity
 			}
 		});
-		
-	}
-	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
 	}
 	
 	/**

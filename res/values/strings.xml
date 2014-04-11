@@ -31,6 +31,7 @@
     <string name="password_empty">密码不能为空</string>
     <string name="password_not_the_same">两次输入的密码不一致</string>
     <string name="login">登录</string>
+    <string name="waiting">登录中，请稍候……</string>
     <string name="logout">退出</string>
     <string name="register">注册</string>
     <string name="reset">重置</string>
