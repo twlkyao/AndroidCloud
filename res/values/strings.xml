@@ -84,5 +84,8 @@
     <string name="sms_textview">短信操作</string>
     <string name="backup_sms">备份</string>
     <string name="recover_sms">恢复</string>
+    <string name="title_activity_choose_disk">ChooseDiskActivity</string>
+    <string name="choose_disk">选择网盘</string>
+    <string name="kuaipan">快盘</string>
 
 </resources>

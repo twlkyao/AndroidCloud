@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -134,7 +135,13 @@ public class MainActivity extends Activity {
 					
 					AlertDialog alertDialog = builder.create(); // Create the dialog.
 					alertDialog.show(); // Show the dialog.
-				} else if(constantVariables.decrypt_file == msg.arg1) {
+					
+					
+					/*// Call the third party net disks via api.
+					Intent intent = new Intent(MainActivity.this, ChooseDiskActivity.class);
+					startActivity(intent);*/
+					
+				} else if(constantVariables.decrypt_file == msg.arg1) { // Decrypt the files.
 					Toast.makeText(getApplicationContext(),
 							R.string.decrypt_succeed, Toast.LENGTH_SHORT).show();
 				}
@@ -387,7 +394,23 @@ public class MainActivity extends Activity {
 									msg.arg1 = constantVariables.encrypt_file; // Indicate this is the encrypt file type.
 									
 									if(0 == which) { // There is no need to encrypt the files.
+										
+										/*
+										// Move the src file to dest file path
+										InputStream is = new FileInputStream(file.getPath());
+										
+										File destFile = new File(dir1 + File.separator + file.getName()); // Create a new File instance.
+										if(!destFile.exists()) { // Only create a new file, if the file does not exists.
+											try {
+												destFile.createNewFile(); // Create a new, empty file.
+											} catch (IOException e) {
+												// TODO Auto-generated catch block
+												e.printStackTrace();
+											}
+										}*/
+										
 										msg.what = constantVariables.operation_succeed;
+										
 									} else { // Choose algorithms and keys to encrypt the files.
 										// Get the remote generated encrypt key.
 										String remote_encrypt_key = fileOperation.retrieveEncryptKey(
@@ -605,30 +628,6 @@ public class MainActivity extends Activity {
 		
 		return flag;
 	}
-	
-	/**
-	 * Upload file use upload file application that specified by packageName. 
-	 * @param packageName The package name of the upload file application.
-	 */
-	public void startUpload(String packageName, String className) {
-		
-		Intent intent = new Intent();
-        ComponentName componentname = new ComponentName( packageName, className);
-        intent.setComponent(componentname);
-        startActivity(intent);
-	}
-	
-	/**
-	 * Retrieve the password from a website specified by passwordUrl.
-	 * @param passwordUrl The url of the password generator to retrieve password from.
-	 * @param encrypt_level The encrypt level.
-	 * @return The retrieved password.
-	 */
-	/*public String retrivePassword(String passwordUrl, int encrypt_level) {
-		String passwordString = "";
-		
-		return passwordString;
-	}*/
 	
 	/**
 	 * Create a thread to upload the file.
