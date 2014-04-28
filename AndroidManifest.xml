@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.twlkyao.androidcloud"
-    android:versionCode="2"
-    android:versionName="1.1" >
+    android:versionCode="3"
+    android:versionName="1.2" >
 
     <uses-sdk
-        android:minSdkVersion="8"
+        android:minSdkVersion="11"
         android:targetSdkVersion="14" />
     <!-- The permission to access the Internet. -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -59,8 +59,6 @@
         </activity>
         <activity android:name="com.twlkyao.androidcloud.RegisterActivity" >
         </activity>
-        <activity android:name="com.twlkyao.androidcloud.WelcomeActivity" >
-        </activity>
         <activity
             android:name="com.twlkyao.androidcloud.MainActivity"
             android:windowSoftInputMode="stateHidden" >
@@ -100,6 +98,10 @@
         <activity
             android:name="com.twlkyao.androidcloud.ChooseDiskActivity"
             android:label="@string/title_activity_choose_disk" >
+        </activity>
+        <activity
+            android:name="com.twlkyao.androidcloud.SetEncryptLevelActivity"
+            android:label="@string/title_activity_set_encrypt_level" >
         </activity>
     </application>
 

@@ -46,8 +46,8 @@
     $mysql_create_table = "CREATE TABLE IF NOT EXISTS $tableName (
         file_id int(20) AUTO_INCREMENT, 
         user_id int(20),
-        file_md5 varchar(32),
-        file_sha1 varchar(80),
+        file_md5 char(32),
+        file_sha1 char(40),
         encrypt_level int(1),
         encrypt_key varchar(40),
         PRIMARY KEY(file_id, user_id, file_md5, file_sha1)                

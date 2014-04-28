@@ -23,6 +23,10 @@ public class ConstantVariables {
 	final public static String RETRIEVE_ENCRYPT_KEY = "cloud/android/keys_generator.php"; // The location of the keys generator PHP script.
 	final public static String CHECK_APK_INFO = "cloud/check_apk_info"; // The location of the check apk info PHP script.
 	
+	// The encrypt level info.
+	final public static String dataBase = "db_encrypt_level"; //The name of database.
+	final public static String table = "table_encrypt_level"; // The name of table.
+	
 	public static String smsBackupLocation = "/SMSBackup/";
 	public static String smsFile = "sms.xml";
 	
@@ -52,6 +56,10 @@ public class ConstantVariables {
 	
 	final public int encrypt_file = 3; // Indicating the type is encrypt file.
 	final public int decrypt_file = 2; // Indicating the type is decrypt file.
+	
+	enum result_code {
+		set_level, upload, set_level_upload, integrity_check, decrypt
+	};
 	
 	public static String charset = "UTF-8";
 	

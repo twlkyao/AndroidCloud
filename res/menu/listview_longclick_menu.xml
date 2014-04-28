@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <!-- The set encrypt level menu. -->
+    <item
+        android:id="@+id/set_level"
+        android:orderInCategory="100"
+        android:title="@string/set_level"/>
+    <!-- The upload menu. -->
+    <item
+        android:id="@+id/upload"
+        android:orderInCategory="200"
+        android:title="@string/upload"/>
+    <!-- The set level and upload menu. -->
+    <item
+        android:id="@+id/set_level_upload"
+        android:orderInCategory="300"
+        android:title="@string/set_level_upload"/>
+    <!-- The integrity check menu. -->
+    <item
+        android:id="@+id/integrity_check"
+        android:orderInCategory="400"
+        android:title="@string/integrity_check"/>
+    <!-- The decrypt menu. -->
+    <item
+        android:id="@+id/decrypt"
+        android:orderInCategory="500"
+        android:title="@string/decrypt"/>
+
+</menu>

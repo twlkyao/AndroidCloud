@@ -38,7 +38,8 @@ public class ExportSms {
 	public void xmlStart() {
 
 		// Construct the file path to store the sms xml file.
-		String path = Environment.getExternalStorageDirectory().getPath() + ConstantVariables.smsBackupLocation;
+		String path = Environment.getExternalStorageDirectory().getPath() 
+				+ ConstantVariables.smsBackupLocation;
 		
 		logUtils.d(Tag, "path:" + path);
 
@@ -72,13 +73,19 @@ public class ExportSms {
 		Cursor cursor = null;
 		try {
 			ContentResolver conResolver = context.getContentResolver();
-			String[] projection = new String[] { SmsField.ADDRESS, SmsField.PERSON, SmsField.DATE, SmsField.PROTOCOL, 
-												SmsField.READ, SmsField.STATUS,	SmsField.TYPE, SmsField.REPLY_PATH_PRESENT,
-												SmsField.BODY,SmsField.LOCKED,SmsField.ERROR_CODE, SmsField.SEEN }; // type=1是收件箱，==2是发件箱;read=0表示未读，read=1表示读过，seen=0表示未读，seen=1表示读过
+			
+			String[] projection = new String[] { SmsField.ADDRESS, SmsField.PERSON, 
+					SmsField.DATE, SmsField.PROTOCOL, 
+					SmsField.READ, SmsField.STATUS,	
+					SmsField.TYPE, SmsField.REPLY_PATH_PRESENT,
+					SmsField.BODY,SmsField.LOCKED,SmsField.ERROR_CODE,
+					SmsField.SEEN };    // type==1 inbox,type==2 sendbox; 
+										// read==0 unread, read==1 read,seen==0 unread, seen==1 read。
 			Uri uri = Uri.parse(SMS_URI_ALL);
 			cursor = conResolver.query(uri, projection, null, null, "_id asc");
 			if (cursor.moveToFirst()) {
-				// 查看数据库sms表得知 subject和service_center始终是null所以这里就不获取它们的数据了。
+				// Check the database, if subject and service_center are null,
+				// then no need to get their data.			
 				String address;
 				String person;
 				String date;
@@ -92,7 +99,9 @@ public class ExportSms {
 				String error_code;
 				String seen;
 				do {
-					// 如果address == null，xml文件中是不会生成该属性的,为了保证解析时，属性能够根据索引一一对应，必须要保证所有的item标记的属性数量和顺序是一致的
+					// if address == null, xml file will not create the attribute,
+					// in case of parsing correctly, assure all items' 
+					// number and sequence of tags are consistent.
 					address = cursor.getString(cursor.getColumnIndex(SmsField.ADDRESS));
 					if (address == null) {
 						address = "";
@@ -106,7 +115,7 @@ public class ExportSms {
 						date = "";
 					}
 					protocol = cursor.getString(cursor.getColumnIndex(SmsField.PROTOCOL));
-					if (protocol == null) {// 为了便于xml解析
+					if (protocol == null) { // Convent for xml parsing.
 						protocol = "";
 					}
 					read = cursor.getString(cursor.getColumnIndex(SmsField.READ));
@@ -121,8 +130,9 @@ public class ExportSms {
 					if (type == null) {
 						type = "";
 					}
-					reply_path_present = cursor.getString(cursor.getColumnIndex(SmsField.REPLY_PATH_PRESENT));
-					if (reply_path_present == null) {// 为了便于XML解析
+					reply_path_present = cursor.getString(
+							cursor.getColumnIndex(SmsField.REPLY_PATH_PRESENT));
+					if (reply_path_present == null) { // Convent for xml parsing.
 						reply_path_present = "";
 					}
 					body = cursor.getString(cursor.getColumnIndex(SmsField.BODY));
@@ -141,10 +151,10 @@ public class ExportSms {
 					if (seen == null) {
 						seen = "";
 					}
-					// 生成xml子标记
-					// 开始标记
+					// Create xml tags.					
+					// Start tag.
 					serializer.startTag(null, "item");
-					// 加入属性
+					// Add attributes.
 					serializer.attribute(null, SmsField.ADDRESS, address);
 					serializer.attribute(null, SmsField.PERSON, person);
 					serializer.attribute(null, SmsField.DATE, date);
@@ -157,7 +167,7 @@ public class ExportSms {
 					serializer.attribute(null, SmsField.LOCKED, locked);
 					serializer.attribute(null, SmsField.ERROR_CODE, error_code);
 					serializer.attribute(null, SmsField.SEEN, seen);
-					// 结束标记
+					// End tag.
 					serializer.endTag(null, "item");
 
 				} while (cursor.moveToNext());
@@ -171,14 +181,14 @@ public class ExportSms {
 			
 		}finally {
 			if(cursor != null) {
-				cursor.close();//手动关闭cursor，及时回收
+				cursor.close(); // Close the cursor manually.			
 			}
 		}
 		serializer.endTag(null, "sms");
 		serializer.endDocument();
 		outStream.flush();
 		outStream.close();
-		Toast.makeText(context, "短信备份成功！", Toast.LENGTH_SHORT).show();
+		Toast.makeText(context, "Backup Completed!", Toast.LENGTH_SHORT).show();
 		return true;
 	}
 }

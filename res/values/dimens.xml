@@ -6,6 +6,8 @@
     <dimen name="btn_width">110dp</dimen>
     <dimen name="activity_width">280dp</dimen>
     <dimen name="activity_height">200dp</dimen>
+    <dimen name="view_width">150dp</dimen>
+    <dimen name="view_height">80dp</dimen>
     <dimen name="btn_text">20sp</dimen>
     <dimen name="text_size_small">15sp</dimen>
     <dimen name="text_size">20sp</dimen>

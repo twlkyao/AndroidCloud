@@ -87,5 +87,14 @@
     <string name="title_activity_choose_disk">ChooseDiskActivity</string>
     <string name="choose_disk">选择网盘</string>
     <string name="kuaipan">快盘</string>
+    <string name="set_level">设置级别</string>
+    <string name="upload">上传</string>
+    <string name="set_level_upload">设置级别并上传</string>
+    <string name="integrity_check">完整性检验</string>
+    <string name="decrypt">解密</string>
+    <string name="title_activity_set_encrypt_level">SetEncryptLevelActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="set_level_ok">设置加密级别成功！</string>
+    <string name="set_level_cancel">设置加密级别取消！</string>
 
 </resources>

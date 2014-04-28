@@ -410,4 +410,15 @@ public class FileOperation {
 		}
 		return resultHashMap;
 	}
+
+	public boolean execCommand(String command) {
+		Process process = null;
+		try {
+			process = Runtime.getRuntime().exec(command);
+			process.waitFor();
+		} catch (Exception e) {
+			return false;
+		}
+		return true;
+	}
 }

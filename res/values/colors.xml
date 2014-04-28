@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="green">#ccdecf</color>
-    <color name="title">#111</color>
-    <color name="black">#000000</color>
+    <color name="green">#ffccdecf</color>
+    <color name="title">#ff010101</color>
+    <color name="black">#ff000000</color>
     <color name="white">#ffffff</color>
 
 </resources>

@@ -42,7 +42,7 @@ public class ImportSms {
 
 	public void InsertSMS() {
 		/**
-		 * 放一个解析xml文件的模块
+		 * Put an xml parse module.
 		 */
 		smsItems = this.getSmsItemsFromXml();
 		
@@ -51,15 +51,15 @@ public class ImportSms {
 		for (SmsItem item : smsItems) {
 
 			Uri uri = Uri.parse(SMS_URI_ALL);
-			// 判断短信数据库中是否已包含该条短信，如果有，则不需要恢复
+			// Check whether the database already has the message, if does, no need to recover.
 			Cursor cursor = conResolver.query(uri, new String[] { SmsField.DATE }, SmsField.DATE + "=?",
 					new String[] { item.getDate() }, null);
 
-			if (!cursor.moveToFirst()) {// 没有该条短信
+			if (!cursor.moveToFirst()) { // The message is not in the database.
 				
 				ContentValues values = new ContentValues();
 				values.put(SmsField.ADDRESS, item.getAddress());
-				// 如果是空字符串说明原来的值是null，所以这里还原为null存入数据库
+				// If is empty string, then the original value is null, put null into the database.	
 				values.put(SmsField.PERSON, item.getPerson().equals("") ? null : item.getPerson());
 				values.put(SmsField.DATE, item.getDate());
 				values.put(SmsField.PROTOCOL, item.getProtocol().equals("") ? null : item.getProtocol());
@@ -75,7 +75,7 @@ public class ImportSms {
 			}
 			cursor.close();
 		}
-		Toast.makeText(context, "短信恢复成功！", Toast.LENGTH_SHORT).show();
+		Toast.makeText(context, "Recover completed!", Toast.LENGTH_SHORT).show();
 	}
 
 //	public void delete() {
@@ -95,9 +95,9 @@ public class ImportSms {
 		if (!file.exists()) {
 
 			Looper.prepare(); // Show a Toast message in the thread.
-			Toast.makeText(context, "短信备份文件" + ConstantVariables.smsFile + "不在sd卡中",
+			Toast.makeText(context, "Sms backup file" + ConstantVariables.smsFile + "is not on SDCard.",
 					Toast.LENGTH_SHORT).show();
-			Looper.loop();//退出线程
+			Looper.loop(); // Exit the thread.
 //			return null;
 		}
 		try {
@@ -109,7 +109,7 @@ public class ImportSms {
 				case XmlPullParser.START_DOCUMENT:
 					smsItems = new ArrayList<SmsItem>();
 					break;
-				case XmlPullParser.START_TAG: // 如果遇到开始标记，如<smsItems>,<smsItem>等
+				case XmlPullParser.START_TAG: // Start tag, such as </smsItems> </smsItem>
 					if ("item".equals(xmlPullParser.getName())) {
 						smsItem = new SmsItem();
 
@@ -127,7 +127,7 @@ public class ImportSms {
 						smsItem.setSeen(xmlPullParser.getAttributeValue(11));
 					}
 					break;
-				case XmlPullParser.END_TAG:// 结束标记,如</smsItems>,</smsItem>等
+				case XmlPullParser.END_TAG: // End tag, such as </smsItems> </smsItem>					
 					if ("item".equals(xmlPullParser.getName())) {
 						smsItems.add(smsItem);
 						smsItem = null;
@@ -139,7 +139,7 @@ public class ImportSms {
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			Looper.prepare();
-			Toast.makeText(context, "文件未找到，短信恢复出错",
+			Toast.makeText(context, "File not found!",
 					Toast.LENGTH_SHORT).show();
 			Looper.loop();
 			e.printStackTrace();
@@ -147,7 +147,7 @@ public class ImportSms {
 		} catch (XmlPullParserException e) {
 			// TODO Auto-generated catch block
 			Looper.prepare();
-			Toast.makeText(context, "文件解析出错，短信恢复出错",
+			Toast.makeText(context, "File parse error!",
 					Toast.LENGTH_SHORT).show();
 			Looper.loop();
 			e.printStackTrace();		
@@ -155,7 +155,7 @@ public class ImportSms {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			Looper.prepare();
-			Toast.makeText(context, "文件IO异常，短信恢复出错",
+			Toast.makeText(context, "File IO error!",
 					Toast.LENGTH_SHORT).show();
 			Looper.loop();
 			e.printStackTrace();

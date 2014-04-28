@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@color/green"
+    android:orientation="vertical" >
+
+    <!-- The number picker to set the encrypt level. -->
+
+    <NumberPicker
+        android:id="@+id/number_picker"
+        android:layout_width="@dimen/view_width"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/layout_margin_top"
+        android:gravity="center_horizontal" >
+    </NumberPicker>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="@dimen/layout_margin_bottom"
+        android:layout_marginLeft="@dimen/layout_margin_left"
+        android:layout_marginRight="@dimen/layout_margin_right"
+        android:layout_marginTop="@dimen/layout_margin_top" >
+
+        <Button
+            android:id="@+id/btn_ok"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="@dimen/btn_width"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_ok"
+            android:textColor="@color/black"
+            android:textSize="@dimen/btn_text" />
+
+        <Button
+            android:id="@+id/btn_cancel"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="@dimen/btn_width"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/layout_margin_left"
+            android:text="@string/btn_cancel"
+            android:textColor="@color/black"
+            android:textSize="@dimen/btn_text" />
+    </LinearLayout>
+
+</LinearLayout>
