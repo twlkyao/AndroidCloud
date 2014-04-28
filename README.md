@@ -40,8 +40,8 @@ Part 4 and part 5 of Directions wil use a third party application, in order to b
 
 <del>5. Implement the same function for contacts and message parts.</del><br>
 
-<del>6. Implement the key splice.</del><br>  
-  
+<del>6. Implement the key splice.</del><br>
+
 7. Implement the same function for contacts.  
 
 8. Encrypt the voice communication data.  
@@ -53,3 +53,5 @@ Part 4 and part 5 of Directions wil use a third party application, in order to b
 11. Key management.
 
 12. Optimize the menu display.
+
+13. Move the functions to listview's onItemClickListener.
