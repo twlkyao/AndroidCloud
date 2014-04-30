@@ -17,30 +17,35 @@ import android.widget.Button;
 public class ChooseDiskActivity extends Activity {
 
 	private Button btnKuaipan; // Kuaipan disk button.
+	private Button btnOpenstack; // Openstack button.
+	private Button btnWeiyun; // Weiyun button.
+	private Button btnDropbox; // Dropbox button.
+	private Button btn360; // 360 button.
 	private Button btnBaidu; // Baidu disk button.
-
-	KuaipanAPI kuaipanAPI; // The api of kuipan disk.
+	private Button btn115; // 115 button.
+	
+	/*KuaipanAPI kuaipanAPI; // The api of kuipan disk.
 	private AuthSession mAuthSession;
-	private int authType;
+	private int authType;*/
 	
 	/**
      * Be sure to configure the consumer key and secret
      */
-    private static final String APP_KEY = "" + "xcBjcIHOvb0RhxTg";
+    /*private static final String APP_KEY = "" + "xcBjcIHOvb0RhxTg";
     private static final String APP_SECRET = "" + "VA5w25Qw0LOKmNhT";
     
     final static private String ACCOUNT_PREFS_NAME = "prefs";
     final static private String ACCESS_KEY_NAME = "ACCESS_KEY";
     final static private String ACCESS_SECRET_NAME = "ACCESS_SECRET";
     final static private String ACCESS_AUTH_TYPE_NAME = "ACCESS_AUTH_TYPE_NAME";
-    final static private String ACCESS_UID_NAME = "ACCESS_UID_NAME";
+    final static private String ACCESS_UID_NAME = "ACCESS_UID_NAME";*/
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		
-		 // We create a new AuthSession so that we can use the Kuaipan API.
+		/*// We create a new AuthSession so that we can use the Kuaipan API.
         mAuthSession = buildSession();
-        kuaipanAPI = new KuaipanAPI(this, mAuthSession);
+        kuaipanAPI = new KuaipanAPI(this, mAuthSession);*/
         
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_choose_disk);
@@ -55,6 +60,12 @@ public class ChooseDiskActivity extends Activity {
 	 */
 	public void findViews() {
 		btnKuaipan = (Button) findViewById(R.id.btn_kuaipan); // Find the kuaipan disk button.
+		btnOpenstack = (Button) findViewById(R.id.btn_openstack);
+		btnWeiyun = (Button) findViewById(R.id.btn_weiyun);
+		btnDropbox = (Button) findViewById(R.id.btn_dropbox);
+		btn360 = (Button) findViewById(R.id.btn_360);
+		btnBaidu = (Button) findViewById(R.id.btn_baidu);
+		btn115 = (Button) findViewById(R.id.btn_115);
 	}
 	
 	/**
@@ -66,12 +77,12 @@ public class ChooseDiskActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				kuaipanAPI.startAuthForResult();
+				/*kuaipanAPI.startAuthForResult();*/
 			}
 		});
 	}
 
-	private AuthSession buildSession() {
+	/*private AuthSession buildSession() {
         AppKeyPair appKeyPair = new AppKeyPair(APP_KEY, APP_SECRET);
         AuthSession session;
 
@@ -91,14 +102,14 @@ public class ChooseDiskActivity extends Activity {
         }
 
         return session;
-    }
+    }*/
 	
 	/**
      * Shows keeping the access keys returned from Trusted Authenticator in a
      * local store, rather than storing user name & password, and
      * re-authenticating each time (which is not to be done, ever).
      */
-    private void storeKeys(String key, String secret, String uid,
+    /*private void storeKeys(String key, String secret, String uid,
             String authType) {
         // Save the access key for later
         SharedPreferences prefs = getSharedPreferences(ACCOUNT_PREFS_NAME, 0);
@@ -108,7 +119,7 @@ public class ChooseDiskActivity extends Activity {
         edit.putString(ACCESS_UID_NAME, uid);
         edit.putString(ACCESS_AUTH_TYPE_NAME, authType);
         edit.commit();
-    }
+    }*/
 	
 	/**
      * Shows keeping the access keys returned from Trusted Authenticator in a
@@ -118,7 +129,7 @@ public class ChooseDiskActivity extends Activity {
      * @return Array of [access_key, access_secret, uid, auth_type], or null if
      *         none stored
      */
-    private String[] getKeys() {
+    /*private String[] getKeys() {
         SharedPreferences prefs = getSharedPreferences(ACCOUNT_PREFS_NAME, 0);
         String key = prefs.getString(ACCESS_KEY_NAME, null);
         String secret = prefs.getString(ACCESS_SECRET_NAME, null);
@@ -134,7 +145,7 @@ public class ChooseDiskActivity extends Activity {
         } else {
             return null;
         }
-    }
+    }*/
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {

@@ -1,32 +1,160 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="?android:attr/buttonBarStyle"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/green"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".ChooseDiskActivity" >
+    android:orientation="vertical" >
 
-    <!-- Choose net disk. -->
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/layout_margin_left"
+        android:layout_marginRight="@dimen/layout_margin_right"
+        android:gravity="center_horizontal" >
 
-    <TextView
-        android:id="@+id/textview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:text="@string/choose_disk"
-        android:textColor="@color/black"
-        android:textSize="@dimen/title" />
-    <!-- Kuaipan disk. -->
+        <TableRow
+            android:id="@+id/tableRow1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/layout_margin_top"
+            android:gravity="center_horizontal" >
 
-    <Button
-        android:id="@+id/btn_kuaipan"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/textview"
-        android:text="@string/kuaipan"
-        android:textSize="@dimen/btn_text" />
+            <!-- The title. -->
 
-</RelativeLayout>
+            <TextView
+                android:id="@+id/choose_disk_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/choose_disk"
+                android:textColor="@color/black"
+                android:textSize="@dimen/title" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/layout_margin_top"
+            android:gravity="center_horizontal" >
+
+            <!-- Kuaipan disk button. -->
+
+            <Button
+                android:id="@+id/btn_kuaipan"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@color/transparent"
+                android:drawableTop="@drawable/disk_kuaipan"
+                android:text="@string/disk_kuaipan" />
+            <!-- The openstack button. -->
+
+            <Button
+                android:id="@+id/btn_openstack"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/layout_margin_left"
+                android:layout_weight="1"
+                android:background="@color/transparent"
+                android:drawableTop="@drawable/disk_openstack"
+                android:text="@string/disk_openstack" />
+            <!-- The weiyun button. -->
+
+            <Button
+                android:id="@+id/btn_weiyun"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/layout_margin_left"
+                android:layout_weight="1"
+                android:background="@color/transparent"
+                android:drawableTop="@drawable/disk_weiyun"
+                android:text="@string/disk_weiyun" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/layout_margin_top"
+            android:gravity="center_horizontal" >
+
+            <!-- The dropbox button. -->
+
+            <Button
+                android:id="@+id/btn_dropbox"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@color/transparent"
+                android:drawableTop="@drawable/disk_dropbox"
+                android:text="@string/disk_dropbox" />
+
+            <!-- The 360 button. -->
+
+            <Button
+                android:id="@+id/btn_360"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/layout_margin_left"
+                android:layout_weight="1"
+                android:background="@color/transparent"
+                android:drawableTop="@drawable/disk_360"
+                android:text="@string/disk_360" />
+            <!-- The 360 button. -->
+
+            <Button
+                android:id="@+id/btn_baidu"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/layout_margin_left"
+                android:layout_weight="1"
+                android:background="@color/transparent"
+                android:drawableTop="@drawable/disk_baidu"
+                android:text="@string/disk_baidu" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/layout_margin_top"
+            android:gravity="left"
+            android:weightSum="3" >
+
+            <!-- The 115 button. -->
+
+            <Button
+                android:id="@+id/btn_115"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_weight="1"
+                android:background="@color/transparent"
+                android:drawableTop="@drawable/disk_115"
+                android:text="@string/disk_115" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal" >
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal" >
+        </TableRow>
+    </TableLayout>
+
+</LinearLayout>

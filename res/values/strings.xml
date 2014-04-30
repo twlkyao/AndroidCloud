@@ -86,7 +86,13 @@
     <string name="recover_sms">恢复</string>
     <string name="title_activity_choose_disk">ChooseDiskActivity</string>
     <string name="choose_disk">选择网盘</string>
-    <string name="kuaipan">快盘</string>
+    <string name="disk_kuaipan">快盘</string>
+    <string name="disk_openstack">OpenStack</string>
+    <string name="disk_weiyun">微云</string>
+    <string name="disk_dropbox">DropBox</string>
+    <string name="disk_360">360云盘</string>
+    <string name="disk_115">115网盘</string>
+    <string name="disk_baidu">百度云盘</string>
     <string name="set_level">设置级别</string>
     <string name="upload">上传</string>
     <string name="set_level_upload">设置级别并上传</string>
