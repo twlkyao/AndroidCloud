@@ -66,8 +66,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
-        android:text="@string/remember_me" >
-    </CheckBox>
+        android:text="@string/remember_me" />
     -->
     <!-- Forget the password -->
 
@@ -94,15 +93,19 @@
         android:layout_marginTop="@dimen/layout_margin_top"
         android:orientation="horizontal" >
 
+        <!-- The login button. -->
+
         <Button
             android:id="@+id/login"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@drawable/btn_style_green"
             android:text="@string/login"
             android:textColor="@android:color/black"
-            android:textSize="@dimen/btn_text" >
-        </Button>
+            android:textSize="@dimen/btn_text" />
+
+        <!-- The register button. -->
 
         <Button
             android:id="@+id/register"
@@ -110,10 +113,10 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/layout_margin_left"
             android:layout_weight="1"
+            android:background="@drawable/btn_style_white"
             android:text="@string/register"
             android:textColor="@android:color/black"
-            android:textSize="@dimen/btn_text" >
-        </Button>
+            android:textSize="@dimen/btn_text" />
     </LinearLayout>
 
 </LinearLayout>

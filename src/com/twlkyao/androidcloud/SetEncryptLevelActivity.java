@@ -6,6 +6,7 @@ import com.twlkyao.utils.LogUtils;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
 import android.view.View;
@@ -29,6 +30,7 @@ public class SetEncryptLevelActivity extends Activity {
 	private Button btnCancel; // The cancel button.
 	private String md5String; // The md5 value from the MainActivity.
 	private String sha1String; // The sha1 value from the MainActivity.
+	private String fileParentPath; // The file path of the clicked file's parent.
 	
 	private DevOpenHelper helper;
 	private SQLiteDatabase db; // The database.
@@ -80,9 +82,11 @@ public class SetEncryptLevelActivity extends Activity {
 			public void onClick(View v) {
 				
 				// Get the md5 and sha1 value passed from the MainActivity.
-				Bundle bundle = getIntent().getExtras();
+				Intent intent = getIntent();
+				Bundle bundle = intent.getExtras();
 				md5String = bundle.getString("md5");
 				sha1String = bundle.getString("sha1");
+				fileParentPath = bundle.getString("fileParentPath");
 				
 				// Get the encrypt level as a string.
 				String encrypt_level = Integer.toString(numberPicker.getValue());
@@ -94,7 +98,11 @@ public class SetEncryptLevelActivity extends Activity {
 				helper.close(); // Close the database.
 				
 				logUtils.d(TAG, "Inserted new fileInfo!");
-				setResult(RESULT_OK); // The operation is succeeded.
+//				setResult(RESULT_OK); // The operation is succeeded.
+				
+				
+				intent.putExtra("fileParentPath", fileParentPath);
+				setResult(RESULT_OK, intent); // The operation is succeeded.
 				
 				finish(); // Finish itself.
 			}

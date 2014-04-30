@@ -15,16 +15,26 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
+import com.twlkyao.dao.DaoMaster;
+import com.twlkyao.dao.DaoSession;
+import com.twlkyao.dao.FileInfo;
+import com.twlkyao.dao.FileInfoDao;
+import com.twlkyao.dao.DaoMaster.DevOpenHelper;
+import com.twlkyao.dao.FileInfoDao.Properties;
 import com.twlkyao.utils.ConstantVariables;
 import com.twlkyao.utils.FileDEncryption;
 import com.twlkyao.utils.FileOperation;
 import com.twlkyao.utils.LogUtils;
 import com.twlkyao.utils.StringSplice;
 
+import de.greenrobot.dao.query.QueryBuilder;
+
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -36,6 +46,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -174,9 +185,45 @@ public class MainActivity extends Activity {
 	}
 
 	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		logUtils.d(TAG, "onPause");
+	}
+
+	@Override
+	protected void onRestart() {
+		// TODO Auto-generated method stub
+		super.onRestart();
+		logUtils.d(TAG, "onRestart");
+	}
+
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+//		initData(Environment.getExternalStorageDirectory()); // Refresh the listview.
+		logUtils.d(TAG, "onResume");
+	}
+
+	@Override
+	protected void onStart() {
+		// TODO Auto-generated method stub
+		super.onStart();
+		logUtils.d(TAG, "onStart");
+	}
+
+	@Override
+	protected void onStop() {
+		// TODO Auto-generated method stub
+		super.onStop();
+		logUtils.d(TAG, "onStop");
+	}
+
+	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		logUtils.d("MainActivity", "out");
+		logUtils.d(TAG, "onDestroy");
 	}
 	
 	@Override
@@ -372,20 +419,6 @@ public class MainActivity extends Activity {
 					initData(file);
 				} else { // If the clicked item is a file, get the file information, such as md5 or sha1
 					
-					/*fileListView.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
-						
-						@Override
-						public void onCreateContextMenu(ContextMenu menu, View v,
-								ContextMenuInfo menuInfo) {
-							// TODO Auto-generated method stub
-							MenuInflater inflater = getMenuInflater();  
-							inflater.inflate(R.menu.listview_longclick_menu, menu);
-							AdapterContextMenuInfo info = (AdapterContextMenuInfo) menuInfo;
-							int position = info.position;
-							logUtils.d(TAG + "Clicked", position + "");
-						}
-					});*/
-					
 					Builder builder = new AlertDialog.Builder(MainActivity.this);
 					builder.setIcon(android.R.drawable.ic_dialog_info);
 					builder.setTitle(R.string.encrypt_level_title);
@@ -414,19 +447,6 @@ public class MainActivity extends Activity {
 									
 									if(0 == which) { // There is no need to encrypt the files.
 										
-										/*String cpFileString = "cp" +  " " + file.getPath() + " " + dir1;
-										logUtils.d(TAG, cpFileString);
-										File destFile = new File(dir1 + "/" + file.getName());
-										if(destFile.exists()) {
-											destFile.delete();
-											boolean status = fileOperation.execCommand(cpFileString);
-											logUtils.d(TAG, status + "");
-										} else {
-											boolean status = fileOperation.execCommand(cpFileString);
-											logUtils.d(TAG, status + "");
-										}*/
-										
-										
 										/*// Move the src file to dest file path
 										InputStream is = new FileInputStream(file.getPath());
 										
@@ -442,7 +462,7 @@ public class MainActivity extends Activity {
 										
 										msg.what = constantVariables.operation_succeed;
 										
-									} else { // Choose algorithms and keys to encrypt the files.
+									} else if(which < 5){ // Choose algorithms and keys to encrypt the files.
 										// Get the remote generated encrypt key.
 										String remote_encrypt_key = fileOperation.retrieveEncryptKey(
 												ConstantVariables.BASE_URL + ConstantVariables.RETRIEVE_ENCRYPT_KEY,
@@ -470,6 +490,67 @@ public class MainActivity extends Activity {
 										} else { // The remote key is not passed correctly.
 											msg.what = constantVariables.operation_failed;
 										}
+									} else if(5 == which) {
+										FileOperation fileOperation = new FileOperation();
+						            	String md5String = fileOperation.fileToMD5(file.getPath());
+						            	String sha1String = fileOperation.fileToSHA1(file.getPath());
+						            	
+						            	DevOpenHelper helper = new DaoMaster.DevOpenHelper(MainActivity.this,
+						            			"encrypt_level_db", null);
+						            	SQLiteDatabase db = helper.getWritableDatabase();
+						            	DaoMaster daoMaster = new DaoMaster(db);
+						            	DaoSession daoSession = daoMaster.newSession();
+						                FileInfoDao fileInfoDao = daoSession.getFileInfoDao();
+						            	
+						                QueryBuilder<FileInfo> qb = fileInfoDao.queryBuilder();
+						                qb.where(qb.and(Properties.Sha1.eq(sha1String),
+						                		Properties.Md5.eq(md5String)));
+						                List<FileInfo> fileInfoList = qb.list();
+						                int size = fileInfoList.size();
+						                if(0 == size) { // No default encrypt level.
+						                	Looper.prepare();
+						                	Toast.makeText(MainActivity.this,
+						                			R.string.no_default_level,
+						                			Toast.LENGTH_SHORT).show();
+						                	Looper.loop();
+						                } else {
+						                	String encryptLevelString = fileInfoList.get(0).getLevel(); // Get the encrypt level string.
+						                	int level = Integer.valueOf(encryptLevelString); // Convert into int.
+						                	
+											if(1 == level) { // There is no need to encrypt the files.
+												
+												msg.what = constantVariables.operation_succeed; 
+											} else {
+						                		// Get the remote generated encrypt key.
+												String remote_encrypt_key = fileOperation.retrieveEncryptKey(
+														ConstantVariables.BASE_URL + ConstantVariables.RETRIEVE_ENCRYPT_KEY,
+														level - 1);
+											
+												logUtils.d(TAG, "Encrypt Key:" + remote_encrypt_key);
+											
+												// Get the base key from SharedPreferences.
+												SharedPreferences sp = getSharedPreferences(constantVariables.PREF_NAME, MODE_PRIVATE); // Get the SharedPreferences.
+												String base_key = sp.getString(constantVariables.PREF_KEY, ""); // Get the string value.
+											
+												/**
+												 * Currently the base_key is not used.
+												 */
+												if(!remote_encrypt_key.equals("")) { // The retrieved encrypt key is not null.
+												
+													// First encrypt the file and then upload the info of encrypted file and the file.
+													if(startEncrypt(file.getPath(), level - 1, remote_encrypt_key, base_key,
+														dir1 + File.separator + file.getName(), upload_file_info_url)) { // Encrypt the file successfully.
+													
+														msg.what = constantVariables.operation_succeed;
+													} else { // The encryption is failed.
+														msg.what = constantVariables.operation_failed;
+													}
+												} else { // The remote key is not passed correctly.
+													msg.what = constantVariables.operation_failed;
+												}
+						                	}
+ 						                	
+						                }
 									}
 									
 									handler.sendMessage(msg);
@@ -556,7 +637,7 @@ public class MainActivity extends Activity {
 	public boolean onContextItemSelected(MenuItem item) {
 		// TODO Auto-generated method stub
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-		File file = (File) fileListAdapter.getItem((int)info.id);
+		final File file = (File) fileListAdapter.getItem((int)info.id);
 		
 		switch(item.getItemId()){ 
 			case R.id.set_level:
@@ -568,6 +649,7 @@ public class MainActivity extends Activity {
 				Bundle bundle = new Bundle();
 				bundle.putString("md5", md5SetString);
 				bundle.putString("sha1", sha1SetString);
+				bundle.putString("fileParentPath", file.getParentFile().getPath()); // Add the file's parent path to the bundle, in order to refersh the listview.
 				
 				logUtils.d(TAG, "md5:" + md5SetString + "sha1:" + sha1SetString);
 				
@@ -575,42 +657,40 @@ public class MainActivity extends Activity {
 				startActivityForResult(intent, set_level);
 				//startActivity(intent);
 				break;
-			case R.id.upload:
-				break;
-			case R.id.set_level_upload:
-				
-				md5SetString = fileOperation.fileToMD5(file.getPath());
-				sha1SetString = fileOperation.fileToSHA1(file.getPath());
-				
-				break;
-			case R.id.integrity_check:
-				break;
 			case R.id.decrypt:
+				final File dir2 = new File(Environment.getExternalStorageDirectory().toString()
+						+ File.separator + getString(R.string.decrypt_directory)); // Create a new directory to store the encrypted file.
+				if(!dir2.exists()) { // If the directory is not exist, create it.
+					dir2.mkdirs();
+				}
+				
+				final Message msg = Message.obtain();
+				Thread thread = new Thread(new Runnable() {
+					
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						
+						msg.arg1 = constantVariables.decrypt_file; // Set the operation flag.
+						// First get the file information from the server.
+						// If the file is not in the server, stop;
+						// if the file is in the server, then decrypt it.
+						// Call the startDecryption function to decrypt the encrypted file.
+						if(startDecrypt(file.getPath(), dir2 + File.separator + file.getName())) {
+							msg.what = constantVariables.operation_succeed;
+						} else {
+							msg.what = constantVariables.operation_failed;
+						}
+						
+						handler.sendMessage(msg);
+					}
+				});
+				
+				thread.start();
 				break;
 		} 
 		return super.onContextItemSelected(item);
 	}
-	
-	/**
-	 * Set file encrypt level.
-	 * @param md5String The md5 value of the file.
-	 * @param sha1String The sha1 value of the file.
-	 * @param level The encrypt level of the file to set.
-	 */
-	/*public void setFileLevel(String md5String, String sha1String, int level) {
-
-	}*/
-	
-	/**
-	 * Get the file encrypt level.
-	 * @param md5String The md5 value of the file.
-	 * @param sha1String The sha1String of the file.
-	 * @return The file encrypt level.
-	 */
-	/*public int getFileLevel(String md5String, String sha1String) {
-		int level = 0;
-		return level;
-	}*/
 	
 	/**
 	 * Get the data from SharedPreferences.
@@ -884,10 +964,14 @@ public class MainActivity extends Activity {
 		super.onActivityResult(requestCode, resultCode, data);
 		switch(requestCode) {
 			case set_level:  // Set encrypt level.
+				
 				if(resultCode == RESULT_OK) {
+					String fileParentPath = data.getStringExtra("fileParentPath");
+					
 					Toast.makeText(MainActivity.this,
 							getString(R.string.set_level_ok),
 							Toast.LENGTH_SHORT).show();
+					initData(new File(fileParentPath));
 				} else if(resultCode == RESULT_CANCELED) {
 					Toast.makeText(MainActivity.this,
 							getString(R.string.set_level_cancel),

@@ -96,5 +96,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="set_level_ok">设置加密级别成功！</string>
     <string name="set_level_cancel">设置加密级别取消！</string>
+    <string name="no_default_level">没有默认级别，请长按设置级别！</string>
 
 </resources>

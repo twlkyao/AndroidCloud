@@ -8,6 +8,7 @@
         <item>3 中等加密</item>
         <item>4 高级加密</item>
         <item>5 绝密加密</item>
+        <item>6 使用原有密级</item>
     </string-array>
     <!-- The cloud applications array. -->
     <string-array name="apps_choice">

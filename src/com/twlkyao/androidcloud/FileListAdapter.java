@@ -88,12 +88,11 @@ public class FileListAdapter extends BaseAdapter {
                   viewHolder.file_icon.setImageResource(R.drawable.folder_icon);
               } else { // The variable file is a file
             	
-            	viewHolder.file_icon.setImageResource(R.drawable.file_icon);
+//            	viewHolder.file_icon.setImageResource(R.drawable.file_icon);
             	
-            	/*FileOperation fileOperation = new FileOperation();
+            	FileOperation fileOperation = new FileOperation();
             	String md5String = fileOperation.fileToMD5(file.getPath());
-            	String sha1String = fileOperation.fileToMD5(file.getPath());
-            	
+            	String sha1String = fileOperation.fileToSHA1(file.getPath());
             	
             	DevOpenHelper helper = new DaoMaster.DevOpenHelper(context, "encrypt_level_db", null);
             	SQLiteDatabase db = helper.getWritableDatabase();
@@ -110,14 +109,12 @@ public class FileListAdapter extends BaseAdapter {
                 	viewHolder.file_icon.setImageResource(R.drawable.file_icon);
                 } else { // The encrypt level is set.
                 	String levelString = fileInfoList.get(0).getLevel();
-                    System.out.println("级别：" + levelString);
                     int resID = context.getResources()
                     		.getIdentifier("file_icon_" + levelString, "drawable",
                     		context.getPackageName());
-                    System.out.println("包名" + context.getPackageName());
                     Drawable image = context.getResources().getDrawable(resID); 
                     viewHolder.file_icon.setImageDrawable(image);
-                }*/
+                }
               }
           }
      
