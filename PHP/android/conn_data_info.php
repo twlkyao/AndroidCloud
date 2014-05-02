@@ -11,8 +11,8 @@
     
     $mysql_handle = mysql_connect($serverAddress, $databaseUser, $databasePassword)
         or die("Cann't connect to the database server!". mysql_error()."<br>"); // connect to the database server
-    mysql_query("set character set 'utf8'");//读库 
-	mysql_query("set names 'utf8'");//写库 
+    mysql_query("set character set 'utf8'"); // Set the charset when read data base. 
+	mysql_query("set names 'utf8'"); // Set the charset when write data base. 
 					
     /**
     Create the database

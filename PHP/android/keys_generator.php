@@ -18,11 +18,11 @@
 	
 	$key_length = $encrypt_key_length[$encrypt_level]; // Get the encrypt key length.
 	
-	$key_set_size = count($encrypt_key_set); // Get the size of key set.
+	$key_set_size = count($encrypt_key_set); // Get the size of encrypt key set.
 	
 	// Join the random chars to get the encrypt key. 
 	for($i = 0; $i < $key_length; $i++) {
-		$index = rand(0, $key_set_size); // Get the random index.
+		$index = rand(0, $key_set_size - 1); // Get the random index. The rand(min, max) generate the random nunber [min, max].
 		$encrypt_key .= $encrypt_key_set[$index]; // Join the random chars to the $encrypt_key.
 	}
 	
@@ -36,6 +36,4 @@
        // 'sessionid'=>$sessionid  
     ); 
     echo json_encode($result_array);	// Return the result encoded in JSON
-        
-   
 ?>
