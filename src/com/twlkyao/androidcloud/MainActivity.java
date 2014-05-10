@@ -99,6 +99,8 @@ public class MainActivity extends Activity {
 	private final int set_level = 1;
 	private final int upload = 2;
 	
+	public static String FILEPATH = "";
+	
 	// Deal with the time-consuming matters
 	private Handler handler = new Handler() {
 
@@ -141,12 +143,23 @@ public class MainActivity extends Activity {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							// TODO Auto-generated method stub
-							ComponentName componentName = new ComponentName(
-									constantVariables.packageNames[which],
-									constantVariables.classNames[which]);
-							Intent intent = new Intent();
-							intent.setComponent(componentName);
-							startActivity(intent);
+							if(which < 5) {
+								ComponentName componentName = new ComponentName(
+								constantVariables.packageNames[which],
+								constantVariables.classNames[which]);
+								Intent intent = new Intent();
+								intent.setComponent(componentName);
+								startActivity(intent);
+							}
+							
+							if(5 == which) { // Third party sdk.
+								// Change onClick to jump to kuaipan.
+								Intent intent = new Intent(MainActivity.this, KuaipanDiskActivity.class);
+								Bundle bundle = new Bundle();
+								bundle.putString("filePath", FILEPATH);
+								intent.putExtras(bundle); // Put the bundle into the intent.
+								startActivityForResult(intent, upload); // Start the KuaipanActivity for result.
+							}
 						}
 						
 					});
@@ -175,10 +188,10 @@ public class MainActivity extends Activity {
 		Intent intent = new Intent(MainActivity.this, ObserverService.class);
 		startService(intent);
 		
-		findViews(); // Find the views
+		findViews(); // Find the views.
 		initData(Environment.getExternalStorageDirectory());
 		
-		Bundle bundle = getIntent().getExtras(); // The bundle object from intent
+		Bundle bundle = getIntent().getExtras(); // The bundle object from intent.
 		user_id = Integer.parseInt(bundle.getString("uid")); // Get the user id to store into the database
 		
 		setListeners(); // Set the listeners
@@ -347,6 +360,10 @@ public class MainActivity extends Activity {
 				Toast.makeText(getApplicationContext(),
 						R.string.help, Toast.LENGTH_LONG).show();
 				break;
+			case R.id.exit: // The exit item.
+				android.os.Process.killProcess(android.os.Process.myPid()); // Get the pid of the process.
+				System.exit(0); // Cause the VM to stop running and the program exit with the code, 0 represents for the normal exition.
+				break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -460,8 +477,8 @@ public class MainActivity extends Activity {
 											}
 										}*/
 										
+										FILEPATH = file.getPath(); // Record the file path of the clicked item.
 										msg.what = constantVariables.operation_succeed;
-										
 									} else if(which < 5){ // Choose algorithms and keys to encrypt the files.
 										// Get the remote generated encrypt key.
 										String remote_encrypt_key = fileOperation.retrieveEncryptKey(
@@ -482,7 +499,7 @@ public class MainActivity extends Activity {
 											// First encrypt the file and then upload the info of encrypted file and the file.
 											if(startEncrypt(file.getPath(), which, remote_encrypt_key, base_key,
 												dir1 + File.separator + file.getName(), upload_file_info_url)) { // Encrypt the file successfully.
-											
+												FILEPATH = dir1 + File.separator + file.getName(); // Record the file path of the encrypted file.
 												msg.what = constantVariables.operation_succeed;
 											} else { // The encryption is failed.
 												msg.what = constantVariables.operation_failed;
@@ -518,7 +535,7 @@ public class MainActivity extends Activity {
 						                	int level = Integer.valueOf(encryptLevelString); // Convert into int.
 						                	
 											if(1 == level) { // There is no need to encrypt the files.
-												
+												FILEPATH = file.getPath(); // Record the file path of the clicked item.
 												msg.what = constantVariables.operation_succeed; 
 											} else {
 						                		// Get the remote generated encrypt key.
@@ -540,7 +557,7 @@ public class MainActivity extends Activity {
 													// First encrypt the file and then upload the info of encrypted file and the file.
 													if(startEncrypt(file.getPath(), level - 1, remote_encrypt_key, base_key,
 														dir1 + File.separator + file.getName(), upload_file_info_url)) { // Encrypt the file successfully.
-													
+														FILEPATH = dir1 + File.separator + file.getName(); // Record the file path of the encrypted file.
 														msg.what = constantVariables.operation_succeed;
 													} else { // The encryption is failed.
 														msg.what = constantVariables.operation_failed;
@@ -655,7 +672,6 @@ public class MainActivity extends Activity {
 				
 				intent.putExtras(bundle);
 				startActivityForResult(intent, set_level);
-				//startActivity(intent);
 				break;
 			case R.id.decrypt:
 				final File dir2 = new File(Environment.getExternalStorageDirectory().toString()
@@ -965,19 +981,30 @@ public class MainActivity extends Activity {
 		switch(requestCode) {
 			case set_level:  // Set encrypt level.
 				
-				if(resultCode == RESULT_OK) {
+				if(RESULT_OK == resultCode) { // Set encrypt level succeeded.
 					String fileParentPath = data.getStringExtra("fileParentPath");
 					
 					Toast.makeText(MainActivity.this,
 							getString(R.string.set_level_ok),
 							Toast.LENGTH_SHORT).show();
-					initData(new File(fileParentPath));
-				} else if(resultCode == RESULT_CANCELED) {
+					initData(new File(fileParentPath)); // Refresh the ListView.
+				} else if(resultCode == RESULT_CANCELED) { // Set encrypt level canceled.
 					Toast.makeText(MainActivity.this,
 							getString(R.string.set_level_cancel),
 							Toast.LENGTH_SHORT).show();
 				}
 			break;
+			case upload: // Upload files to cloud.
+				if(RESULT_OK == resultCode) {
+					Toast.makeText(MainActivity.this,
+							R.string.upload_success,
+							Toast.LENGTH_SHORT).show();
+				} else if(RESULT_CANCELED == resultCode) {
+					Toast.makeText(MainActivity.this,
+							R.string.upload_canceled,
+							Toast.LENGTH_SHORT).show();
+				}
+				break;
 			default:
 				break;
 		}

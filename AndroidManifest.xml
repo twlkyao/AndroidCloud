@@ -27,6 +27,10 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <!-- The permission to access network state. -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- The permisson to access information about wifi networks. -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!-- The permission to stop the task. -->
+    <uses-permission android:name="android.permission.RESTART_PACKAGES" />
 
     <application
         android:allowBackup="true"
@@ -49,11 +53,38 @@
             <intent-filter>
 
                 <!-- Change this to be appkey- followed by your app key -->
-                <data android:scheme="appkey-xcBjcIHOvb0RhxTg" />
+                <data android:scheme="appkey-xcatrEBRzuAprw4k" />
 
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <!-- Tencent account authorization activity -->
+        <activity
+            android:name="com.tencent.tauth.AuthActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:noHistory="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="tencent100537458" />
+            </intent-filter>
+        </activity>
+        <!-- xiaomi account authorization activity -->
+        <activity
+            android:name="com.xiaomi.channel.openauth.AuthorizeActivity"
+            android:configChanges="orientation"
+            android:exported="false"
+            android:windowSoftInputMode="stateHidden" >
+            <intent-filter>
+                <action android:name="com.xiaomi.openauth.action.AUTH" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -85,7 +116,7 @@
         <service android:name="android.inputmethodservice.InputMethodService" >
         </service>
         <service android:name="android.net.VpnService" >
-        </service>
+        </service>
         -->
         <activity
             android:name="com.twlkyao.androidcloud.MessageActivity"
@@ -96,7 +127,7 @@
             android:label="@string/title_activity_contacts" >
         </activity>
         <activity
-            android:name="com.twlkyao.androidcloud.ChooseDiskActivity"
+            android:name="com.twlkyao.androidcloud.KuaipanDiskActivity"
             android:label="@string/title_activity_choose_disk" >
         </activity>
         <activity

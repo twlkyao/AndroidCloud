@@ -20,5 +20,10 @@
         android:id="@+id/action_help"
         android:orderInCategory="400"
         android:title="@string/action_help"/>
+    <!-- The exit menu. -->
+    <item
+        android:id="@+id/exit"
+        android:orderInCategory="500"
+        android:title="@string/exit"/>
 
 </menu>

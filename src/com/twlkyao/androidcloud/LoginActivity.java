@@ -49,8 +49,6 @@ public class LoginActivity extends Activity {
 	public static String strResult; //Login result string
 	private static String loginUrl = ConstantVariables.BASE_URL + ConstantVariables.LOGIN_URL; // the login url address for android function module
 	
-//	private ProgressDialog progressDialog; // progressdialog
-	
 	private StringBuilder suggest = null;
 	private String uid = "";	// To store the user id.
 	private String Tag = "LoginActivity"; // The logcat tag
@@ -86,12 +84,12 @@ public class LoginActivity extends Activity {
 				password_editText.setText(""); // Reset the password
 				*/
 			} else if(1 == msg.arg1){ // The input format is correct
+				progressDialog.dismiss();
 				if(0 == msg.arg2) { // The login validate is failed
+					
 					Toast.makeText(getApplicationContext(),
 							R.string.login_fail, Toast.LENGTH_SHORT).show();
 				} else if(1 == msg.arg2) { // The login validate is passed
-					
-					progressDialog.dismiss();
 					
 					/*Toast.makeText(getApplicationContext(),
 							R.string.login_success, Toast.LENGTH_SHORT).show();*/
