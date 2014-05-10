@@ -994,7 +994,7 @@ public class MainActivity extends Activity {
 							Toast.LENGTH_SHORT).show();
 				}
 			break;
-			case upload: // Upload files to cloud.
+			/*case upload: // Upload files to cloud.
 				if(RESULT_OK == resultCode) {
 					Toast.makeText(MainActivity.this,
 							R.string.upload_success,
@@ -1004,7 +1004,7 @@ public class MainActivity extends Activity {
 							R.string.upload_canceled,
 							Toast.LENGTH_SHORT).show();
 				}
-				break;
+				break;*/
 			default:
 				break;
 		}

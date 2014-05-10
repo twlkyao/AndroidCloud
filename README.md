@@ -48,7 +48,7 @@ Part 4 and part 5 of Directions wil use a third party application, in order to b
 
 9. Encrypt the SMS data.  
 
-10. Integrate the third party cloud APIs.  
+10. Integrate the third party cloud APIs(Kuaipan is integrated).  
 
 11. Key management.
 
