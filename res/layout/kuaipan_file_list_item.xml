@@ -8,7 +8,8 @@
     <TextView
         android:id="@+id/filepath"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
+        android:gravity="center_vertical"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/black"
         android:textSize="@dimen/text_size" />

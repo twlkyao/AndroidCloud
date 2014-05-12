@@ -60,7 +60,6 @@ public class KuaipanDiskActivity extends Activity {
 	private Button btnOK; // The ok button.
 //	private Button btnCancel; // The cancel button.
 	private ArrayList<KuaipanFile> kuaipanFileList; // The ArrayList of kuaipan file.
-//	private ArrayList<String> kuaipanFileList; // The ArrayList of kuaipan file.
 	private TextView userInfo; // The TextView to display the user info.
 	private TextView remoteFilePath; // The TextView to display the file path.
 	private ListView kuaipanFileListView; // The ListView to hold the KuaipanFile.
@@ -76,7 +75,7 @@ public class KuaipanDiskActivity extends Activity {
     final static private String ACCESS_SECRET_NAME = "ACCESS_SECRET";
     final static private String ACCESS_AUTH_TYPE_NAME = "ACCESS_AUTH_TYPE_NAME";
     final static private String ACCESS_UID_NAME = "ACCESS_UID_NAME";
-    private static final int FILE_SELECTED = 1; // Indicator of file selection.
+//    private static final int FILE_SELECTED = 1; // Indicator of file selection.
     
     private static final String fREMOTE_FILEPATH = "/我的应用/AndroidCloud/";
     private static String REMOTE_FILEPATH = fREMOTE_FILEPATH; // The path of the cloud.
@@ -213,7 +212,8 @@ public class KuaipanDiskActivity extends Activity {
 				// TODO Auto-generated method stub
 				setResult(RESULT_CANCELED, intent); // The operation is succeeded.
 				startActivity(intent); // Jump to the new activity.
-				logOut(); // Call the logOut() function to finish the activity.
+				finish();
+//				logOut(); // Call the logOut() function to finish the activity.
 			}
 		});*/
 	}
@@ -382,7 +382,7 @@ public class KuaipanDiskActivity extends Activity {
             getFileMetadata("/我的应用/AndroidCloud/");*/
         }
         btnOK.setEnabled(loggedIn);
-//        btnCancel.setEnabled(!loggedIn);
+//        btnCancel.setEnabled(loggedIn);
     }
     
     /**
@@ -422,7 +422,8 @@ public class KuaipanDiskActivity extends Activity {
                 	Log.v("keys",kuaipanFileList.size() + "");
                 	
                     HashMap<String, Object> map = new HashMap<String, Object>();
-                    map.put("FileItem", kuaipanFileList.get(i).path);
+//                    map.put("FileItem", kuaipanFileList.get(i).path;
+                    map.put("FileItem", kuaipanFileToString(kuaipanFileList.get(i))); // Get the file path.
                     listItem.add(map);
                 }
 
@@ -442,7 +443,9 @@ public class KuaipanDiskActivity extends Activity {
                             int arg2, long arg3) {
 
                         KuaipanFile file = kuaipanFileList.get(arg2);
-                        if (file != null && file.isFile()) { // The item clicked is a file.
+                        displayAlert(getString(R.string.fileinfo), file); // Display the file info.
+                        
+                        /*if (file != null && file.isFile()) { // The item clicked is a file.
                         	displayAlert(getString(R.string.fileinfo), file);
                         } else { // The item clicked is a directory.
                         	String[] fileInfo = file.toString().split("\""); // Get the file path of the current file.
@@ -450,7 +453,7 @@ public class KuaipanDiskActivity extends Activity {
                         	Log.v(TAG, "新的路径：" + REMOTE_FILEPATH);
                         	remoteFilePath.setText(REMOTE_FILEPATH);
                         	getFileMetadata(REMOTE_FILEPATH);
-                        }
+                        }*/
                     }
                 });
             }
@@ -492,20 +495,22 @@ public class KuaipanDiskActivity extends Activity {
         confirm.setTitle(title); // Set title.
         confirm.setMessage(file.toString()); // Set message.
        
-        // Set positive button.
-        confirm.setPositiveButton(getString(R.string.download),
-        		new DialogInterface.OnClickListener() {
-        			public void onClick(DialogInterface dialog, int which) {
-        				dialog.dismiss();
-        				String remotePath = file.path;
-        				RequestBase request = new RequestBase();
-        				request.setApi(kuaipanAPI);
-        				request.setRemotePath(remotePath);
-        				new DownloadTask(KuaipanDiskActivity.this).start(request);
-        				Log.v(TAG, "getDataFile:" + remotePath);
-        			}
-        });
-
+        if(file.isFile()) { // The item clicked is a KuaipanFile, add the download button.
+        	// Set positive button.
+            confirm.setPositiveButton(getString(R.string.download),
+            		new DialogInterface.OnClickListener() {
+            			public void onClick(DialogInterface dialog, int which) {
+            				dialog.dismiss();
+            				String remotePath = file.path;
+            				RequestBase request = new RequestBase();
+            				request.setApi(kuaipanAPI);
+            				request.setRemotePath(remotePath);
+            				new DownloadTask(KuaipanDiskActivity.this).start(request);
+            				Log.v(TAG, "getDataFile:" + remotePath);
+            			}
+            });
+        }
+        
         // Set negative button.
         confirm.setNegativeButton(getString(R.string.cancel),
         new DialogInterface.OnClickListener() {
@@ -526,7 +531,7 @@ public class KuaipanDiskActivity extends Activity {
     public void getAllFiles(ArrayList<KuaipanFile> list, KuaipanFile file) {
 //    	public void getAllFiles(ArrayList<String> list, KuaipanFile file) {
     	
-        list.add(file); // Add the file itself.
+//        list.add(file); // Add the file itself.
         
         if (file.isDirectory()) {
             List<KuaipanFile> childrens = file.getChildren();

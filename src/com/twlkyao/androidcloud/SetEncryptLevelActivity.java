@@ -95,6 +95,7 @@ public class SetEncryptLevelActivity extends Activity {
 				FileInfo fileInfo = new FileInfo(null, md5String, sha1String, encrypt_level);
 				
 				fileInfoDao.insertOrReplace(fileInfo); // Inset or replace the entity.
+				db.close(); // Close the database.
 				helper.close(); // Close the database.
 				
 				logUtils.d(TAG, "Inserted new fileInfo!");
