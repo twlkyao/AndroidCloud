@@ -35,7 +35,6 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -66,8 +65,6 @@ public class LoginActivity extends Activity {
 	// define the hashmap to record the basic information of users during the session
 	private HashMap<String, String> session =new HashMap<String, String>();
 	
-	private boolean isNetError; //Indicate whether the network is available, true for network failure, false for user name or password failure
-
 	// Deal with the time-consuming matters
 	private Handler handler = new Handler() {
 

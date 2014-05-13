@@ -9,8 +9,6 @@ import android.widget.Button;
 
 public class MessageActivity extends Activity {
 
-	private String TAG = "MessageActivity";
-	private boolean DEBUG = true;
 	// Buttons to operate Sms.
 	private Button backupSmsButton;
 	private Button recoverSmsButton;

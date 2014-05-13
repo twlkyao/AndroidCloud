@@ -14,17 +14,12 @@ import android.content.ContentResolver;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.view.Menu;
 import android.widget.TextView;
-
 public class ContactsActivity extends Activity {
 
 	private TextView contacts; // TextView to display the contacts.
 	private ContentResolver contentResolver;
 	private String result = ""; // To store the contacts.
-	private String TAG = "ContactsActivity";
-	private boolean DEBUG = true;
-	private LogUtils logUtils = new LogUtils(DEBUG, TAG);
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
