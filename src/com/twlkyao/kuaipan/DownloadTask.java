@@ -35,6 +35,7 @@ public class DownloadTask {
 
 	private static final String TAG = "DownloadTask";
 	
+	// The local file path to store the downloaded file.
 	private static final String DOWNLOAD_DIR = Environment.getExternalStorageDirectory().getPath()+"/kuaipanfiles/";
 	
 	private ProgressDialog dialog;
@@ -72,8 +73,8 @@ public class DownloadTask {
 						dialog.dismiss();
 					}
 				});
-
-		confirm.show().show();
+		confirm.show(); // Show the dialog.
+//		confirm.show().show();
 	}
 
 	protected void displayErrorAlert(String title, String message) {
@@ -90,14 +91,13 @@ public class DownloadTask {
 						activity.finish();
 					}
 				});
-
-		confirm.show().show();
+		confirm.show(); // Show the dialog.
+//		confirm.show().show();
 	}
 	
 	public void start (RequestBase req) {
 		new Download ().execute(req);
 	}
-	
 	
 	private class Download extends AsyncTask<RequestBase, Void, ResultBase> {
 
@@ -112,13 +112,13 @@ public class DownloadTask {
 				return null;
 			}
 
-			final RequestBase req = (RequestBase) params[0];
-			final String remotePath = req.getRemotePath();
-			final KuaipanAPI api = req.getApi();
+			final RequestBase req = (RequestBase) params[0]; // Get the RequestBase params.
+			final String remotePath = req.getRemotePath(); // Get the remote file path.
+			final KuaipanAPI api = req.getApi(); // Get the api.
 
 			ResultBase result = new ResultBase();
 			
-			String localPath = DOWNLOAD_DIR+new File(remotePath).getName();
+			String localPath = DOWNLOAD_DIR + new File(remotePath).getName();
 			result.setRemotePath (remotePath);
 			result.setFilePath(localPath);
 			File dir = new File (DOWNLOAD_DIR);
@@ -127,6 +127,7 @@ public class DownloadTask {
 			}
 			
 			try {
+				// Download the file to local.
 				api.download(remotePath, localPath, "", false,
 						new TransportListener(TransportListener.OPERATION_DOWNLOAD, "Download"));
 			} catch (KscRuntimeException e) {
@@ -147,13 +148,15 @@ public class DownloadTask {
 
 			hideProgressDialog ();
 			if (result == null) {
-				Toast.makeText(activity, "Please, select photo from gallery app", Toast.LENGTH_LONG).show();
+				Toast.makeText(activity,
+						"Please, select a file.",
+						Toast.LENGTH_SHORT).show();
 				return;
 			}
 			
 			if (result.getErrorMsg() != null) {
 				displayErrorAlert(
-						activity.getString(R.string.upload_failure_title),
+						activity.getString(R.string.download_failure_title),
 						result.getErrorMsg());
 			} else {
 				displayAlert("Download Task Finish",

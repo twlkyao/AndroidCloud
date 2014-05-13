@@ -103,11 +103,12 @@
     <string name="set_level_ok">设置加密级别成功！</string>
     <string name="set_level_cancel">设置加密级别取消！</string>
     <string name="no_default_level">没有默认级别，请长按设置级别！</string>
-    <string name="remote_file_path">云盘路径：</string>
+    <string name="remote_file_path_label">云盘路径：</string>
     <string name="downloading">下载中…</string>
     <string name="uploading">上传中…</string>
     <string name="ok">确定</string>
     <string name="upload_failure_title">上传失败</string>
+    <string name="download_failure_title">下载失败</string>
     <string name="unauthorized">"未授权！"</string>
     <string name="get_user_info_failed">获取账号信息失败</string>
     <string name="download">下载</string>
@@ -117,5 +118,6 @@
     <string name="upload_canceled">上传取消！</string>
     <string name="file_path_empty">文件路径为空，请检查操作！</string>
     <string name="empty_file_path">路径为空！</string>
+    <string name="remote_file_path">/我的应用/AndroidCloud/</string>
 
 </resources>
