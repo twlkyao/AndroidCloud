@@ -15,6 +15,7 @@
 package com.twlkyao.kuaipan;
 
 import java.io.File;
+import java.util.concurrent.ExecutionException;
 
 import com.twlkyao.androidcloud.R;
 
@@ -92,8 +93,18 @@ public class UploadTask {
 //		confirm.show().show();
 	}
 	
-	public void start (RequestBase req) {
-		new Upload ().execute(req);
+	public String start (RequestBase req) {
+		String result = null;
+		try {
+			result = new Upload ().execute(req).get().getErrorMsg();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return result;
 	}
 	
 	

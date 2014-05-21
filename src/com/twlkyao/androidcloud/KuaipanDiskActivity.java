@@ -194,7 +194,10 @@ public class KuaipanDiskActivity extends Activity {
 					request.setRemotePath(REMOTE_FILEPATH); // Set remote file path.
 					remoteFilePath.setText(REMOTE_FILEPATH); // Set the remote file path display.
 					
-					new UploadTask(KuaipanDiskActivity.this).start(request); // Upload the file to remote cloud.
+					String result = new UploadTask(KuaipanDiskActivity.this).start(request); // Upload the file to remote cloud.
+					if(null == result){ // Refresh the kuaipanFile list after upload successfully.
+						getFileMetadata(fREMOTE_FILEPATH);
+					}
 //					finish(); // Finish the activity.
 				} else {
 					Toast.makeText(KuaipanDiskActivity.this,
