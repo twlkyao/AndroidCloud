@@ -69,7 +69,7 @@
             android:id="@+id/remote_disk_file_path"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/remote_file_path"
+            android:text="@string/kuaipan_remote_file_path"
             android:textColor="@color/black"
             android:textSize="@dimen/text_size" />
     </LinearLayout>
